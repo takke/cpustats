@@ -8,26 +8,26 @@ import android.preference.PreferenceManager;
 
 public class BootReceiver extends BroadcastReceiver {
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		
-		MyLog.i("BootReceiver.onReceive");
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        
+        MyLog.i("BootReceiver.onReceive");
 
-		if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-			// 端末起動時の処理
-			
-			// 自動起動の確認
-			final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-			final boolean startOnBoot = pref.getBoolean(C.PREF_KEY_START_ON_BOOT, false);
-			
-			MyLog.i("start on boot[" + (startOnBoot ? "YES" : "NO") + "]");
-			
-			if (startOnBoot) {
-				// サービス起動
-				final Intent serviceIntent = new Intent(context, UsageUpdateService.class);
-				context.startService(serviceIntent);
-			}
-		}
-		
-	}
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            // 端末起動時の処理
+            
+            // 自動起動の確認
+            final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            final boolean startOnBoot = pref.getBoolean(C.PREF_KEY_START_ON_BOOT, false);
+            
+            MyLog.i("start on boot[" + (startOnBoot ? "YES" : "NO") + "]");
+            
+            if (startOnBoot) {
+                // サービス起動
+                final Intent serviceIntent = new Intent(context, UsageUpdateService.class);
+                context.startService(serviceIntent);
+            }
+        }
+        
+    }
 }
