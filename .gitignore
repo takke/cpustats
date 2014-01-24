@@ -27,3 +27,8 @@ proguard/
 *.ipr
 *.iws
 .idea/
+
+# my files/folders
+*.keystore
+/.metadata
+/CpuStatsXSample
