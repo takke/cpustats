@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:drawable="@drawable/freq_bg" />
+	<item android:left="@dimen/freq_left1" android:top="@dimen/freq_top">
+	    <bitmap android:src="@drawable/digit4" android:gravity="left" />
+	</item>
+	<item android:left="@dimen/freq_left2" android:top="@dimen/freq_top">
+	    <bitmap android:src="@drawable/dot" android:gravity="left" />
+	</item>
+	<item android:left="@dimen/freq_left3" android:top="@dimen/freq_top">
+	    <bitmap android:src="@drawable/digit8" android:gravity="left" />
+	</item>
+</layer-list>

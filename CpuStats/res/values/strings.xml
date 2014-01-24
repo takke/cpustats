@@ -1,0 +1,22 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Settings</string>
+    
+    <string name="menu_settings">Settings</string>
+    <string name="menu_start_service">Show Notification</string>
+    <string name="menu_stop_service">Hide Notification</string>
+    <string name="menu_exit">Exit</string>
+    
+    <string name="config_general_category_title">General</string>
+    <string name="config_update_interval_title">Update Interval</string>
+    <string name="config_start_on_boot_title">On Boot</string>
+    <string name="config_start_on_boot_summary">Start notification on boot</string>
+
+    <string name="config_frequency_category_title">CPU Frequency</string>
+    <string name="config_show_frequency_notification">Notification</string>
+
+    <string name="config_usage_category_title">CPU Usage</string>
+    <string name="config_show_usage_notification">Notification</string>
+</resources>

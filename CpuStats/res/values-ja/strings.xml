@@ -1,0 +1,22 @@
+<resources>
+    
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">設定</string>
+    
+    <string name="menu_settings">設定</string>
+    <string name="menu_start_service">常駐開始</string>
+    <string name="menu_stop_service">常駐停止</string>
+    <string name="menu_exit">終了</string>
+    
+    <string name="config_general_category_title">全般</string>
+    <string name="config_update_interval_title">更新間隔</string>
+    <string name="config_start_on_boot_title">自動起動</string>
+    <string name="config_start_on_boot_summary">端末の起動時に自動的に開始します</string>
+
+    <string name="config_frequency_category_title">CPU クロック</string>
+    <string name="config_show_frequency_notification">通知</string>
+
+    <string name="config_usage_category_title">CPU 使用率</string>
+    <string name="config_show_usage_notification">通知</string>
+</resources>

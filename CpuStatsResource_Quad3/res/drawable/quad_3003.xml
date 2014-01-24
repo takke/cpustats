@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:drawable="@drawable/bg" />
+	<item android:left="@dimen/quad_left1">
+	    <bitmap android:src="@drawable/q3" android:gravity="left" />
+	</item>
+	<item android:left="@dimen/quad_left2">
+	    <bitmap android:src="@drawable/q0" android:gravity="left" />
+	</item>
+	<item android:left="@dimen/quad_left3">
+	    <bitmap android:src="@drawable/q0" android:gravity="left" />
+	</item>
+	<item android:left="@dimen/quad_left4">
+	    <bitmap android:src="@drawable/q3" android:gravity="left" />
+	</item>
+</layer-list>
