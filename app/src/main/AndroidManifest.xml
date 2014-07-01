@@ -1,19 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="jp.takke.cpustats"
-    android:versionCode="6"
-    android:versionName="1.2.0" >
+    package="jp.takke.cpustats">
 
-    <uses-sdk
-        android:minSdkVersion="4"
-        android:targetSdkVersion="15" />
-    
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        
+
         <activity
             android:name=".PreviewActivity"
             android:label="@string/title_activity_main" >
@@ -23,25 +19,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity
             android:name=".ConfigActivity"
             android:label="@string/title_activity_config">
         </activity>
-        
+
         <service android:enabled="true" android:exported="false" android:name=".UsageUpdateService">
             <intent-filter>
                 <action android:name="jp.takke.cpustats.IUsageUpdateService" />
             </intent-filter>
         </service>
-        
+
         <receiver android:name=".BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        
+
     </application>
 
 </manifest>

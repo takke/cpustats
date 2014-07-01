@@ -1,15 +1,11 @@
 package jp.takke.cpustats;
 
-import jp.takke.cpustatsresourcesquad.R;
-
-
 public class QuadResourceUtil {
 
     public static int getIconIdForCpuUsageQuad(int[] cpuUsages) {
         
         // 4コア
         return getIconIdForCpuUsageQuadLevel3(cpuUsages);
-//      return getIconIdForCpuUsageQuadLevel5(cpuUsages);
     }
 
     
