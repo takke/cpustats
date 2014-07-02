@@ -1,18 +1,8 @@
+v1.2.1 (2014.07.03)
+- Android Studio に移行
+- proguard最適化
 
-
-* リリース前のリソース切り替え手順メモ
-
-- CpuStatsResource_Quad3 プロジェクトを閉じる
-- CpuStatsResource_Quad5 プロジェクトを開く
-- CpuStats のビルドパスのプロジェクトタブから CpuStatsResource_Quad3 を削除
-- CpuStats のビルドパスのプロジェクトタブから CpuStatsResource_Quad5 を追加
-- CpuStats のプロパティ、Androidのライブラリーで CpuStatsResource_Quad3 を削除
-- CpuStats のプロパティ、Androidのライブラリーで CpuStatsResource_Quad5 を追加
-- 全てのプロジェクトのクリーン
-
-
-
-v1.2.0 (2013.1.13)
+v1.2.0 (2013.01.13)
 - Android1.6以降対応(従来はAndroid2.2以降だった)
 - 0.5秒設定追加
 - スリープ復帰時にステータスバーがすぐに更新されるのを防ぐようにした
