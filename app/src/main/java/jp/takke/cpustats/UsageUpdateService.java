@@ -350,7 +350,7 @@ public class UsageUpdateService extends Service {
         // 通知ウインドウをクリックした際に起動するインテント
         final Intent intent = new Intent(this, PreviewActivity.class);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                Intent.FLAG_ACTIVITY_NEW_TASK | PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_CANCEL_CURRENT);
         
         if (cpuUsages != null && mShowUsageNotification) {
             // 通知ウインドウのメッセージ
