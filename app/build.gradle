@@ -4,25 +4,29 @@ android {
     signingConfigs {
         myConfig
     }
-    compileSdkVersion 15
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.1'
     defaultConfig {
         applicationId 'jp.takke.cpustats'
         minSdkVersion 4
         targetSdkVersion 15
-        versionCode 7
-        versionName '1.2.1'
+        versionCode 8
+        versionName '1.2.2'
     }
     buildTypes {
         release {
-            runProguard true
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.myConfig
 
             applicationVariants.all { variant ->
-                def file = variant.outputFile
-//                variant.outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
-                variant.outputFile = new File(file.parent, "CpuStats_r" + defaultConfig.versionCode + "-" + defaultConfig.versionName + ".apk")
+                variant.outputs.each { output ->
+                    if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
+                        def file = output.outputFile
+                        output.outputFile = new File(file.parent, "CpuStats_r" + defaultConfig.versionCode + "-" + defaultConfig.versionName + ".apk")
+                    }
+                }
             }
         }
     }
