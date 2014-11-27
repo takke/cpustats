@@ -3,6 +3,7 @@ package jp.takke.cpustats;
 import java.util.ArrayList;
 
 import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -142,7 +144,7 @@ public class UsageUpdateService extends Service {
                 mSleeping = true;
                 
                 // アラーム停止
-                stopAlerm();
+                stopAlarm();
             }
         }
     };
@@ -333,8 +335,6 @@ public class UsageUpdateService extends Service {
     
     /**
      * ステータスバー通知の設定
-     * 
-     * @param cpuUsages
      */
     @SuppressWarnings("deprecation")
     private void updateCpuUsageNotifications(int[] cpuUsages, int currentCpuClock) {
@@ -362,7 +362,10 @@ public class UsageUpdateService extends Service {
             
             // 消えないようにする
             notification.flags = Notification.FLAG_ONGOING_EVENT;
-            
+
+            // Lollipop:ロックスクリーンには表示しない
+            setPriorityForKeyguardOnLollipop(notification);
+
             // 通知文字列の生成
             final StringBuilder sb = new StringBuilder(128);
             // 各コア分
@@ -372,7 +375,7 @@ public class UsageUpdateService extends Service {
                     if (i>=2) {
                         sb.append(" ");
                     }
-                    sb.append(cpuUsages[i] + "%");
+                    sb.append(cpuUsages[i]).append("%");
                 }
             }
             final String notificationContent = sb.toString();
@@ -397,7 +400,10 @@ public class UsageUpdateService extends Service {
             
             // 消えないようにする
             notification.flags = Notification.FLAG_ONGOING_EVENT;
-            
+
+            // Lollipop:ロックスクリーンには表示しない
+            setPriorityForKeyguardOnLollipop(notification);
+
             // 通知文字列の生成
             final String notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock);
             final String notificationContent = "Max Freq " + mMaxFreqText + " Min Freq " + mMinFreqText;
@@ -408,7 +414,32 @@ public class UsageUpdateService extends Service {
             nm.notify(MY_FREQ_NOTIFICATION_ID, notification);
         }
     }
-    
+
+
+    /**
+     * ロックスクリーンであれば非表示にする
+     */
+    private void setPriorityForKeyguardOnLollipop(Notification notification) {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+
+        final KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        if (km.inKeyguardRestrictedInputMode()) {
+            MyLog.d("set notification priority: min");
+
+            // same as: notification.priority = Notification.PRIORITY_MIN;
+            try {
+                final int Notification_PRIORITY_MIN = -2;   // Notification.PRIORITY_MIN
+                notification.getClass().getField("priority").setInt(notification, Notification_PRIORITY_MIN);
+            } catch (Exception e) {
+                MyLog.e(e);
+            }
+        }
+    }
+
+
     /**
      * サービスの次回の起動を予約
      */
@@ -449,7 +480,7 @@ public class UsageUpdateService extends Service {
         mStopResident = true;
         
         // アラーム停止
-        stopAlerm();
+        stopAlarm();
         
         // 通知を消す
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
@@ -461,7 +492,7 @@ public class UsageUpdateService extends Service {
     /**
      * アラームの停止
      */
-    private void stopAlerm() {
+    private void stopAlarm() {
         
         // サービス名を指定
         final Intent intent = new Intent(this, this.getClass());
