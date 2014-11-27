@@ -1,0 +1,22 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Nastavení</string>
+    
+    <string name="menu_settings">Nastavení</string>
+    <string name="menu_start_service">Zobrazit upozornění</string>
+    <string name="menu_stop_service">Skrýt upozornění</string>
+    <string name="menu_exit">Ukončit</string>
+    
+    <string name="config_general_category_title">Všeobecné</string>
+    <string name="config_update_interval_title">Interval aktualizace</string>
+    <string name="config_start_on_boot_title">Při startu</string>
+    <string name="config_start_on_boot_summary">Spustit upozorňování při startu</string>
+
+    <string name="config_frequency_category_title">Frekvence CPU</string>
+    <string name="config_show_frequency_notification">Ukazatel</string>
+
+    <string name="config_usage_category_title">Využití CPU</string>
+    <string name="config_show_usage_notification">Ukazatel</string>
+</resources>
