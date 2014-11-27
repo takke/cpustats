@@ -1,25 +1,31 @@
+v1.2.2 (2014.11.27)
+- Add czech translation (by Jaroslav Lichtblau)
+- Add german translation (by Oliver Z.)
+- Hide notification on lock-screen (Android 5.0)
+- Reduce APK Size
+
 v1.2.1 (2014.07.03)
-- Android Studio �Ɉڍs
-- proguard�œK��
+- Android Studio に移行
+- proguard最適化
 
 v1.2.0 (2013.01.13)
-- Android1.6�ȍ~�Ή�(�]����Android2.2�ȍ~������)
-- 0.5�b�ݒ�ǉ�
-- �X���[�v���A���ɃX�e�[�^�X�o�[�������ɍX�V�����̂�h���悤�ɂ���
+- Android1.6以降対応(従来はAndroid2.2以降だった)
+- 0.5秒設定追加
+- スリープ復帰時にステータスバーがすぐに更新されるのを防ぐようにした
 
 v1.1.0 (2012.10.22)
-- �N�A�b�h�R�A�̃��x����5�i�K�ɕύX
-- CPU�N���b�N���g���̕\���ɑΉ�
-- �ݒ��CPU�g�p���A�N���b�N���g���̒ʒm�\����ύX�ł���悤�ɂ���
+- クアッドコアのレベルを5段階に変更
+- CPUクロック周波数の表示に対応
+- 設定でCPU使用率、クロック周波数の通知表示を変更できるようにした
 
 v1.0.2 (2012.10.17)
-- ���\���P(�������Z���A�L���b�V���ǉ��A�s�v�f�[�^�̉�͗}�~�Ȃ�)
-- �o�b�N�O���E���h������ʍX�V���Ă����o�O�C��
-- �f�t�H���g�X�V�Ԋu��3�b����5�b�ɕύX
-- �R�A���ϓ������ł������Z�o����悤�ɂ���
+- 性能改善(整数演算化、キャッシュ追加、不要データの解析抑止など)
+- バックグラウンド時も画面更新していたバグ修正
+- デフォルト更新間隔を3秒から5秒に変更
+- コア数変動時もできる限り算出するようにした
 
 v1.0.1 (2012.10.16)
-- �f���A���R�A�ł�CPU�R�A����1�R�A�ƔF�������ꍇ������s����C��
+- デュアルコアでもCPUコア数が1コアと認識される場合がある不具合を修正
 
 v1.0 (2012.10.16)
-- ���Ń����[�X
+- 初版リリース
