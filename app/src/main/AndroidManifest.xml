@@ -19,7 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".CpuInfoActivity"
+            android:label="@string/title_activity_cpuinfo"
+            android:icon="@android:drawable/ic_dialog_info">
+        </activity>
         <activity
             android:name=".ConfigActivity"
             android:label="@string/title_activity_config">
