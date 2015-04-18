@@ -220,13 +220,17 @@ public class PreviewActivity extends Activity {
             }
             break;
             
+        case R.id.menu_cpuinfo:
+            startActivity(new Intent(this, CpuInfoActivity.class));
+            break;
+
         case R.id.menu_settings:
             {
                 final Intent intent = new Intent(this, ConfigActivity.class);
                 startActivityForResult(intent, REQUEST_CONFIG_ACTIVITY);
             }
             break;
-            
+
         case R.id.menu_exut:
             // 終了
             finish();
