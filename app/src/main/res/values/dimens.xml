@@ -16,5 +16,6 @@
     <dimen name="freq_left2">18.5dip</dimen>
     <dimen name="freq_left3">27.5dip</dimen>
     <dimen name="freq_top">10dip</dimen>
-    
+
+    <dimen name="about_horizontal_margin">12dp</dimen>
 </resources>

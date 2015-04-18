@@ -3,7 +3,8 @@
     <string name="app_name">CPU Stats</string>
     <string name="title_activity_main">CPU Stats</string>
     <string name="title_activity_config">設定</string>
-    
+    <string name="title_activity_about">CPU Statsについて</string>
+
     <string name="menu_settings">設定</string>
     <string name="menu_start_service">常駐開始</string>
     <string name="menu_stop_service">常駐停止</string>
@@ -19,4 +20,8 @@
 
     <string name="config_usage_category_title">CPU 使用率</string>
     <string name="config_show_usage_notification">通知</string>
+
+    <string name="app_version">Version {VERSION} [r{REVISION}]</string>
+    <string name="app_copyright">Copyright &#169; 2012-2015 Hiroaki TAKEUCHI</string>
+
 </resources>

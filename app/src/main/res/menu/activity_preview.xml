@@ -1,30 +1,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    <item android:id="@+id/menu_cpuinfo"
-        android:icon="@android:drawable/ic_dialog_info"
-        android:title="@string/menu_cpuinfo"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
 
     <item android:id="@+id/menu_settings"
-        android:icon="@android:drawable/ic_menu_manage"
-        android:title="@string/menu_settings"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom" />
+          android:icon="@android:drawable/ic_menu_manage"
+          android:title="@string/menu_settings"
+          android:orderInCategory="100"
+          android:showAsAction="ifRoom" />
 
     <item android:id="@+id/menu_start_service"
-        android:title="@string/menu_start_service"
-        android:orderInCategory="101"
-        android:showAsAction="never" />
-    
+          android:title="@string/menu_start_service"
+          android:orderInCategory="101"
+          android:showAsAction="never" />
+
     <item android:id="@+id/menu_stop_service"
-        android:title="@string/menu_stop_service"
-        android:orderInCategory="102"
-        android:showAsAction="never" />
-    
+          android:title="@string/menu_stop_service"
+          android:orderInCategory="102"
+          android:showAsAction="never" />
+
+    <item android:id="@+id/menu_about"
+          android:title="@string/title_activity_about"
+          android:orderInCategory="103"
+          android:showAsAction="never" />
+
     <item android:id="@+id/menu_exut"
-        android:title="@string/menu_exit"
-        android:orderInCategory="110"
-        android:showAsAction="never" />
-    
+          android:title="@string/menu_exit"
+          android:orderInCategory="110"
+          android:showAsAction="never" />
+
 </menu>

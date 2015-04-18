@@ -30,7 +30,7 @@ public class PreviewActivity extends Activity {
 
     // 設定画面
     private final static int REQUEST_CONFIG_ACTIVITY = 0;
-    
+
     // サービス実行フラグ(メニュー切り替え用。コールバックがあれば実行中と判定する)
     private boolean mServiceMaybeRunning = false;
     
@@ -220,15 +220,15 @@ public class PreviewActivity extends Activity {
             }
             break;
             
-        case R.id.menu_cpuinfo:
-            startActivity(new Intent(this, CpuInfoActivity.class));
-            break;
-
         case R.id.menu_settings:
             {
                 final Intent intent = new Intent(this, ConfigActivity.class);
                 startActivityForResult(intent, REQUEST_CONFIG_ACTIVITY);
             }
+            break;
+
+        case R.id.menu_about:
+            startActivity(new Intent(this, AboutActivity.class));
             break;
 
         case R.id.menu_exut:

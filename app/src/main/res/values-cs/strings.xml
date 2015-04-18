@@ -3,7 +3,8 @@
     <string name="app_name">CPU Stats</string>
     <string name="title_activity_main">CPU Stats</string>
     <string name="title_activity_config">Nastavení</string>
-    
+    <string name="title_activity_about">About</string>
+
     <string name="menu_settings">Nastavení</string>
     <string name="menu_start_service">Zobrazit upozornění</string>
     <string name="menu_stop_service">Skrýt upozornění</string>
@@ -19,4 +20,8 @@
 
     <string name="config_usage_category_title">Využití CPU</string>
     <string name="config_show_usage_notification">Ukazatel</string>
+
+    <string name="app_version">Version {VERSION} [r{REVISION}]</string>
+    <string name="app_copyright">Copyright &#169; 2012-2015 Hiroaki TAKEUCHI</string>
+
 </resources>
