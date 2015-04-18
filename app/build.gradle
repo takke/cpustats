@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    //noinspection GroovyAssignabilityCheck
     signingConfigs {
         myConfig
     }
@@ -10,8 +11,8 @@ android {
         applicationId 'jp.takke.cpustats'
         minSdkVersion 4
         targetSdkVersion 15
-        versionCode 8
-        versionName '1.2.2'
+        versionCode 9
+        versionName '1.3.0'
     }
     buildTypes {
         release {
@@ -24,7 +25,10 @@ android {
                 variant.outputs.each { output ->
                     if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
                         def file = output.outputFile
-                        output.outputFile = new File(file.parent, "CpuStats_r" + defaultConfig.versionCode + "-" + defaultConfig.versionName + ".apk")
+                        def shortVersionName = defaultConfig.versionName.replaceAll('\\.', '')
+                        def d = new java.text.SimpleDateFormat("yyyyMMdd_HHmm").format(new Date())
+                        def newName = "CpuStats_r${defaultConfig.versionCode}_${shortVersionName}_${d}.apk"
+                        output.outputFile = new File(file.parent, newName)
                     }
                 }
             }
