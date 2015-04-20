@@ -23,8 +23,10 @@ public class PreviewActivity extends Activity {
     private boolean mIsForeground = false;
     
     // CPUクロック周波数(最小、最大)の文字列キャッシュ
+    @SuppressWarnings("FieldCanBeLocal")
     private int mMinFreq = 0;
     private String mMinFreqText = "";
+    @SuppressWarnings("FieldCanBeLocal")
     private int mMaxFreq = 0;
     private String mMaxFreqText = "";
 
@@ -93,7 +95,7 @@ public class PreviewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
         
-        MyLog.debugMode = false;
+//        MyLog.debugMode = true;
         MyLog.d("PreviewActivity.onCreate");
         
         // とりあえず全消去
@@ -186,6 +188,7 @@ public class PreviewActivity extends Activity {
         case R.id.menu_start_service:
             // サービス開始
             if (mServiceIf != null) {
+                MyLog.i("PreviewActivity: start");
                 try {
                     // 常駐開始
                     mServiceIf.startResident();
@@ -198,6 +201,7 @@ public class PreviewActivity extends Activity {
         case R.id.menu_stop_service:
             // サービス停止
             if (mServiceIf != null) {
+                MyLog.i("PreviewActivity: stop");
                 try {
                     // 常駐停止
                     mServiceIf.stopResident();
@@ -311,12 +315,10 @@ public class PreviewActivity extends Activity {
     
     /**
      * CPU 使用率を画面に表示する
-     * 
-     * @param cpuUsages
      */
     private void updateCpuUsages(int[] cpuUsages) {
         
-        MyLog.d("updateCpuUsages");
+//        MyLog.d("PreviewActivity.updateCpuUsages");
         
         // アクションバーのアイコン変更
         if (cpuUsages != null && cpuUsages.length >= 1) {
@@ -359,12 +361,10 @@ public class PreviewActivity extends Activity {
 
     /**
      * CPU クロック周波数を画面に表示する
-     * 
-     * @param currentFreq
      */
     private void updateCpuFrequency(final int currentFreq) {
         
-        MyLog.d("updateCpuFrequency");
+//        MyLog.d("PreviewActivity.updateCpuFrequency");
         
         final TextView textView1 = (TextView) findViewById(R.id.freqText1);
         textView1.setText("Freq: " + MyUtil.formatFreq(currentFreq));

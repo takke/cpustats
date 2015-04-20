@@ -12,5 +12,10 @@ public class C {
 
     public static final String PREF_KEY_SHOW_FREQUENCY_NOTIFICATION = "ShowFrequencyNotification";
     public static final String PREF_KEY_SHOW_USAGE_NOTIFICATION = "ShowUsageNotification";
-    
+
+    // 初期Alarmの遅延時間[ms]
+    public static final int ALARM_STARTUP_DELAY_MSEC = 1000;
+
+    // Service維持のためのAlarmの更新間隔[ms]
+    public static final int ALARM_INTERVAL_MSEC = 60 * 1000;
 }

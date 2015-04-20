@@ -1,7 +1,5 @@
 package jp.takke.cpustats;
 
-import java.util.ArrayList;
-
 import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.Notification;
@@ -17,7 +15,10 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
+
+import java.util.ArrayList;
 
 class OneCpuInfo {
     long idle = 0;
@@ -59,11 +60,17 @@ public class UsageUpdateService extends Service {
     private int[] mLastCpuUsages = null;
     
     // コールバック一覧
-    private final RemoteCallbackList<IUsageUpdateCallback> mCallbackList = new RemoteCallbackList<IUsageUpdateCallback>();
+    private final RemoteCallbackList<IUsageUpdateCallback> mCallbackList = new RemoteCallbackList<>();
     
     // コールバック数キャッシュ
     private int mCallbackListSize = 0;
-    
+
+    private long mLastExecTask = System.currentTimeMillis();
+
+    // 通信量取得スレッド管理
+    private GatherThread mThread = null;
+    private boolean mThreadActive = false;
+
     // サービスの実装
     private final IUsageUpdateService.Stub mBinder = new IUsageUpdateService.Stub() {
                 
@@ -97,7 +104,11 @@ public class UsageUpdateService extends Service {
             mStopResident = false;
             
             // すぐに次の onStart を呼ぶ
-            UsageUpdateService.this.scheduleNextTime(100);
+            UsageUpdateService.this.scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC);
+
+            if (mThread == null) {
+                startThread();
+            }
         }
 
         /**
@@ -117,6 +128,7 @@ public class UsageUpdateService extends Service {
         }
     };
 
+
     /**
      * スリープ状態(SCREEN_ON/OFF)の検出用レシーバ
      */
@@ -134,7 +146,12 @@ public class UsageUpdateService extends Service {
                 // 但し、「通知時刻」はすぐに更新するとステータスバーの順序がいきなり変わってしまってうざいので少し遅延させる
                 mNotificationTimeKeep = System.currentTimeMillis() + 30*1000;
                 
-                UsageUpdateService.this.scheduleNextTime(mIntervalMs);
+                UsageUpdateService.this.scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC);
+
+                // スレッド開始
+                if (!mStopResident) {
+                    startThread();
+                }
                 
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 
@@ -145,9 +162,13 @@ public class UsageUpdateService extends Service {
                 
                 // アラーム停止
                 stopAlarm();
+
+                // スレッド停止
+                stopThread();
             }
         }
     };
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -155,9 +176,13 @@ public class UsageUpdateService extends Service {
         if (IUsageUpdateService.class.getName().equals(intent.getAction())) {
             return mBinder;
         }
-        
+
+        // スレッド開始
+        startThread();
+
         return null;
     }
+
 
     @Override
     public void onCreate() {
@@ -177,9 +202,13 @@ public class UsageUpdateService extends Service {
         getApplicationContext().registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         
         // 定期処理開始
-        scheduleNextTime(mIntervalMs);
+        scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC);
+
+        // スレッド開始
+        startThread();
     }
-    
+
+
     /**
      * 設定のロード
      */
@@ -205,19 +234,27 @@ public class UsageUpdateService extends Service {
         mShowFrequencyNotification = pref.getBoolean(C.PREF_KEY_SHOW_FREQUENCY_NOTIFICATION, false);
     }
 
-    @SuppressWarnings("deprecation")
+
     @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
-        
-        MyLog.d("UsageUpdateService.onStart");
-        
-        // TODO 遅いと怒られるのでTaskにすべき
-        execTask();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        final int result = super.onStartCommand(intent, flags, startId);
+
+        MyLog.d("UsageUpdateService.onStartCommand");
+
+        // 通信量取得スレッド開始
+        if (mThread == null) {
+            startThread();
+        }
+
+        // Alarmループ続行
+        scheduleNextTime(C.ALARM_INTERVAL_MSEC);
+
+        return result;
     }
-    
+
+
     private void execTask() {
-        
+
         //-------------------------------------------------
         // CPU クロック周波数の取得
         //-------------------------------------------------
@@ -231,7 +268,7 @@ public class UsageUpdateService extends Service {
             mMaxFreqText = MyUtil.formatFreq(mMaxFreq);
         }
         if (MyLog.debugMode) {
-            MyLog.d("CPU:" + currentCpuClock + " [" + mMinFreq + "," + mMaxFreq + "]");
+            MyLog.d("* CPU: " + currentCpuClock + " [" + mMinFreq + "," + mMaxFreq + "] [" + (System.currentTimeMillis() - mLastExecTask) + "ms]");
         }
         
         
@@ -277,7 +314,7 @@ public class UsageUpdateService extends Service {
         //-------------------------------------------------
         if (!updated) {
             if (MyLog.debugMode) {
-                MyLog.d(" skipping caused by no diff.");
+                MyLog.d("- skipping caused by no diff.");
             }
         } else {
             // ステータスバーの通知
@@ -290,9 +327,9 @@ public class UsageUpdateService extends Service {
                 // コールバック数を念のため更新しておく
                 mCallbackListSize = n;
                 
-                if (MyLog.debugMode) {
-                    MyLog.d(" broadcast:" + n);
-                }
+//                if (MyLog.debugMode) {
+//                    MyLog.d("- broadcast:" + n);
+//                }
                 for (int i=0; i<n; i++) {
                     try {
                         mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages, currentCpuClock);
@@ -307,8 +344,7 @@ public class UsageUpdateService extends Service {
         // 今回の snapshot を保存
         mLastInfo = currentInfo;
         
-        // 次回の実行予約
-        scheduleNextTime(mIntervalMs);
+        mLastExecTask = System.currentTimeMillis();
     }
 
     
@@ -316,7 +352,12 @@ public class UsageUpdateService extends Service {
     public void onDestroy() {
         
         MyLog.d("UsageUpdateService.onDestroy");
-        
+
+        stopAlarm();
+
+        // 通信量取得スレッド停止
+        stopThread();
+
         // スリープ状態のレシーバ解除
         getApplicationContext().unregisterReceiver(mReceiver);
         
@@ -325,6 +366,7 @@ public class UsageUpdateService extends Service {
 
         super.onDestroy();
     }
+
 
     // 通知時刻[ms]
     private long mNotificationTime = 0;
@@ -380,7 +422,7 @@ public class UsageUpdateService extends Service {
             }
             final String notificationContent = sb.toString();
             if (MyLog.debugMode) {
-                MyLog.d(" " + notificationContent);
+                MyLog.d("- " + notificationContent);
             }
             
             final String notificationTitle = "CPU Usage " + cpuUsages[0] + "%";
@@ -463,31 +505,36 @@ public class UsageUpdateService extends Service {
             intent,
             0
         );
-        // ※onStartが呼ばれるように設定する
+        // ※onStartCommandが呼ばれるように設定する
         
         final AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         
         am.set(AlarmManager.RTC, now + intervalMs, alarmSender);
         
-        MyLog.d(" scheduled[" + intervalMs + "]");
+        MyLog.d("-- scheduled[" + intervalMs + "ms]");
     }
-    
+
+
     /**
      * 常駐停止
      */
     public void stopResident() {
         
         mStopResident = true;
-        
+
+        // スレッド停止
+        stopThread();
+
         // アラーム停止
         stopAlarm();
         
         // 通知を消す
         ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
-        
+
         // 常駐停止
         stopSelf();
     }
+
 
     /**
      * アラームの停止
@@ -507,6 +554,65 @@ public class UsageUpdateService extends Service {
         
         final AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         am.cancel(pendingIntent);
-            // @see http://creadorgranoeste.blogspot.com/2011/06/alarmmanager.html
+        // @see http://creadorgranoeste.blogspot.com/2011/06/alarmmanager.html
     }
+
+
+    private void startThread() {
+
+        if (mThread == null) {
+            mThread = new GatherThread();
+            mThreadActive = true;
+            mThread.start();
+            MyLog.d("UsageUpdateService.startThread: thread start");
+        } else {
+            MyLog.d("UsageUpdateService.startThread: already running");
+        }
+    }
+
+
+    private void stopThread() {
+
+        if (mThreadActive && mThread != null) {
+            MyLog.d("UsageUpdateService.stopThread");
+
+            mThreadActive = false;
+            while (true) {
+                try {
+                    mThread.join();
+                    break;
+                } catch (InterruptedException ignored) {
+                    MyLog.e(ignored);
+                }
+            }
+            mThread = null;
+        } else {
+            MyLog.d("UsageUpdateService.stopThread: no thread");
+        }
+    }
+
+
+    /**
+     * 通信量取得スレッド
+     */
+    private class GatherThread extends Thread {
+
+        @Override
+        public void run() {
+
+            MyLog.d("UsageUpdateService$GatherThread: start");
+
+            while (mThread != null && mThreadActive) {
+
+                SystemClock.sleep(mIntervalMs);
+
+                if (mThreadActive && !mStopResident) {
+                    execTask();
+                }
+            }
+
+            MyLog.d("UsageUpdateService$GatherThread: done");
+        }
+    }
+
 }
