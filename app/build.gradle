@@ -11,7 +11,7 @@ android {
         applicationId 'jp.takke.cpustats'
         minSdkVersion 4
         targetSdkVersion 15
-        versionCode 9
+        versionCode 10
         versionName '1.3.0'
     }
     buildTypes {

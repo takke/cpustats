@@ -1,3 +1,7 @@
+v1.3.0 (2015.04.20)
+- Fix delaying interval on Android 5.1 devices
+- Add About activity (and show CPU Info) (by Paul Verest)
+
 v1.2.2 (2014.11.27)
 - Add czech translation (by Jaroslav Lichtblau)
 - Add german translation (by Oliver Z.)
