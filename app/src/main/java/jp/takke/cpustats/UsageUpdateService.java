@@ -401,9 +401,24 @@ public class UsageUpdateService extends Service {
             // 通知ウインドウのメッセージ
 
             // cpuUsages の index=0 は「全CPU使用率の平均」
-            if (cpuUsages.length >= 6+1) {
+            if (cpuUsages.length == 6+1) {
+                // 6コアなので3つずつに分割する
+                final int[] cpuUsages1 = new int[3+1];
+                final int[] cpuUsages2 = new int[3+1];
 
-                // TODO 6コアの場合は3つずつ分割すること
+                System.arraycopy(cpuUsages, 0, cpuUsages1, 0, 4);
+
+                // cpuUsages2のindex=0 も「全CPU使用率の平均」とする
+                cpuUsages2[0] = cpuUsages[0];
+                System.arraycopy(cpuUsages, 4, cpuUsages2, 1, 3);
+
+                dumpCpuUsagesForDebug(cpuUsages, cpuUsages1, cpuUsages2);
+
+                // 通知
+                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(cpuUsages1, pendingIntent, 1, 3).build());
+                nm.notify(MY_USAGE_NOTIFICATION_ID2, makeUsageNotification(cpuUsages2, pendingIntent, 4, 6).build());
+            } else if (cpuUsages.length > 6+1) {
+                // 7コア以上
 
                 // 2つに分割する
                 final int[] cpuUsages1 = new int[5];
@@ -415,32 +430,15 @@ public class UsageUpdateService extends Service {
                 cpuUsages2[0] = cpuUsages[0];
                 System.arraycopy(cpuUsages, 5, cpuUsages2, 1, cpuUsages.length-5);
 
-                if (MyLog.debugMode) {
-                    final StringBuilder sb = new StringBuilder();
-                    sb.append("org: ");
-                    for (int cpuUsage : cpuUsages) {
-                        sb.append(cpuUsage).append("% ");
-                    }
-                    sb.append("\nusage1: ");
-                    for (int cpuUsage : cpuUsages1) {
-                        sb.append(cpuUsage).append("% ");
-                    }
-                    sb.append("\nusage2: ");
-                    for (int cpuUsage : cpuUsages2) {
-                        sb.append(cpuUsage).append("% ");
-                    }
-                    MyLog.d(sb.toString());
-                }
+                dumpCpuUsagesForDebug(cpuUsages, cpuUsages1, cpuUsages2);
 
                 // 通知
-                final NotificationCompat.Builder builder1 = makeUsageNotification(cpuUsages1, pendingIntent, 1, 4);
-                nm.notify(MY_USAGE_NOTIFICATION_ID1, builder1.build());
-                final NotificationCompat.Builder builder2 = makeUsageNotification(cpuUsages2, pendingIntent, 5, cpuUsages.length-1);
-                nm.notify(MY_USAGE_NOTIFICATION_ID2, builder2.build());
+                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(cpuUsages1, pendingIntent, 1, 4).build());
+                nm.notify(MY_USAGE_NOTIFICATION_ID2, makeUsageNotification(cpuUsages2, pendingIntent, 5, cpuUsages.length-1).build());
             } else {
                 // 通知
-                final NotificationCompat.Builder builder = makeUsageNotification(cpuUsages, pendingIntent, 1, cpuUsages.length-1);
-                nm.notify(MY_USAGE_NOTIFICATION_ID1, builder.build());
+                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(cpuUsages, pendingIntent, 1, cpuUsages.length - 1).build());
+                nm.cancel(MY_USAGE_NOTIFICATION_ID2);
             }
         }
         
@@ -472,6 +470,26 @@ public class UsageUpdateService extends Service {
 
             // ノーティフィケーション通知
             nm.notify(MY_FREQ_NOTIFICATION_ID, builder.build());
+        }
+    }
+
+
+    private void dumpCpuUsagesForDebug(int[] cpuUsages, int[] cpuUsages1, int[] cpuUsages2) {
+        if (MyLog.debugMode) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("org: ");
+            for (int cpuUsage : cpuUsages) {
+                sb.append(cpuUsage).append("% ");
+            }
+            sb.append("\nusage1: ");
+            for (int cpuUsage : cpuUsages1) {
+                sb.append(cpuUsage).append("% ");
+            }
+            sb.append("\nusage2: ");
+            for (int cpuUsage : cpuUsages2) {
+                sb.append(cpuUsage).append("% ");
+            }
+            MyLog.d(sb.toString());
         }
     }
 

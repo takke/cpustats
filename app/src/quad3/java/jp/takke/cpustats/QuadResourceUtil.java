@@ -2,6 +2,13 @@ package jp.takke.cpustats;
 
 public class QuadResourceUtil {
 
+    public static int getIconIdForCpuUsageTri(int[] cpuUsages) {
+
+        // 3コア
+        return getIconIdForCpuUsageTriLevel3(cpuUsages);
+    }
+
+
     public static int getIconIdForCpuUsageQuad(int[] cpuUsages) {
         
         // 4コア
@@ -353,6 +360,109 @@ public class QuadResourceUtil {
         case 5555: return R.drawable.quad_5555;
         default:
             return R.drawable.quad_0000;
+        }
+    }
+
+
+    private static int getIconIdForCpuUsageTriLevel3(int[] cpuUsages) {
+
+        // リソース節約のため 0, 1, 3, 5 のみとする
+        int digit = 0;
+        switch (cpuUsageToLevel3(cpuUsages.length < 2 ? 0 : cpuUsages[1])) {
+        case 0: digit += 100*0;    break;
+        case 1: digit += 100*1;    break;
+        case 2: digit += 100*1;    break;
+        case 3: digit += 100*3;    break;
+        case 4: digit += 100*3;    break;
+        case 5: digit += 100*5;    break;
+        }
+        switch (cpuUsageToLevel3(cpuUsages.length < 3 ? 0 : cpuUsages[2])) {
+        case 0: digit += 10*0; break;
+        case 1: digit += 10*1; break;
+        case 2: digit += 10*1; break;
+        case 3: digit += 10*3; break;
+        case 4: digit += 10*3; break;
+        case 5: digit += 10*5; break;
+        }
+        switch (cpuUsageToLevel3(cpuUsages.length < 4 ? 0 : cpuUsages[3])) {
+        case 0: digit += 1*0;  break;
+        case 1: digit += 1*1;  break;
+        case 2: digit += 1*1;  break;
+        case 3: digit += 1*3;  break;
+        case 4: digit += 1*3;  break;
+        case 5: digit += 1*5;  break;
+        }
+
+//      MyLog.i("digit:" + digit);
+
+        // for Level3
+        switch (digit) {
+        case 0: return R.drawable.tri_000;
+        case 1: return R.drawable.tri_001;
+        case 3: return R.drawable.tri_003;
+        case 5: return R.drawable.tri_005;
+        case 10: return R.drawable.tri_010;
+        case 11: return R.drawable.tri_011;
+        case 13: return R.drawable.tri_013;
+        case 15: return R.drawable.tri_015;
+        case 30: return R.drawable.tri_030;
+        case 31: return R.drawable.tri_031;
+        case 33: return R.drawable.tri_033;
+        case 35: return R.drawable.tri_035;
+        case 50: return R.drawable.tri_050;
+        case 51: return R.drawable.tri_051;
+        case 53: return R.drawable.tri_053;
+        case 55: return R.drawable.tri_055;
+        case 100: return R.drawable.tri_100;
+        case 101: return R.drawable.tri_101;
+        case 103: return R.drawable.tri_103;
+        case 105: return R.drawable.tri_105;
+        case 110: return R.drawable.tri_110;
+        case 111: return R.drawable.tri_111;
+        case 113: return R.drawable.tri_113;
+        case 115: return R.drawable.tri_115;
+        case 130: return R.drawable.tri_130;
+        case 131: return R.drawable.tri_131;
+        case 133: return R.drawable.tri_133;
+        case 135: return R.drawable.tri_135;
+        case 150: return R.drawable.tri_150;
+        case 151: return R.drawable.tri_151;
+        case 153: return R.drawable.tri_153;
+        case 155: return R.drawable.tri_155;
+        case 300: return R.drawable.tri_300;
+        case 301: return R.drawable.tri_301;
+        case 303: return R.drawable.tri_303;
+        case 305: return R.drawable.tri_305;
+        case 310: return R.drawable.tri_310;
+        case 311: return R.drawable.tri_311;
+        case 313: return R.drawable.tri_313;
+        case 315: return R.drawable.tri_315;
+        case 330: return R.drawable.tri_330;
+        case 331: return R.drawable.tri_331;
+        case 333: return R.drawable.tri_333;
+        case 335: return R.drawable.tri_335;
+        case 350: return R.drawable.tri_350;
+        case 351: return R.drawable.tri_351;
+        case 353: return R.drawable.tri_353;
+        case 355: return R.drawable.tri_355;
+        case 500: return R.drawable.tri_500;
+        case 501: return R.drawable.tri_501;
+        case 503: return R.drawable.tri_503;
+        case 505: return R.drawable.tri_505;
+        case 510: return R.drawable.tri_510;
+        case 511: return R.drawable.tri_511;
+        case 513: return R.drawable.tri_513;
+        case 515: return R.drawable.tri_515;
+        case 530: return R.drawable.tri_530;
+        case 531: return R.drawable.tri_531;
+        case 533: return R.drawable.tri_533;
+        case 535: return R.drawable.tri_535;
+        case 550: return R.drawable.tri_550;
+        case 551: return R.drawable.tri_551;
+        case 553: return R.drawable.tri_553;
+        case 555: return R.drawable.tri_555;
+        default:
+            return R.drawable.tri_000;
         }
     }
 }

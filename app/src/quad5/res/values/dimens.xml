@@ -1,8 +1,0 @@
-<resources>
-
-    <dimen name="quad_left1">1dip</dimen>
-    <dimen name="quad_left2">12dip</dimen>
-    <dimen name="quad_left3">23dip</dimen>
-    <dimen name="quad_left4">34dip</dimen>
-
-</resources>

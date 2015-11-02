@@ -12,23 +12,21 @@ public class ResourceUtil {
 //        final int coreCount = MyUtil.calcCpuCoreCount();
 //      MyLog.i("core:" + coreCount);
         final int coreCount = cpuUsages.length-1;
-        
-        if (coreCount <= 1) {
+
+        switch (coreCount) {
+        case 1:
             // シングルコア
             return getIconIdForCpuUsageSingle(cpuUsages[0]);
-        }
-        
-        if (coreCount <= 3) {
-            // 2 or 3コア
+        case 2:
+            // 2コア
             return getIconIdForCpuUsageDual(cpuUsages);
-        }
-        
-        if (coreCount >= 4) {
+        case 3:
+            // 3コア(6コアの2分割など)
+            return QuadResourceUtil.getIconIdForCpuUsageTri(cpuUsages);
+        default:
             // 4コア以上
             return QuadResourceUtil.getIconIdForCpuUsageQuad(cpuUsages);
         }
-        
-        return R.drawable.single000;
     }
 
     
