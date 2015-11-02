@@ -16,6 +16,7 @@ import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
@@ -28,8 +29,9 @@ class OneCpuInfo {
 public class UsageUpdateService extends Service {
 
     // 通知のID
-    private static final int MY_USAGE_NOTIFICATION_ID = 1;
-    private static final int MY_FREQ_NOTIFICATION_ID = 2;
+    private static final int MY_USAGE_NOTIFICATION_ID1 = 10;
+    private static final int MY_USAGE_NOTIFICATION_ID2 = 11;
+    private static final int MY_FREQ_NOTIFICATION_ID = 20;
 
     // 更新間隔
     private long mIntervalMs = C.PREF_DEFAULT_UPDATE_INTERVAL_SEC * 1000;
@@ -120,7 +122,8 @@ public class UsageUpdateService extends Service {
             
             // 設定で消された通知を消去
             if (!mShowUsageNotification) {
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_USAGE_NOTIFICATION_ID);
+                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_USAGE_NOTIFICATION_ID1);
+                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_USAGE_NOTIFICATION_ID2);
             }
             if (!mShowFrequencyNotification) {
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_FREQ_NOTIFICATION_ID);
@@ -396,45 +399,49 @@ public class UsageUpdateService extends Service {
         
         if (cpuUsages != null && mShowUsageNotification) {
             // 通知ウインドウのメッセージ
-            final String notificationTitle0 = "CPU Usage";
-    
-            final int iconId = ResourceUtil.getIconIdForCpuUsage(cpuUsages);
-            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
-            builder.setSmallIcon(iconId);
-            builder.setTicker(notificationTitle0);
-            builder.setWhen(mNotificationTime);
+            // cpuUsages の index=0 は「全CPU使用率の平均」
+            if (cpuUsages.length >= 6+1) {
 
-            // 消えないようにする
-            builder.setOngoing(true);
+                // TODO 6コアの場合は3つずつ分割すること
 
-            // Lollipop:ロックスクリーンには表示しない
-            setPriorityForKeyguardOnLollipop(builder);
+                // 2つに分割する
+                final int[] cpuUsages1 = new int[5];
+                final int[] cpuUsages2 = new int[cpuUsages.length-4];
 
-            // 通知文字列の生成
-            final StringBuilder sb = new StringBuilder(128);
-            // 各コア分
-            if (cpuUsages.length >= 3) {
-                sb.append("Cores: ");
-                for (int i=1; i<cpuUsages.length; i++) {
-                    if (i>=2) {
-                        sb.append(" ");
+                System.arraycopy(cpuUsages, 0, cpuUsages1, 0, 5);
+
+                // cpuUsages2のindex=0 も「全CPU使用率の平均」とする
+                cpuUsages2[0] = cpuUsages[0];
+                System.arraycopy(cpuUsages, 5, cpuUsages2, 1, cpuUsages.length-5);
+
+                if (MyLog.debugMode) {
+                    final StringBuilder sb = new StringBuilder();
+                    sb.append("org: ");
+                    for (int cpuUsage : cpuUsages) {
+                        sb.append(cpuUsage).append("% ");
                     }
-                    sb.append(cpuUsages[i]).append("%");
+                    sb.append("\nusage1: ");
+                    for (int cpuUsage : cpuUsages1) {
+                        sb.append(cpuUsage).append("% ");
+                    }
+                    sb.append("\nusage2: ");
+                    for (int cpuUsage : cpuUsages2) {
+                        sb.append(cpuUsage).append("% ");
+                    }
+                    MyLog.d(sb.toString());
                 }
-            }
-            final String notificationContent = sb.toString();
-            if (MyLog.debugMode) {
-                MyLog.d("- " + notificationContent);
-            }
-            
-            final String notificationTitle = "CPU Usage " + cpuUsages[0] + "%";
-            builder.setContentTitle(notificationTitle);
-            builder.setContentText(notificationContent);
-            builder.setContentIntent(pendingIntent);
 
-            // ノーティフィケーション通知
-            nm.notify(MY_USAGE_NOTIFICATION_ID, builder.build());
+                // 通知
+                final NotificationCompat.Builder builder1 = makeUsageNotification(cpuUsages1, pendingIntent, 1, 4);
+                nm.notify(MY_USAGE_NOTIFICATION_ID1, builder1.build());
+                final NotificationCompat.Builder builder2 = makeUsageNotification(cpuUsages2, pendingIntent, 5, cpuUsages.length-1);
+                nm.notify(MY_USAGE_NOTIFICATION_ID2, builder2.build());
+            } else {
+                // 通知
+                final NotificationCompat.Builder builder = makeUsageNotification(cpuUsages, pendingIntent, 1, cpuUsages.length-1);
+                nm.notify(MY_USAGE_NOTIFICATION_ID1, builder.build());
+            }
         }
         
         if (currentCpuClock > 0 && mShowFrequencyNotification) {
@@ -466,6 +473,52 @@ public class UsageUpdateService extends Service {
             // ノーティフィケーション通知
             nm.notify(MY_FREQ_NOTIFICATION_ID, builder.build());
         }
+    }
+
+
+    @NonNull
+    private NotificationCompat.Builder makeUsageNotification(int[] cpuUsages, PendingIntent pendingIntent, int coreNoStart, int coreNoEnd) {
+
+        String notificationTitle0 = "CPU Usage";
+
+        final int iconId = ResourceUtil.getIconIdForCpuUsage(cpuUsages);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        builder.setSmallIcon(iconId);
+        builder.setTicker(notificationTitle0);
+        builder.setWhen(mNotificationTime);
+
+        // 消えないようにする
+        builder.setOngoing(true);
+
+        // Lollipop:ロックスクリーンには表示しない
+        setPriorityForKeyguardOnLollipop(builder);
+
+        // 通知文字列の生成
+        final StringBuilder sb = new StringBuilder(128);
+        // 各コア分
+        if (cpuUsages.length >= 3) {    // 2コアの場合length=3になるので。
+
+//            sb.append("Cores: ");
+            sb.append("Core").append(coreNoStart).append("-Core").append(coreNoEnd).append(": ");
+
+            for (int i=1; i<cpuUsages.length; i++) {
+                if (i>=2) {
+                    sb.append(" ");
+                }
+                sb.append(cpuUsages[i]).append("%");
+            }
+        }
+        final String notificationContent = sb.toString();
+        if (MyLog.debugMode) {
+            MyLog.d("- " + notificationContent);
+        }
+
+        final String notificationTitle = notificationTitle0 + " " + cpuUsages[0] + "%";
+        builder.setContentTitle(notificationTitle);
+        builder.setContentText(notificationContent);
+        builder.setContentIntent(pendingIntent);
+        return builder;
     }
 
 

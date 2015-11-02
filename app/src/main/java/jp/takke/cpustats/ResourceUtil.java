@@ -9,8 +9,9 @@ public class ResourceUtil {
             return R.drawable.single000;
         }
         
-        final int coreCount = MyUtil.calcCpuCoreCount();
+//        final int coreCount = MyUtil.calcCpuCoreCount();
 //      MyLog.i("core:" + coreCount);
+        final int coreCount = cpuUsages.length-1;
         
         if (coreCount <= 1) {
             // シングルコア
