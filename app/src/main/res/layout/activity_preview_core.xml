@@ -1,0 +1,28 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/padding_tiny"
+    >
+
+    <!-- Core -->
+    <ImageView
+        android:id="@+id/coreImage"
+        android:layout_width="72dip"
+        android:layout_height="72dip"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/single000"
+        />
+    <TextView
+        android:id="@+id/coreText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/coreImage"
+        android:text="CPU Usage:"
+        android:padding="@dimen/padding_medium"
+        android:textColor="#fff"
+        android:gravity="left"
+        />
+</RelativeLayout>

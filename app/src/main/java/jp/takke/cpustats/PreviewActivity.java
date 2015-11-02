@@ -1,5 +1,6 @@
 package jp.takke.cpustats;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -133,24 +134,18 @@ public class PreviewActivity extends Activity {
     }
 
     private void hideAllCoreFreqInfo() {
-        
+
         // Core
-        final int[] imageViews = new int[]{R.id.core1Image, R.id.core2Image, R.id.core3Image, R.id.core4Image};
-        final int[] titleViews = new int[]{R.id.core1Title, R.id.core2Title, R.id.core3Title, R.id.core4Title};
-        final int[] textViews = new int[]{R.id.core1Text, R.id.core2Text, R.id.core3Text, R.id.core4Text};
-        
-        for (int i=0; i<4; i++) {
-            findViewById(imageViews[i]).setVisibility(View.GONE);
-            findViewById(titleViews[i]).setVisibility(View.GONE);
-            findViewById(textViews[i]).setVisibility(View.GONE);
+        final int[] cores = new int[]{R.id.core1, R.id.core2, R.id.core3, R.id.core4, R.id.core5, R.id.core6, R.id.core7, R.id.core8};
+        for (int i=0; i<8; i++) {
+            findViewById(cores[i]).setVisibility(View.GONE);
+
         }
-        
+
         // Freq
         findViewById(R.id.freqImage).setVisibility(View.GONE);
         findViewById(R.id.freqText1).setVisibility(View.GONE);
         findViewById(R.id.freqText2).setVisibility(View.GONE);
-        findViewById(R.id.freqText3).setVisibility(View.GONE);
-        findViewById(R.id.freqTitle).setVisibility(View.GONE);
     }
 
     @Override
@@ -316,6 +311,7 @@ public class PreviewActivity extends Activity {
     /**
      * CPU 使用率を画面に表示する
      */
+    @SuppressLint("SetTextI18n")
     private void updateCpuUsages(int[] cpuUsages) {
         
 //        MyLog.d("PreviewActivity.updateCpuUsages");
@@ -327,32 +323,30 @@ public class PreviewActivity extends Activity {
         }
         
         // プレビュー画面に表示
-        final int[] imageViews = new int[]{R.id.core1Image, R.id.core2Image, R.id.core3Image, R.id.core4Image};
-        final int[] titleViews = new int[]{R.id.core1Title, R.id.core2Title, R.id.core3Title, R.id.core4Title};
-        final int[] textViews = new int[]{R.id.core1Text, R.id.core2Text, R.id.core3Text, R.id.core4Text};
-        
+        final int[] cores = new int[]{R.id.core1, R.id.core2, R.id.core3, R.id.core4, R.id.core5, R.id.core6, R.id.core7, R.id.core8};
+
         final int coreCount = MyUtil.calcCpuCoreCount();
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<8; i++) {
             
             if (coreCount <= i) {
                 // Coreが少ないので消去
-                findViewById(imageViews[i]).setVisibility(View.GONE);
-                findViewById(titleViews[i]).setVisibility(View.GONE);
-                findViewById(textViews[i]).setVisibility(View.GONE);
+                findViewById(cores[i]).setVisibility(View.GONE);
             } else {
+                final View coreView = findViewById(cores[i]);
+                coreView.setVisibility(View.VISIBLE);
+
                 int cpuUsage = 0;
                 if (cpuUsages != null && cpuUsages.length > i+1) {
                     cpuUsage = cpuUsages[i+1];
                 }
 
-                final TextView textView = (TextView) findViewById(textViews[i]);
-                textView.setText("CPU Usage: " + cpuUsage + "%");
+
+                final TextView textView = (TextView) coreView.findViewById(R.id.coreText);
+                textView.setText("Core" + (i+1) + ": " + cpuUsage + "%");
                 textView.setVisibility(View.VISIBLE);
-                
-                findViewById(titleViews[i]).setVisibility(View.VISIBLE);
-                
+
                 final int id = ResourceUtil.getIconIdForCpuUsageSingle(cpuUsage);
-                final ImageView imageView = (ImageView) findViewById(imageViews[i]);
+                final ImageView imageView = (ImageView) coreView.findViewById(R.id.coreImage);
                 imageView.setImageResource(id);
                 imageView.setVisibility(View.VISIBLE);
             }
@@ -371,15 +365,9 @@ public class PreviewActivity extends Activity {
         textView1.setVisibility(View.VISIBLE);
         
         final TextView textView2 = (TextView) findViewById(R.id.freqText2);
-        textView2.setText("Max: " + mMaxFreqText);
+        textView2.setText("(" + mMinFreqText + " - " + mMaxFreqText + ")");
         textView2.setVisibility(View.VISIBLE);
-        
-        final TextView textView3 = (TextView) findViewById(R.id.freqText3);
-        textView3.setText("Min: " + mMinFreqText);
-        textView3.setVisibility(View.VISIBLE);
-        
-        findViewById(R.id.freqTitle).setVisibility(View.VISIBLE);
-        
+
 //      final int clockPercent = mMaxFreq >= 0 ? ((currentFreq - mMinFreq) * 100 / (mMaxFreq - mMinFreq)) : 0;
 //      MyLog.i(" clock[" + currentFreq + "] => " + clockPercent + "%");
         

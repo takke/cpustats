@@ -3,176 +3,61 @@
     android:layout_height="fill_parent"
     android:background="#222"
     >
-    <RelativeLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
-    
-        <!-- Core1 -->
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/padding_medium"
-            android:text="Core1 Usage"
-            android:id="@+id/core1Title"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:gravity="center_horizontal" />
-        <ImageView android:src="@drawable/single000"
-            android:id="@+id/core1Image"
-            android:layout_width="100dip"
-            android:layout_height="100dip"
-            android:layout_below="@id/core1Title"
-             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/core1Image"
-            android:layout_below="@id/core1Title"
-            android:padding="@dimen/padding_medium"
-            android:text="CPU Usage:"
-            android:id="@+id/core1Text"
-            android:textColor="#fff"
-            android:gravity="center_horizontal" />
-        
-        <!-- Core2 -->
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/core1Image"
-            android:padding="@dimen/padding_medium"
-            android:text="Core2 Usage"
-            android:id="@+id/core2Title"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:gravity="center_horizontal" />
-        <ImageView android:src="@drawable/single000"
-            android:id="@+id/core2Image"
-            android:layout_width="100dip"
-            android:layout_height="100dip"
-            android:layout_below="@id/core2Title"
-             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/core2Image"
-            android:layout_below="@id/core2Title"
-            android:padding="@dimen/padding_medium"
-            android:text="CPU Usage:"
-            android:id="@+id/core2Text"
-            android:textColor="#fff"
-            android:gravity="center_horizontal" />
-        
-        <!-- Core3 -->
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/core2Image"
-            android:padding="@dimen/padding_medium"
-            android:text="Core3 Usage"
-            android:id="@+id/core3Title"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:gravity="center_horizontal" />
-        <ImageView android:src="@drawable/single000"
-            android:id="@+id/core3Image"
-            android:layout_width="100dip"
-            android:layout_height="100dip"
-            android:layout_below="@id/core3Title"
-             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/core3Image"
-            android:layout_below="@id/core3Title"
-            android:padding="@dimen/padding_medium"
-            android:text="CPU Usage:"
-            android:id="@+id/core3Text"
-            android:textColor="#fff"
-            android:gravity="center_horizontal" />
-        
-        <!-- Core4 -->
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/core3Image"
-            android:padding="@dimen/padding_medium"
-            android:text="Core4 Usage"
-            android:id="@+id/core4Title"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:gravity="center_horizontal" />
-        <ImageView android:src="@drawable/single000"
-            android:id="@+id/core4Image"
-            android:layout_width="100dip"
-            android:layout_height="100dip"
-            android:layout_below="@id/core4Title"
-             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/core4Image"
-            android:layout_below="@id/core4Title"
-            android:padding="@dimen/padding_medium"
-            android:text="CPU Usage:"
-            android:id="@+id/core4Text"
-            android:textColor="#fff"
-            android:gravity="center_horizontal" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!-- Frequency -->
-        <TextView
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/core4Image"
-            android:padding="@dimen/padding_medium"
-            android:text="CPU Frequency"
-            android:id="@+id/freqTitle"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:gravity="center_horizontal" />
-        <ImageView android:src="@drawable/single000"
-            android:id="@+id/freqImage"
-            android:layout_width="100dip"
-            android:layout_height="100dip"
-            android:layout_below="@id/freqTitle"
-             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/freqImage"
-            android:layout_below="@id/freqTitle"
-            android:paddingLeft="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingBottom="@dimen/padding_small"
-            android:text="Freq:"
-            android:id="@+id/freqText1"
-            android:textColor="#fff"
-            android:gravity="center_horizontal" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/freqImage"
-            android:layout_below="@id/freqText1"
-            android:paddingLeft="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingBottom="@dimen/padding_small"
-            android:text="Max:"
-            android:id="@+id/freqText2"
-            android:textColor="#fff"
-            android:gravity="center_horizontal" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/freqImage"
-            android:layout_below="@id/freqText2"
-            android:paddingLeft="@dimen/padding_medium"
-            android:paddingTop="@dimen/padding_small"
-            android:paddingBottom="@dimen/padding_small"
-            android:text="Min:"
-            android:id="@+id/freqText3"
-            android:textColor="#fff"
-            android:gravity="center_horizontal" />
-                        
-    </RelativeLayout>
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="@dimen/padding_tiny"
+            >
+
+            <!-- Frequency -->
+            <ImageView
+                android:id="@+id/freqImage"
+                android:src="@drawable/digit0"
+                android:layout_width="72dip"
+                android:layout_height="72dip"
+                android:layout_alignParentTop="true"
+                 />
+            <TextView
+                android:id="@+id/freqText1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/freqImage"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:text="Freq:"
+                android:textColor="#fff"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:id="@+id/freqText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/freqImage"
+                android:layout_below="@id/freqText1"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingTop="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:text="Min: XXXMHz, Max: XXXGHz"
+                android:textColor="#fff"
+                android:gravity="center_horizontal" />
+
+        </RelativeLayout>
+
+        <!-- Core1 - Core8 -->
+        <include layout="@layout/activity_preview_core" android:id="@+id/core1" />
+        <include layout="@layout/activity_preview_core" android:id="@+id/core2" />
+        <include layout="@layout/activity_preview_core" android:id="@+id/core3" />
+        <include layout="@layout/activity_preview_core" android:id="@+id/core4" />
+        <include layout="@layout/activity_preview_core" android:id="@+id/core5" />
+        <include layout="@layout/activity_preview_core" android:id="@+id/core6" />
+        <include layout="@layout/activity_preview_core" android:id="@+id/core7" />
+        <include layout="@layout/activity_preview_core" android:id="@+id/core8" />
+
+    </LinearLayout>
 </ScrollView>
