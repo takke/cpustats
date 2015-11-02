@@ -1,5 +1,6 @@
-v1.4.0 (2015.11.xx)
-- Supports 6 cores and 8 cores (2 icons)
+v1.4.0 (2015.11.02)
+- Supports 6 or 8 cores (2 icons)
+- More simple layout
 
 v1.3.0 (2015.04.20)
 - Fix delaying interval on Android 5.1 devices
