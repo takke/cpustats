@@ -5,14 +5,16 @@ android {
     signingConfigs {
         myConfig
     }
-    compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+
+    compileSdkVersion rootProject.ext.compileSdkVersion as Integer
+    buildToolsVersion rootProject.ext.buildToolsVersion as String
+
     defaultConfig {
         applicationId 'jp.takke.cpustats'
-        minSdkVersion 4
-        targetSdkVersion 15
-        versionCode 10
-        versionName '1.3.0'
+        targetSdkVersion rootProject.ext.targetSdkVersion as Integer
+        minSdkVersion rootProject.ext.minSdkVersion as Integer
+        versionCode rootProject.ext.versionCode as Integer
+        versionName rootProject.ext.versionName as String
     }
     buildTypes {
         release {
