@@ -2,7 +2,6 @@ package jp.takke.cpustats;
 
 import android.app.AlarmManager;
 import android.app.KeyguardManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -17,6 +16,7 @@ import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
 
@@ -297,7 +297,7 @@ public class UsageUpdateService extends Service {
             // コア数変動のケア(Galaxy S II等でよくあるらしい)
             updated = true;
         } else {
-            // 各値が同一なら更新する
+            // 同一でない値があれば更新する
             final int n = cpuUsages.length;
             for (int i=0; i<n; i++) {
                 if (cpuUsages[i] != mLastCpuUsages[i]) {
@@ -398,15 +398,18 @@ public class UsageUpdateService extends Service {
             // 通知ウインドウのメッセージ
             final String notificationTitle0 = "CPU Usage";
     
-            // Notification.Builder は API Level11 以降からなので旧方式で作成する
             final int iconId = ResourceUtil.getIconIdForCpuUsage(cpuUsages);
-            final Notification notification = new Notification(iconId, notificationTitle0, mNotificationTime);
-            
+            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+            builder.setSmallIcon(iconId);
+            builder.setTicker(notificationTitle0);
+            builder.setWhen(mNotificationTime);
+
             // 消えないようにする
-            notification.flags = Notification.FLAG_ONGOING_EVENT;
+            builder.setOngoing(true);
 
             // Lollipop:ロックスクリーンには表示しない
-            setPriorityForKeyguardOnLollipop(notification);
+            setPriorityForKeyguardOnLollipop(builder);
 
             // 通知文字列の生成
             final StringBuilder sb = new StringBuilder(128);
@@ -426,10 +429,12 @@ public class UsageUpdateService extends Service {
             }
             
             final String notificationTitle = "CPU Usage " + cpuUsages[0] + "%";
-            notification.setLatestEventInfo(this, notificationTitle, notificationContent, pendingIntent);
+            builder.setContentTitle(notificationTitle);
+            builder.setContentText(notificationContent);
+            builder.setContentIntent(pendingIntent);
 
             // ノーティフィケーション通知
-            nm.notify(MY_USAGE_NOTIFICATION_ID, notification);
+            nm.notify(MY_USAGE_NOTIFICATION_ID, builder.build());
         }
         
         if (currentCpuClock > 0 && mShowFrequencyNotification) {
@@ -438,22 +443,28 @@ public class UsageUpdateService extends Service {
 
             // Notification.Builder は API Level11 以降からなので旧方式で作成する
             final int iconId = ResourceUtil.getIconIdForCpuFreq(currentCpuClock);
-            final Notification notification = new Notification(iconId, notificationTitle0, mNotificationTime);
-            
+            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+            builder.setSmallIcon(iconId);
+            builder.setTicker(notificationTitle0);
+            builder.setWhen(mNotificationTime);
+
             // 消えないようにする
-            notification.flags = Notification.FLAG_ONGOING_EVENT;
+            builder.setOngoing(true);
 
             // Lollipop:ロックスクリーンには表示しない
-            setPriorityForKeyguardOnLollipop(notification);
+            setPriorityForKeyguardOnLollipop(builder);
 
             // 通知文字列の生成
             final String notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock);
             final String notificationContent = "Max Freq " + mMaxFreqText + " Min Freq " + mMinFreqText;
-            
-            notification.setLatestEventInfo(this, notificationTitle, notificationContent, pendingIntent);
+
+            builder.setContentTitle(notificationTitle);
+            builder.setContentText(notificationContent);
+            builder.setContentIntent(pendingIntent);
 
             // ノーティフィケーション通知
-            nm.notify(MY_FREQ_NOTIFICATION_ID, notification);
+            nm.notify(MY_FREQ_NOTIFICATION_ID, builder.build());
         }
     }
 
@@ -461,7 +472,7 @@ public class UsageUpdateService extends Service {
     /**
      * ロックスクリーンであれば非表示にする
      */
-    private void setPriorityForKeyguardOnLollipop(Notification notification) {
+    private void setPriorityForKeyguardOnLollipop(NotificationCompat.Builder builder) {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return;
@@ -470,14 +481,8 @@ public class UsageUpdateService extends Service {
         final KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         if (km.inKeyguardRestrictedInputMode()) {
             MyLog.d("set notification priority: min");
-
-            // same as: notification.priority = Notification.PRIORITY_MIN;
-            try {
-                final int Notification_PRIORITY_MIN = -2;   // Notification.PRIORITY_MIN
-                notification.getClass().getField("priority").setInt(notification, Notification_PRIORITY_MIN);
-            } catch (Exception e) {
-                MyLog.e(e);
-            }
+            final int Notification_PRIORITY_MIN = -2;   // Notification.PRIORITY_MIN
+            builder.setPriority(Notification_PRIORITY_MIN);
         }
     }
 

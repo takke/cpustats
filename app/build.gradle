@@ -50,6 +50,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile "com.android.support:support-v4:${supportLibraryVersion}"
 }
 
 // load signing settings from gradle.properties

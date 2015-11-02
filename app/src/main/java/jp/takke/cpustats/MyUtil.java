@@ -107,7 +107,7 @@ public class MyUtil {
     public static ArrayList<OneCpuInfo> takeCpuUsageSnapshot() {
         
         // [0] が全体、[1]以降が個別CPU
-        final ArrayList<OneCpuInfo> result = new ArrayList<OneCpuInfo>();
+        final ArrayList<OneCpuInfo> result = new ArrayList<>();
         
         try {
             final BufferedReader reader = new BufferedReader(
@@ -116,7 +116,7 @@ public class MyUtil {
             
 //          MyLog.i("load:-----");
             
-            String line = null;
+            String line;
             while ((line=reader.readLine()) != null) {
                 if (!line.startsWith("cpu")) {
                     break;
