@@ -20,6 +20,13 @@
 
     <string name="config_usage_category_title">Utilisation CPU</string>
     <string name="config_show_usage_notification">Notification</string>
+    <string name="config_core_distribution_mode">Count Icône</string>
+    <string name="config_core_distribution_mode_summary">"L'icône de notification nombre et l'ordre"</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 icônes (max)</item>
+        <item>1 Icône (non triés)</item>
+        <item>1 Icône (triés)</item>
+    </string-array>
 
     <string name="app_version">Version {VERSION} [r{REVISION}]</string>
     <string name="app_copyright">Copyright &#169; 2012-2015 Hiroaki TAKEUCHI</string>

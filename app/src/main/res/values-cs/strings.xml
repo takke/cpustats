@@ -20,6 +20,13 @@
 
     <string name="config_usage_category_title">Využití CPU</string>
     <string name="config_show_usage_notification">Ukazatel</string>
+    <string name="config_core_distribution_mode">Počet icon</string>
+    <string name="config_core_distribution_mode_summary">Oznámení počet ikona a pořádek</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 ikony (max)</item>
+        <item>1 Ikona (netříděné)</item>
+        <item>1 Ikona (seřazeny)</item>
+    </string-array>
 
     <string name="app_version">Version {VERSION} [r{REVISION}]</string>
     <string name="app_copyright">Copyright &#169; 2012-2015 Hiroaki TAKEUCHI</string>

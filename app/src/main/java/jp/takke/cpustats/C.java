@@ -18,4 +18,11 @@ public class C {
 
     // Service維持のためのAlarmの更新間隔[ms]
     public static final int ALARM_INTERVAL_MSEC = 60 * 1000;
+
+    // CPU使用率通知のアイコンモード
+    public static final String PREF_KEY_CORE_DISTRIBUTION_MODE = "CoreDistributionMode";
+    public static final int CORE_DISTRIBUTION_MODE_2ICONS = 0;          // 最大2アイコン(デフォルト)
+    public static final int CORE_DISTRIBUTION_MODE_1ICON_UNSORTED = 1;  // 1アイコン+非ソート
+    public static final int CORE_DISTRIBUTION_MODE_1ICON_SORTED = 2;    // 1アイコン+ソート
+
 }

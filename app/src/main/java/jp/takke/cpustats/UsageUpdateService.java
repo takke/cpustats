@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class OneCpuInfo {
     long idle = 0;
@@ -46,7 +47,10 @@ public class UsageUpdateService extends Service {
     // 通知
     private boolean mShowUsageNotification = true;
     private boolean mShowFrequencyNotification = false;
-    
+
+    // CPU使用率通知のアイコンモード
+    private int mCoreDistributionMode = C.CORE_DISTRIBUTION_MODE_2ICONS;
+
     // 常駐停止フラグ
     private boolean mStopResident = false;
 
@@ -242,6 +246,14 @@ public class UsageUpdateService extends Service {
 
         // クロック周波数通知
         mShowFrequencyNotification = pref.getBoolean(C.PREF_KEY_SHOW_FREQUENCY_NOTIFICATION, false);
+
+        // CPU使用率通知のアイコンモード
+        try {
+            final String s = pref.getString(C.PREF_KEY_CORE_DISTRIBUTION_MODE, ""+C.CORE_DISTRIBUTION_MODE_2ICONS);
+            mCoreDistributionMode = Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            MyLog.e(e);
+        }
     }
 
 
@@ -407,7 +419,7 @@ public class UsageUpdateService extends Service {
         if (cpuUsages != null && mShowUsageNotification) {
 
             // cpuUsagesを各通知アイコンのデータに振り分ける
-            final CpuNotificationData[] data = distributeNotificationData(cpuUsages);
+            final CpuNotificationData[] data = distributeNotificationData(cpuUsages, mCoreDistributionMode);
 
             if (MyLog.debugMode) {
                 dumpCpuUsagesForDebug(cpuUsages, data);
@@ -435,11 +447,28 @@ public class UsageUpdateService extends Service {
     }
 
 
-    static CpuNotificationData[] distributeNotificationData(int[] cpuUsages) {
+    public static CpuNotificationData[] distributeNotificationData(int[] cpuUsages, int coreDistributionMode) {
 
         // cpuUsages の index=0 は「全CPU使用率の平均」
+        final int coreCount = cpuUsages.length - 1;
 
-        if (cpuUsages.length <= 4+1) {
+        switch (coreDistributionMode) {
+        case C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED:
+            return distributeNotificationData_1IconUnsorted(coreCount, cpuUsages);
+
+        case C.CORE_DISTRIBUTION_MODE_1ICON_SORTED:
+            return distributeNotificationData_1IconSorted(coreCount, cpuUsages);
+
+        case C.CORE_DISTRIBUTION_MODE_2ICONS:
+        default:
+            return distributeNotificationData_2Icons(coreCount, cpuUsages);
+        }
+    }
+
+
+    private static CpuNotificationData[] distributeNotificationData_1IconUnsorted(int coreCount, int[] cpuUsages) {
+
+        if (coreCount <= 4) {
             // 4コア以下
             final CpuNotificationData data[] = new CpuNotificationData[1];
 
@@ -447,25 +476,86 @@ public class UsageUpdateService extends Service {
             data[0] = new CpuNotificationData();
             data[0].cpuUsages = cpuUsages;
             data[0].coreNoStart = 1;
-            data[0].coreNoEnd = cpuUsages.length - 1;
+            data[0].coreNoEnd = coreCount;
 
             return data;
         }
 
-        if (cpuUsages.length == 6+1) {
+        {
+            // 5コア以上
+            final CpuNotificationData data[] = new CpuNotificationData[1];
+
+            // icon1
+            data[0] = new CpuNotificationData();
+            data[0].cpuUsages = new int[1+4];
+            System.arraycopy(cpuUsages, 0, data[0].cpuUsages, 0, 5);
+
+            data[0].coreNoStart = 1;
+            data[0].coreNoEnd = 4;
+
+            return data;
+        }
+    }
+
+
+    private static CpuNotificationData[] distributeNotificationData_1IconSorted(int coreCount, int[] cpuUsages) {
+
+        final CpuNotificationData data[] = new CpuNotificationData[1];
+
+        // icon1
+        data[0] = new CpuNotificationData();
+        data[0].cpuUsages = new int[1+min(coreCount, 4)];
+        data[0].cpuUsages[0] = cpuUsages[0];
+
+        // index=0 は無視してソートする
+        Arrays.sort(cpuUsages, 1, cpuUsages.length);
+
+        // 降順に選択する
+        for (int i=0; i<min(coreCount, 4); i++) {
+            data[0].cpuUsages[i+1] = cpuUsages[cpuUsages.length-i-1];
+        }
+
+        data[0].coreNoStart = 1;
+        data[0].coreNoEnd = min(coreCount, 4);
+
+        return data;
+    }
+
+
+    private static int min(int a, int b) {
+        return a < b ? a : b;
+    }
+
+
+    private static CpuNotificationData[] distributeNotificationData_2Icons(int coreCount, int[] cpuUsages) {
+
+        if (coreCount <= 4) {
+            // 4コア以下
+            final CpuNotificationData data[] = new CpuNotificationData[1];
+
+            // icon1
+            data[0] = new CpuNotificationData();
+            data[0].cpuUsages = cpuUsages;
+            data[0].coreNoStart = 1;
+            data[0].coreNoEnd = coreCount;
+
+            return data;
+        }
+
+        if (coreCount == 6) {
             // 6コアなので3つずつに分割する
             final CpuNotificationData data[] = new CpuNotificationData[2];
 
             // icon1
             data[0] = new CpuNotificationData();
-            data[0].cpuUsages = new int[3+1];
+            data[0].cpuUsages = new int[3 + 1];
             data[0].coreNoStart = 1;
             data[0].coreNoEnd = 3;
             System.arraycopy(cpuUsages, 0, data[0].cpuUsages, 0, 4);
 
             // icon2
             data[1] = new CpuNotificationData();
-            data[1].cpuUsages = new int[3+1];
+            data[1].cpuUsages = new int[3 + 1];
             data[1].coreNoStart = 4;
             data[1].coreNoEnd = 6;
             // icon2のindex=0 も「全CPU使用率の平均」とする
@@ -490,12 +580,12 @@ public class UsageUpdateService extends Service {
 
             // icon2
             data[1] = new CpuNotificationData();
-            data[1].cpuUsages = new int[cpuUsages.length-4];
+            data[1].cpuUsages = new int[1 + coreCount - 4];
             data[1].coreNoStart = 5;
-            data[1].coreNoEnd = cpuUsages.length-1;
+            data[1].coreNoEnd = coreCount;
             // icon2のindex=0 も「全CPU使用率の平均」とする
             data[1].cpuUsages[0] = cpuUsages[0];
-            System.arraycopy(cpuUsages, 5, data[1].cpuUsages, 1, cpuUsages.length - 5);
+            System.arraycopy(cpuUsages, 5, data[1].cpuUsages, 1, coreCount - 4);
 
             return data;
         }

@@ -20,6 +20,13 @@
 
     <string name="config_usage_category_title">CPU-Nutzung</string>
     <string name="config_show_usage_notification">Benachrichtigung</string>
+    <string name="config_core_distribution_mode">Icon Count</string>
+    <string name="config_core_distribution_mode_summary">Benachrichtigungssymbol Zahl und um</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 Icons (max)</item>
+        <item>1 Icon (unsortiert)</item>
+        <item>1 Icon (sortiert)</item>
+    </string-array>
 
     <string name="app_version">Version {VERSION} [r{REVISION}]</string>
     <string name="app_copyright">Copyright &#169; 2012-2015 Hiroaki TAKEUCHI</string>

@@ -28,6 +28,23 @@ public class ConfigActivity extends PreferenceActivity {
                 pref.setDefaultValue(true);
                 pc.addPreference(pref);
             }
+
+            {
+                final ListPreference pref = new ListPreference(this);
+                pref.setKey(C.PREF_KEY_CORE_DISTRIBUTION_MODE);
+                pref.setTitle(R.string.config_core_distribution_mode);
+                pref.setSummary(R.string.config_core_distribution_mode_summary);
+                final String[] entryValues = {
+                        C.CORE_DISTRIBUTION_MODE_2ICONS + "",
+                        C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED + "",
+                        C.CORE_DISTRIBUTION_MODE_1ICON_SORTED + "",
+                };
+                pref.setEntries(R.array.core_distribution_mode_entries);
+                pref.setEntryValues(entryValues);
+                pref.setDefaultValue(C.CORE_DISTRIBUTION_MODE_2ICONS + "");
+                pc.addPreference(pref);
+            }
+
         }
         
         {
