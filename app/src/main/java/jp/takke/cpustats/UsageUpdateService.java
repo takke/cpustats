@@ -26,6 +26,13 @@ class OneCpuInfo {
     long total = 0;
 }
 
+class CpuNotificationData {
+    public int[] cpuUsages;
+    public int coreNoStart;
+    public int coreNoEnd;
+}
+
+
 public class UsageUpdateService extends Service {
 
     // 通知のID
@@ -398,108 +405,157 @@ public class UsageUpdateService extends Service {
                 PendingIntent.FLAG_CANCEL_CURRENT);
         
         if (cpuUsages != null && mShowUsageNotification) {
-            // 通知ウインドウのメッセージ
 
-            // cpuUsages の index=0 は「全CPU使用率の平均」
-            if (cpuUsages.length == 6+1) {
-                // 6コアなので3つずつに分割する
-                final int[] cpuUsages1 = new int[3+1];
-                final int[] cpuUsages2 = new int[3+1];
+            // cpuUsagesを各通知アイコンのデータに振り分ける
+            final CpuNotificationData[] data = distributeNotificationData(cpuUsages);
 
-                System.arraycopy(cpuUsages, 0, cpuUsages1, 0, 4);
+            if (MyLog.debugMode) {
+                dumpCpuUsagesForDebug(cpuUsages, data);
+            }
 
-                // cpuUsages2のindex=0 も「全CPU使用率の平均」とする
-                cpuUsages2[0] = cpuUsages[0];
-                System.arraycopy(cpuUsages, 4, cpuUsages2, 1, 3);
-
-                dumpCpuUsagesForDebug(cpuUsages, cpuUsages1, cpuUsages2);
-
-                // 通知
-                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(cpuUsages1, pendingIntent, 1, 3).build());
-                nm.notify(MY_USAGE_NOTIFICATION_ID2, makeUsageNotification(cpuUsages2, pendingIntent, 4, 6).build());
-            } else if (cpuUsages.length > 6+1) {
-                // 7コア以上
-
-                // 2つに分割する
-                final int[] cpuUsages1 = new int[5];
-                final int[] cpuUsages2 = new int[cpuUsages.length-4];
-
-                System.arraycopy(cpuUsages, 0, cpuUsages1, 0, 5);
-
-                // cpuUsages2のindex=0 も「全CPU使用率の平均」とする
-                cpuUsages2[0] = cpuUsages[0];
-                System.arraycopy(cpuUsages, 5, cpuUsages2, 1, cpuUsages.length-5);
-
-                dumpCpuUsagesForDebug(cpuUsages, cpuUsages1, cpuUsages2);
-
-                // 通知
-                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(cpuUsages1, pendingIntent, 1, 4).build());
-                nm.notify(MY_USAGE_NOTIFICATION_ID2, makeUsageNotification(cpuUsages2, pendingIntent, 5, cpuUsages.length-1).build());
+            // Notification(icon1)
+            if (data.length >= 1) {
+                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(data[0], pendingIntent).build());
             } else {
-                // 通知
-                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(cpuUsages, pendingIntent, 1, cpuUsages.length - 1).build());
+                nm.cancel(MY_USAGE_NOTIFICATION_ID1);
+            }
+            // Notification(icon2)
+            if (data.length >= 2) {
+                nm.notify(MY_USAGE_NOTIFICATION_ID2, makeUsageNotification(data[1], pendingIntent).build());
+            } else {
                 nm.cancel(MY_USAGE_NOTIFICATION_ID2);
             }
         }
         
         if (currentCpuClock > 0 && mShowFrequencyNotification) {
-            // 通知ウインドウのメッセージ
-            final String notificationTitle0 = "CPU Frequency";
 
-            // Notification.Builder は API Level11 以降からなので旧方式で作成する
-            final int iconId = ResourceUtil.getIconIdForCpuFreq(currentCpuClock);
-            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-            builder.setSmallIcon(iconId);
-            builder.setTicker(notificationTitle0);
-            builder.setWhen(mNotificationTime);
-
-            // 消えないようにする
-            builder.setOngoing(true);
-
-            // Lollipop:ロックスクリーンには表示しない
-            setPriorityForKeyguardOnLollipop(builder);
-
-            // 通知文字列の生成
-            final String notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock);
-            final String notificationContent = "Max Freq " + mMaxFreqText + " Min Freq " + mMinFreqText;
-
-            builder.setContentTitle(notificationTitle);
-            builder.setContentText(notificationContent);
-            builder.setContentIntent(pendingIntent);
-
-            // ノーティフィケーション通知
-            nm.notify(MY_FREQ_NOTIFICATION_ID, builder.build());
+            // 周波数通知
+            nm.notify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(currentCpuClock, pendingIntent).build());
         }
     }
 
 
-    private void dumpCpuUsagesForDebug(int[] cpuUsages, int[] cpuUsages1, int[] cpuUsages2) {
-        if (MyLog.debugMode) {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("org: ");
-            for (int cpuUsage : cpuUsages) {
-                sb.append(cpuUsage).append("% ");
-            }
-            sb.append("\nusage1: ");
-            for (int cpuUsage : cpuUsages1) {
-                sb.append(cpuUsage).append("% ");
-            }
-            sb.append("\nusage2: ");
-            for (int cpuUsage : cpuUsages2) {
-                sb.append(cpuUsage).append("% ");
-            }
-            MyLog.d(sb.toString());
+    static CpuNotificationData[] distributeNotificationData(int[] cpuUsages) {
+
+        // cpuUsages の index=0 は「全CPU使用率の平均」
+        if (cpuUsages.length == 6+1) {
+            // 6コアなので3つずつに分割する
+
+            final CpuNotificationData data[] = new CpuNotificationData[2];
+
+            // icon1
+            data[0] = new CpuNotificationData();
+            data[0].cpuUsages = new int[3+1];
+            data[0].coreNoStart = 1;
+            data[0].coreNoEnd = 3;
+            System.arraycopy(cpuUsages, 0, data[0].cpuUsages, 0, 4);
+
+            // icon2
+            data[1] = new CpuNotificationData();
+            data[1].cpuUsages = new int[3+1];
+            data[1].coreNoStart = 4;
+            data[1].coreNoEnd = 6;
+            // icon2のindex=0 も「全CPU使用率の平均」とする
+            data[1].cpuUsages[0] = cpuUsages[0];
+            System.arraycopy(cpuUsages, 4, data[1].cpuUsages, 1, 3);
+
+            return data;
+
+        } else if (cpuUsages.length > 6+1) {
+            // 7コア以上
+
+            // 2つに分割する
+            final CpuNotificationData data[] = new CpuNotificationData[2];
+
+            // icon1
+            data[0] = new CpuNotificationData();
+            data[0].cpuUsages = new int[5];
+            data[0].coreNoStart = 1;
+            data[0].coreNoEnd = 4;
+            System.arraycopy(cpuUsages, 0, data[0].cpuUsages, 0, 5);
+
+            // icon2
+            data[1] = new CpuNotificationData();
+            data[1].cpuUsages = new int[cpuUsages.length-4];
+            data[1].coreNoStart = 5;
+            data[1].coreNoEnd = cpuUsages.length-1;
+            // icon2のindex=0 も「全CPU使用率の平均」とする
+            data[1].cpuUsages[0] = cpuUsages[0];
+            System.arraycopy(cpuUsages, 5, data[1].cpuUsages, 1, cpuUsages.length - 5);
+
+            return data;
+        } else {
+            // 5コア以下
+
+            final CpuNotificationData data[] = new CpuNotificationData[1];
+
+            // icon1
+            data[0] = new CpuNotificationData();
+            data[0].cpuUsages = cpuUsages;
+            data[0].coreNoStart = 1;
+            data[0].coreNoEnd = cpuUsages.length - 1;
+
+            return data;
         }
     }
 
 
     @NonNull
-    private NotificationCompat.Builder makeUsageNotification(int[] cpuUsages, PendingIntent pendingIntent, int coreNoStart, int coreNoEnd) {
+    private NotificationCompat.Builder makeFrequencyNotification(int currentCpuClock, PendingIntent pendingIntent) {
+
+        // 通知ウインドウのメッセージ
+        final String notificationTitle0 = "CPU Frequency";
+
+        // Notification.Builder は API Level11 以降からなので旧方式で作成する
+        final int iconId = ResourceUtil.getIconIdForCpuFreq(currentCpuClock);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        builder.setSmallIcon(iconId);
+        builder.setTicker(notificationTitle0);
+        builder.setWhen(mNotificationTime);
+
+        // 消えないようにする
+        builder.setOngoing(true);
+
+        // Lollipop:ロックスクリーンには表示しない
+        setPriorityForKeyguardOnLollipop(builder);
+
+        // 通知文字列の生成
+        final String notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock);
+        final String notificationContent = "Max Freq " + mMaxFreqText + " Min Freq " + mMinFreqText;
+
+        builder.setContentTitle(notificationTitle);
+        builder.setContentText(notificationContent);
+        builder.setContentIntent(pendingIntent);
+        return builder;
+    }
+
+
+    private static void dumpCpuUsagesForDebug(int[] cpuUsages, CpuNotificationData[] data) {
+
+        final StringBuilder sb = new StringBuilder();
+        sb.append("org: ");
+        for (int cpuUsage : cpuUsages) {
+            sb.append(cpuUsage).append("% ");
+        }
+        sb.append("\nusage1: ");
+        for (int cpuUsage : data[0].cpuUsages) {
+            sb.append(cpuUsage).append("% ");
+        }
+        sb.append("\nusage2: ");
+        for (int cpuUsage : data[1].cpuUsages) {
+            sb.append(cpuUsage).append("% ");
+        }
+        MyLog.d(sb.toString());
+    }
+
+
+    @NonNull
+    private NotificationCompat.Builder makeUsageNotification(CpuNotificationData data, PendingIntent pendingIntent) {
 
         String notificationTitle0 = "CPU Usage";
 
-        final int iconId = ResourceUtil.getIconIdForCpuUsage(cpuUsages);
+        final int iconId = ResourceUtil.getIconIdForCpuUsage(data.cpuUsages);
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
         builder.setSmallIcon(iconId);
@@ -515,16 +571,16 @@ public class UsageUpdateService extends Service {
         // 通知文字列の生成
         final StringBuilder sb = new StringBuilder(128);
         // 各コア分
-        if (cpuUsages.length >= 3) {    // 2コアの場合length=3になるので。
+        if (data.cpuUsages.length >= 3) {    // 2コアの場合length=3になるので。
 
 //            sb.append("Cores: ");
-            sb.append("Core").append(coreNoStart).append("-Core").append(coreNoEnd).append(": ");
+            sb.append("Core").append(data.coreNoStart).append("-Core").append(data.coreNoEnd).append(": ");
 
-            for (int i=1; i<cpuUsages.length; i++) {
+            for (int i=1; i<data.cpuUsages.length; i++) {
                 if (i>=2) {
                     sb.append(" ");
                 }
-                sb.append(cpuUsages[i]).append("%");
+                sb.append(data.cpuUsages[i]).append("%");
             }
         }
         final String notificationContent = sb.toString();
@@ -532,7 +588,7 @@ public class UsageUpdateService extends Service {
             MyLog.d("- " + notificationContent);
         }
 
-        final String notificationTitle = notificationTitle0 + " " + cpuUsages[0] + "%";
+        final String notificationTitle = notificationTitle0 + " " + data.cpuUsages[0] + "%";
         builder.setContentTitle(notificationTitle);
         builder.setContentText(notificationContent);
         builder.setContentIntent(pendingIntent);
@@ -690,5 +746,4 @@ public class UsageUpdateService extends Service {
             MyLog.d("UsageUpdateService$GatherThread: done");
         }
     }
-
 }
