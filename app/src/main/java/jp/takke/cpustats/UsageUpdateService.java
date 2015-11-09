@@ -438,9 +438,22 @@ public class UsageUpdateService extends Service {
     static CpuNotificationData[] distributeNotificationData(int[] cpuUsages) {
 
         // cpuUsages の index=0 は「全CPU使用率の平均」
+
+        if (cpuUsages.length <= 4+1) {
+            // 4コア以下
+            final CpuNotificationData data[] = new CpuNotificationData[1];
+
+            // icon1
+            data[0] = new CpuNotificationData();
+            data[0].cpuUsages = cpuUsages;
+            data[0].coreNoStart = 1;
+            data[0].coreNoEnd = cpuUsages.length - 1;
+
+            return data;
+        }
+
         if (cpuUsages.length == 6+1) {
             // 6コアなので3つずつに分割する
-
             final CpuNotificationData data[] = new CpuNotificationData[2];
 
             // icon1
@@ -460,9 +473,10 @@ public class UsageUpdateService extends Service {
             System.arraycopy(cpuUsages, 4, data[1].cpuUsages, 1, 3);
 
             return data;
+        }
 
-        } else if (cpuUsages.length > 6+1) {
-            // 7コア以上
+        {
+            // 4コア以上(6コアを除く)
 
             // 2つに分割する
             final CpuNotificationData data[] = new CpuNotificationData[2];
@@ -482,18 +496,6 @@ public class UsageUpdateService extends Service {
             // icon2のindex=0 も「全CPU使用率の平均」とする
             data[1].cpuUsages[0] = cpuUsages[0];
             System.arraycopy(cpuUsages, 5, data[1].cpuUsages, 1, cpuUsages.length - 5);
-
-            return data;
-        } else {
-            // 5コア以下
-
-            final CpuNotificationData data[] = new CpuNotificationData[1];
-
-            // icon1
-            data[0] = new CpuNotificationData();
-            data[0].cpuUsages = cpuUsages;
-            data[0].coreNoStart = 1;
-            data[0].coreNoEnd = cpuUsages.length - 1;
 
             return data;
         }

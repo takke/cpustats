@@ -29,4 +29,6 @@ ext {
 
     // library
     supportLibraryVersion = '23.1.0'
+
+    robolectricVersion = "3.0"
 }

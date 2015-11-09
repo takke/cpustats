@@ -52,6 +52,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile "com.android.support:support-v4:${supportLibraryVersion}"
+
+    testCompile "org.robolectric:robolectric:${robolectricVersion}"
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.apache.maven:maven-ant-tasks:2.1.3'
 }
 
 // load signing settings from gradle.properties
