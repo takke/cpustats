@@ -1,3 +1,7 @@
+v1.4.1 (2015.11.10)
+- Add "1 Icon (Unsorted)" and "1 Icon (Sorted)" mode
+- Add french translation (by Belarrius)
+
 v1.4.0 (2015.11.02)
 - Supports 6 or 8 cores (2 icons)
 - More simple layout
