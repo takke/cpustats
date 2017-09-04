@@ -28,7 +28,4 @@
         <item>1 Icône (triés)</item>
     </string-array>
 
-    <string name="app_version">Version {VERSION} [r{REVISION}]</string>
-    <string name="app_copyright">Copyright &#169; 2012-2015 Hiroaki TAKEUCHI</string>
-
 </resources>
