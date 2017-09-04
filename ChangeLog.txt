@@ -1,3 +1,8 @@
+v1.4.2 (2017.09.04)
+- Support Android 2.3 to 7.1 (exclude Android 1.6, and 8.0 or later)
+- Update Support Library 23.1.0 -> 25.3.1
+- Update build tools
+
 v1.4.1 (2015.11.10)
 - Add "1 Icon (Unsorted)" and "1 Icon (Sorted)" mode
 - Add french translation (by Belarrius)
