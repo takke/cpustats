@@ -13,7 +13,6 @@ android {
         applicationId 'jp.takke.cpustats'
         targetSdkVersion rootProject.ext.targetSdkVersion as Integer
         minSdkVersion rootProject.ext.minSdkVersion as Integer
-        maxSdkVersion rootProject.ext.maxSdkVersion as Integer
         versionCode rootProject.ext.versionCode as Integer
         versionName rootProject.ext.versionName as String
     }
