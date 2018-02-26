@@ -210,7 +210,7 @@ public class UsageUpdateService extends Service {
         loadSettings();
         
         if (mLastInfo == null) {
-            mLastInfo = MyUtil.takeCpuUsageSnapshot();
+            mLastInfo = CpuInfoCollector.takeCpuUsageSnapshot();
         }
         
         // スリープ状態のレシーバ登録
@@ -282,13 +282,13 @@ public class UsageUpdateService extends Service {
         //-------------------------------------------------
         // CPU クロック周波数の取得
         //-------------------------------------------------
-        final int currentCpuClock = MyUtil.takeCurrentCpuFreq();
+        final int currentCpuClock = CpuInfoCollector.takeCurrentCpuFreq();
         if (mMinFreq < 0) {
-            mMinFreq = MyUtil.takeMinCpuFreq();
+            mMinFreq = CpuInfoCollector.takeMinCpuFreq();
             mMinFreqText = MyUtil.formatFreq(mMinFreq);
         }
         if (mMaxFreq < 0) {
-            mMaxFreq = MyUtil.takeMaxCpuFreq();
+            mMaxFreq = CpuInfoCollector.takeMaxCpuFreq();
             mMaxFreqText = MyUtil.formatFreq(mMaxFreq);
         }
         if (MyLog.debugMode) {
@@ -300,7 +300,7 @@ public class UsageUpdateService extends Service {
         // CPU 使用率の取得
         //-------------------------------------------------
         // CPU 使用率の snapshot 取得
-        final ArrayList<OneCpuInfo> currentInfo = MyUtil.takeCpuUsageSnapshot();
+        final ArrayList<OneCpuInfo> currentInfo = CpuInfoCollector.takeCpuUsageSnapshot();
         
         // CPU 使用率の算出
         final int[] cpuUsages = MyUtil.calcCpuUsages(currentInfo, mLastInfo);

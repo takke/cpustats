@@ -103,12 +103,12 @@ public class PreviewActivity extends Activity {
         hideAllCoreFreqInfo();
         
         // CPU クロック更新
-        mMinFreq = MyUtil.takeMinCpuFreq();
+        mMinFreq = CpuInfoCollector.takeMinCpuFreq();
         mMinFreqText = MyUtil.formatFreq(mMinFreq);
         
-        mMaxFreq = MyUtil.takeMaxCpuFreq();
+        mMaxFreq = CpuInfoCollector.takeMaxCpuFreq();
         mMaxFreqText = MyUtil.formatFreq(mMaxFreq);
-        updateCpuFrequency(MyUtil.takeCurrentCpuFreq());
+        updateCpuFrequency(CpuInfoCollector.takeCurrentCpuFreq());
         
         // アクションバーのアイコン変更
         setActionBarLogo(R.drawable.single000);
@@ -326,7 +326,7 @@ public class PreviewActivity extends Activity {
         // プレビュー画面に表示
         final int[] cores = new int[]{R.id.core1, R.id.core2, R.id.core3, R.id.core4, R.id.core5, R.id.core6, R.id.core7, R.id.core8};
 
-        final int coreCount = MyUtil.calcCpuCoreCount();
+        final int coreCount = CpuInfoCollector.calcCpuCoreCount();
         for (int i=0; i<8; i++) {
             
             if (coreCount <= i) {
