@@ -70,6 +70,7 @@ public class ConfigActivity extends PreferenceActivity {
                 final ListPreference pref = new ListPreference(this);
                 pref.setKey(C.PREF_KEY_UPDATE_INTERVAL_SEC);
                 pref.setTitle(R.string.config_update_interval_title);
+                pref.setSummary("%s");
                 final String[] entries = {"0.5sec", "1sec", "2sec", "3sec", "5sec", "10sec"};
                 final String[] entryValues = {"0.5", "1", "2", "3", "5", "10"};
                 pref.setEntries(entries);

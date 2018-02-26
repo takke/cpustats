@@ -21,7 +21,7 @@
     <string name="config_usage_category_title">CPU 使用率</string>
     <string name="config_show_usage_notification">通知</string>
     <string name="config_core_distribution_mode">アイコン数</string>
-    <string name="config_core_distribution_mode_summary">通知アイコン数とソート順序\n例：4+4コア端末の場合は「1アイコン(ソート)」がおすすめです</string>
+    <string name="config_core_distribution_mode_summary">%s\n通知アイコン数とソート順序\n例：4+4コア端末の場合は「1アイコン(ソート)」がおすすめです</string>
     <string-array name="core_distribution_mode_entries">
         <item>2アイコン(5コア以上)</item>
         <item>1アイコン(非ソート)</item>
