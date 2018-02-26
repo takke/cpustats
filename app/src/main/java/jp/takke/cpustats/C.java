@@ -25,4 +25,5 @@ public class C {
     public static final int CORE_DISTRIBUTION_MODE_1ICON_UNSORTED = 1;  // 1アイコン+非ソート
     public static final int CORE_DISTRIBUTION_MODE_1ICON_SORTED = 2;    // 1アイコン+ソート
 
+    public static final int READ_BUFFER_SIZE = 1024;
 }

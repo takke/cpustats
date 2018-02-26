@@ -109,7 +109,7 @@ public class CpuInfoCollector {
 
         try {
             final BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream("/proc/stat")), 1000);
+                    new InputStreamReader(new FileInputStream("/proc/stat")), C.READ_BUFFER_SIZE);
 //          final RandomAccessFile reader = new RandomAccessFile("/proc/stat", "r");
 
 //          MyLog.i("load:-----");
