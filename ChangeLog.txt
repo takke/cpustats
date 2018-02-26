@@ -1,3 +1,11 @@
+v2.0.0 (2018.02.27)
+- Re-support Android 8.0 or later
+- For Android 8.0 and later, use the frequency of each core as the CPU usages
+- Show frequency of each core
+- Add placeholder at ConfigActivity
+- Add "dump feature" on long tap of app icon of AboutActivity
+- Update build tools
+
 v1.4.2 (2017.09.04)
 - Support Android 2.3 to 7.1 (exclude Android 1.6, and 8.0 or later)
 - Update Support Library 23.1.0 -> 25.3.1
