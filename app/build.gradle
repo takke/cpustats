@@ -24,6 +24,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.myConfig
         }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix 'd'
+
+            // use Built-in Shrinker instead of ProGuard
+//            minifyEnabled true
+//            useProguard false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
     }
 
     applicationVariants.all { variant ->
