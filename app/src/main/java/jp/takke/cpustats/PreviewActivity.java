@@ -115,6 +115,7 @@ public class PreviewActivity extends Activity {
         
         // サービスへのバインド開始
         final Intent intent = new Intent(IUsageUpdateService.class.getName());
+        intent.setPackage(getPackageName());
         bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
