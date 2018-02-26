@@ -30,21 +30,24 @@ android {
         if (variant.buildType.name.equals("release")) {
 
             variant.outputs.each { output ->
-                if (output.outputFile != null && output.outputFile.name.endsWith('.apk')) {
-                    def file = output.outputFile
+                if (output.outputFileName.endsWith('.apk')) {
                     def shortVersionName = defaultConfig.versionName.replaceAll('\\.', '')
                     def d = new java.text.SimpleDateFormat("yyyyMMdd_HHmm").format(new Date())
                     def newName = "CpuStats_r${defaultConfig.versionCode}_${shortVersionName}_${d}.apk"
-                    output.outputFile = new File(file.parent, newName)
+                    output.outputFileName = newName
                 }
             }
         }
     }
 
+    flavorDimensions "edition"
+
     productFlavors {
         quad3 {
+            dimension "edition"
         }
         quad5 {
+            dimension "edition"
         }
     }
 }
