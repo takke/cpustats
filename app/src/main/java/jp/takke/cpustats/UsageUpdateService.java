@@ -23,11 +23,6 @@ import android.support.v4.app.NotificationCompat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class OneCpuInfo {
-    long idle = 0;
-    long total = 0;
-}
-
 class CpuNotificationData {
     public int[] cpuUsages;
     public int coreNoStart;
