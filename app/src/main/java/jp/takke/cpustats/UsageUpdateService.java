@@ -17,6 +17,7 @@ import android.os.RemoteException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class UsageUpdateService extends Service {
     private int mLastCpuClock = -1;
     
     // 前回の収集データ
+    @Nullable
     private ArrayList<OneCpuInfo> mLastInfo = null;
     
     // 前回のデータ

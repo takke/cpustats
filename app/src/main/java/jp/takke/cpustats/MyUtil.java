@@ -1,5 +1,7 @@
 package jp.takke.cpustats;
 
+import android.support.annotation.Nullable;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -104,6 +106,7 @@ public class MyUtil {
      * 
      * @return 各コアの CPU 値のリスト(エラー時は要素数0)
      */
+    @Nullable
     public static ArrayList<OneCpuInfo> takeCpuUsageSnapshot() {
         
         // [0] が全体、[1]以降が個別CPU
@@ -146,6 +149,7 @@ public class MyUtil {
             reader.close();
         } catch (Exception ex) {
             MyLog.e(ex);
+            return null;
         }
         
         return result;
@@ -159,7 +163,7 @@ public class MyUtil {
      * @param lastInfo
      * @return CPU使用率の配列(要素数1以上、[0]は全CPU、[1]以降は各コア)、または null
      */
-    public static int[] calcCpuUsages(ArrayList<OneCpuInfo> currentInfo, ArrayList<OneCpuInfo> lastInfo) {
+    public static int[] calcCpuUsages(ArrayList<OneCpuInfo> currentInfo, @Nullable ArrayList<OneCpuInfo> lastInfo) {
         
         if (currentInfo == null || lastInfo == null) {
             // NPE対策(基本的に発生しないはず。サービスが死んだときにはありうるかな？)
