@@ -3,16 +3,16 @@ package jp.takke.cpustats;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
-public class UsageUpdateServiceTest {
+public class NotificationPresenterTest {
 
     @Before
     public void setUp() throws Exception {
@@ -25,7 +25,7 @@ public class UsageUpdateServiceTest {
         // core1
         {
             final int[] cpuUsages = {30, 30};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -36,7 +36,7 @@ public class UsageUpdateServiceTest {
         // core2
         {
             final int[] cpuUsages = {60, 30, 90};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -47,7 +47,7 @@ public class UsageUpdateServiceTest {
         // core3
         {
             final int[] cpuUsages = {50, 30, 90, 30};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -58,7 +58,7 @@ public class UsageUpdateServiceTest {
         // core4
         {
             final int[] cpuUsages = {40, 30, 90, 30, 10};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -69,7 +69,7 @@ public class UsageUpdateServiceTest {
         // core5
         {
             final int[] cpuUsages = {40, 30, 90, 30, 10, 40};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(2));
             assertThat(data[0].coreNoStart, is(1));
@@ -83,7 +83,7 @@ public class UsageUpdateServiceTest {
         // core6
         {
             final int[] cpuUsages = {40, 10, 20, 30, 70, 50, 60};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(2));
             assertThat(data[0].coreNoStart, is(1));
@@ -97,7 +97,7 @@ public class UsageUpdateServiceTest {
         // core7
         {
             final int[] cpuUsages = {40, 10, 20, 30, 70, 50, 60, 40};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(2));
             assertThat(data[0].coreNoStart, is(1));
@@ -111,7 +111,7 @@ public class UsageUpdateServiceTest {
         // core8
         {
             final int[] cpuUsages = {45, 10, 30, 50, 20, 40, 80, 70, 60};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(2));
             assertThat(data[0].coreNoStart, is(1));
@@ -125,7 +125,7 @@ public class UsageUpdateServiceTest {
         // core9
         {
             final int[] cpuUsages = {45, 10, 30, 50, 20, 40, 80, 70, 60, 90};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_2ICONS);
 
             assertThat(data.length, is(2));
             assertThat(data[0].coreNoStart, is(1));
@@ -143,7 +143,7 @@ public class UsageUpdateServiceTest {
         // core1
         {
             final int[] cpuUsages = {30, 30};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -154,7 +154,7 @@ public class UsageUpdateServiceTest {
         // core2
         {
             final int[] cpuUsages = {60, 30, 90};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -165,7 +165,7 @@ public class UsageUpdateServiceTest {
         // core3
         {
             final int[] cpuUsages = {50, 30, 90, 30};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -176,7 +176,7 @@ public class UsageUpdateServiceTest {
         // core4
         {
             final int[] cpuUsages = {40, 30, 90, 30, 10};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -187,7 +187,7 @@ public class UsageUpdateServiceTest {
         // core5
         {
             final int[] cpuUsages = {40, 30, 90, 30, 10, 40};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -198,7 +198,7 @@ public class UsageUpdateServiceTest {
         // core6
         {
             final int[] cpuUsages = {40, 10, 20, 30, 70, 50, 60};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -209,7 +209,7 @@ public class UsageUpdateServiceTest {
         // core7
         {
             final int[] cpuUsages = {40, 10, 20, 30, 70, 50, 60, 40};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -220,7 +220,7 @@ public class UsageUpdateServiceTest {
         // core8
         {
             final int[] cpuUsages = {45, 10, 30, 50, 20, 40, 80, 70, 60};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -231,7 +231,7 @@ public class UsageUpdateServiceTest {
         // core9
         {
             final int[] cpuUsages = {45, 10, 30, 50, 20, 40, 80, 70, 60, 90};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -246,7 +246,7 @@ public class UsageUpdateServiceTest {
         // core1
         {
             final int[] cpuUsages = {30, 30};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -257,7 +257,7 @@ public class UsageUpdateServiceTest {
         // core2
         {
             final int[] cpuUsages = {60, 30, 90};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -268,7 +268,7 @@ public class UsageUpdateServiceTest {
         // core3
         {
             final int[] cpuUsages = {50, 30, 90, 20};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -279,7 +279,7 @@ public class UsageUpdateServiceTest {
         // core4
         {
             final int[] cpuUsages = {40, 20, 90, 30, 10};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -290,7 +290,7 @@ public class UsageUpdateServiceTest {
         // core5
         {
             final int[] cpuUsages = {40, 30, 90, 10, 5, 40};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -301,7 +301,7 @@ public class UsageUpdateServiceTest {
         // core6
         {
             final int[] cpuUsages = {40, 10, 20, 30, 70, 50, 60};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -312,7 +312,7 @@ public class UsageUpdateServiceTest {
         // core7
         {
             final int[] cpuUsages = {40, 10, 20, 30, 70, 50, 60, 40};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -323,7 +323,7 @@ public class UsageUpdateServiceTest {
         // core8
         {
             final int[] cpuUsages = {45, 10, 30, 50, 20, 40, 80, 70, 60};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));
@@ -334,7 +334,7 @@ public class UsageUpdateServiceTest {
         // core9
         {
             final int[] cpuUsages = {45, 10, 30, 50, 20, 40, 80, 70, 60, 90};
-            final CpuNotificationData[] data = UsageUpdateService.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
+            final CpuNotificationData[] data = NotificationPresenter.distributeNotificationData(cpuUsages, C.CORE_DISTRIBUTION_MODE_1ICON_SORTED);
 
             assertThat(data.length, is(1));
             assertThat(data[0].coreNoStart, is(1));

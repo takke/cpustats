@@ -38,5 +38,5 @@ ext {
     // library
     supportLibraryVersion = '25.3.1'
 
-    robolectricVersion = "3.0"
+    robolectricVersion = "3.7.1"
 }
