@@ -16,13 +16,6 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("WeakerAccess")
-class CpuNotificationData {
-    public int[] cpuUsages;
-    public int coreNoStart;
-    public int coreNoEnd;
-}
-
 
 public class UsageUpdateService extends Service {
 
