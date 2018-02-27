@@ -53,9 +53,13 @@ class CpuNotificationDataDistributor {
         }
     }
 
-    private static CpuNotificationData[] distributeNotificationData_1IconSorted(int coreCount, int[] cpuUsages) {
+    private static CpuNotificationData[] distributeNotificationData_1IconSorted(int coreCount, int[] cpuUsagesIn) {
 
         final CpuNotificationData data[] = new CpuNotificationData[1];
+
+        // ソートして破壊されるのを防ぐためにコピーしておく
+        final int[] cpuUsages = new int[cpuUsagesIn.length];
+        System.arraycopy(cpuUsagesIn, 0, cpuUsages, 0, cpuUsagesIn.length);
 
         // icon1
         data[0] = new CpuNotificationData();

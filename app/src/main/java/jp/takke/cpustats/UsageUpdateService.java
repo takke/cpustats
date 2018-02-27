@@ -36,11 +36,14 @@ public class UsageUpdateService extends Service {
     
     // 前回の収集データ
     @Nullable
-    private ArrayList<OneCpuInfo> mLastInfo = null;
+    private ArrayList<OneCpuInfo> mLastCpuUsageSnapshot = null;
     
     // 前回のCPU使用率
     private int[] mLastCpuUsages = null;
-    
+
+    // CPU使用率を各コアの周波数から算出するモード(Android 8.0以降用)
+    private boolean mUseFreqForCpuUsage = false;
+
     // コールバック一覧
     private final RemoteCallbackList<IUsageUpdateCallback> mCallbackList = new RemoteCallbackList<>();
     
@@ -173,8 +176,8 @@ public class UsageUpdateService extends Service {
         // 設定のロード
         mConfig.loadSettings(this);
         
-        if (mLastInfo == null) {
-            mLastInfo = CpuInfoCollector.takeCpuUsageSnapshot();
+        if (mLastCpuUsageSnapshot == null) {
+            mLastCpuUsageSnapshot = CpuInfoCollector.takeCpuUsageSnapshot();
         }
         
         // スリープ状態のレシーバ登録
@@ -229,11 +232,24 @@ public class UsageUpdateService extends Service {
         // CPU 使用率の取得
         //-------------------------------------------------
         // CPU 使用率の snapshot 取得
-        final ArrayList<OneCpuInfo> currentCpuUsages = CpuInfoCollector.takeCpuUsageSnapshot();
-        
-        // CPU 使用率の算出
-        final int[] cpuUsages = MyUtil.calcCpuUsages(currentCpuUsages, mLastInfo);
-        
+        int[] cpuUsages = null;
+        if (!mUseFreqForCpuUsage) {
+            final ArrayList<OneCpuInfo> currentCpuUsageSnapshot = CpuInfoCollector.takeCpuUsageSnapshot();
+            if (currentCpuUsageSnapshot != null) {
+                // CPU 使用率の算出
+                cpuUsages = MyUtil.calcCpuUsages(currentCpuUsageSnapshot, mLastCpuUsageSnapshot);
+                // 今回の snapshot を保存
+                mLastCpuUsageSnapshot = currentCpuUsageSnapshot;
+            } else {
+                // 取得できないので fallback する
+                mUseFreqForCpuUsage = true;
+            }
+        }
+        if (cpuUsages == null) {
+            // fallbackモード(Android 8.0以降では /proc/stat にアクセスできないのでコアの周波数からCPU使用率を算出する)
+            cpuUsages = MyUtil.calcCpuUsagesByCoreFrequencies(fi);
+        }
+
 
         //-------------------------------------------------
         // 通知判定
@@ -258,9 +274,6 @@ public class UsageUpdateService extends Service {
             // コールバック経由で通知
             distributeToCallbacks(cpuUsages, fi);
         }
-        
-        // 今回の snapshot を保存
-        mLastInfo = currentCpuUsages;
         
         mLastExecTask = System.currentTimeMillis();
     }
@@ -302,7 +315,6 @@ public class UsageUpdateService extends Service {
             for (int i=0; i<n; i++) {
                 try {
                     mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages,
-//                            currentCpuClock, mMinFreq, mMaxFreq,
                             fi.freqs, fi.minFreqs, fi.maxFreqs);
                 } catch (RemoteException e) {
 //                      MyLog.e(e);

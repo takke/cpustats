@@ -1,5 +1,6 @@
 package jp.takke.cpustats;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -11,8 +12,9 @@ public class MyUtil {
      * 
      * @param currentInfo
      * @param lastInfo
-     * @return CPU使用率の配列(要素数1以上、[0]は全CPU、[1]以降は各コア)、または null
+     * @return CPU使用率の配列(要素数は必ず1以上、[0]は全CPU、[1]以降は各コア)、または null
      */
+    @Nullable
     public static int[] calcCpuUsages(ArrayList<OneCpuInfo> currentInfo, @Nullable ArrayList<OneCpuInfo> lastInfo) {
         
         if (currentInfo == null || lastInfo == null) {
@@ -60,6 +62,39 @@ public class MyUtil {
     }
 
     /**
+     * 擬似的なCPU使用率を各コアの周波数(およびその min/max 値)から算出する
+     */
+    @NonNull
+    public static int[] calcCpuUsagesByCoreFrequencies(AllCoreFrequencyInfo fi) {
+
+        final int coreCount = fi.freqs.length;
+
+        // [0] は全体、[1]～[coreCount] は各コアの CPU 使用率
+        final int[] cpuUsages = new int[coreCount+1];
+
+        // 各コアの CPU 使用率を算出する
+//        MyLog.i("---");
+        for (int i = 0; i < coreCount; i++) {
+            cpuUsages[i+1] = MyUtil.getClockPercent(fi.freqs[i], fi.minFreqs[i], fi.maxFreqs[i]);
+//            MyLog.i("calc core[" + i + "] = " + cpuUsages[i+1] + "% (max=" + fi.maxFreqs[i] + ")");
+        }
+
+        // 全体の CPU 使用率を算出する
+        // TODO big.LITTLE で停止するコアの考慮はしていない
+        int freqSum = 0;
+        int minFreqSum = 0;
+        int maxFreqSum = 0;
+        for (int i = 0; i < coreCount; i++) {
+            freqSum += fi.freqs[i];
+            minFreqSum += fi.minFreqs[i];
+            maxFreqSum += fi.maxFreqs[i];
+        }
+        cpuUsages[0] = MyUtil.getClockPercent(freqSum, minFreqSum, maxFreqSum);
+
+        return cpuUsages;
+    }
+
+    /**
      * クロック周波数の表示用整形
      * 
      * @param clockHz クロック周波数[KHz]
@@ -100,4 +135,5 @@ public class MyUtil {
         }
         return maxFreq >= 0 ? ((currentFreq - minFreq) * 100 / (maxFreq - minFreq)) : 0;
     }
+
 }

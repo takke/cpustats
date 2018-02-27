@@ -107,6 +107,8 @@ public class PreviewActivity extends Activity {
             dummyCpuUsages[i] = 0;
         }
         CpuInfoCollector.takeAllCoreFreqs(fi);
+        // CPU周波数が100%になってしまうので最初はゼロにしておく
+        System.arraycopy(fi.minFreqs, 0, fi.freqs, 0, fi.freqs.length);
         showCpuUsages(dummyCpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs);
 
         // アクションバーのアイコン変更
@@ -404,9 +406,10 @@ public class PreviewActivity extends Activity {
             final TextView textView = (TextView) coreView.findViewById(R.id.coreText);
             final SpannableStringBuilder ssb = new SpannableStringBuilder();
             ssb.append("Core" + (i + 1) + ": " + cpuUsage + "%");
+//            MyLog.i("disp core[" + i + "] = " + cpuUsage + "% (max=" + maxFreqs[i] + ")");
 
             // 周波数
-            String freqText = MyUtil.formatFreq(freqs[i]);
+            final String freqText = MyUtil.formatFreq(freqs[i]);
             ssb.append("\n");
             ssb.append(" " + freqText);
 
@@ -432,7 +435,9 @@ public class PreviewActivity extends Activity {
             textView.setVisibility(View.VISIBLE);
 
             // アクティブコアの背景色を変える
-            if (clockPercent > 0) {
+            if (clockPercent >= 60) {
+                coreView.setBackgroundColor(0xff442222);
+            } else if (clockPercent > 0) {
                 coreView.setBackgroundColor(0xff333333);
             } else {
                 coreView.setBackgroundColor(0xff222222);
