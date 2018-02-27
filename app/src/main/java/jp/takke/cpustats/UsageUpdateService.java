@@ -44,13 +44,7 @@ public class UsageUpdateService extends Service {
 
     // スリープ中フラグ
     private boolean mSleeping = false;
-    
-    // CPU クロック周波数のmin/max
-    private int mMinFreq = -1;
-    private String mMinFreqText = "";
-    private int mMaxFreq = -1;
-    private String mMaxFreqText = "";
-    
+
     // 前回の CPU クロック周波数
     private int mLastCpuClock = -1;
     
@@ -242,22 +236,18 @@ public class UsageUpdateService extends Service {
         //-------------------------------------------------
         // CPU クロック周波数の取得
         //-------------------------------------------------
-        // TODO 最適なものを選ぶこと
-        final int currentCpuClock = CpuInfoCollector.takeCurrentCpuFreq(0);
         final AllCoreFrequencyInfo fi = new AllCoreFrequencyInfo(CpuInfoCollector.calcCpuCoreCount());
         CpuInfoCollector.takeAllCoreFreqs(fi);
 
+        final int activeCoreIndex = MyUtil.getActiveCoreIndex(fi.freqs);
+        final int currentCpuClock = fi.freqs[activeCoreIndex];
 
-        if (mMinFreq < 0) {
-            mMinFreq = CpuInfoCollector.takeMinCpuFreq(0);
-            mMinFreqText = MyUtil.formatFreq(mMinFreq);
-        }
-        if (mMaxFreq < 0) {
-            mMaxFreq = CpuInfoCollector.takeMaxCpuFreq(0);
-            mMaxFreqText = MyUtil.formatFreq(mMaxFreq);
-        }
+        // CPU クロック周波数のmin/max
+        final int minFreq = fi.minFreqs[activeCoreIndex];
+        final int maxFreq = fi.maxFreqs[activeCoreIndex];
+
         if (MyLog.debugMode) {
-            MyLog.d("* CPU: " + currentCpuClock + " [" + mMinFreq + "," + mMaxFreq + "] [" + (System.currentTimeMillis() - mLastExecTask) + "ms]");
+            MyLog.d("* CPU: " + currentCpuClock + " [" + minFreq + "," + maxFreq + "] [" + (System.currentTimeMillis() - mLastExecTask) + "ms]");
         }
         
         
@@ -265,10 +255,10 @@ public class UsageUpdateService extends Service {
         // CPU 使用率の取得
         //-------------------------------------------------
         // CPU 使用率の snapshot 取得
-        final ArrayList<OneCpuInfo> currentInfo = CpuInfoCollector.takeCpuUsageSnapshot();
+        final ArrayList<OneCpuInfo> currentCpuUsages = CpuInfoCollector.takeCpuUsageSnapshot();
         
         // CPU 使用率の算出
-        final int[] cpuUsages = MyUtil.calcCpuUsages(currentInfo, mLastInfo);
+        final int[] cpuUsages = MyUtil.calcCpuUsages(currentCpuUsages, mLastInfo);
         
 
         //-------------------------------------------------
@@ -276,25 +266,7 @@ public class UsageUpdateService extends Service {
         //-------------------------------------------------
         // 前回と同じ CPU 使用率なら通知しない
         // ※通知アイコンだけなら丸めた値で比較すればいいんだけど通知テキストにCPU使用率%が出るので完全一致で比較する
-        boolean updated = false;
-        
-        if (mLastCpuClock != currentCpuClock) {
-            updated = true;
-        } else if (mLastCpuUsages == null || cpuUsages == null) {
-            updated = true;
-        } else if (cpuUsages.length != mLastCpuUsages.length) {
-            // コア数変動のケア(Galaxy S II等でよくあるらしい)
-            updated = true;
-        } else {
-            // 同一でない値があれば更新する
-            final int n = cpuUsages.length;
-            for (int i=0; i<n; i++) {
-                if (cpuUsages[i] != mLastCpuUsages[i]) {
-                    updated = true;
-                    break;
-                }
-            }
-        }
+        final boolean updated = isUpdated(currentCpuClock, cpuUsages);
         mLastCpuUsages = cpuUsages;
         mLastCpuClock = currentCpuClock;
         
@@ -307,16 +279,37 @@ public class UsageUpdateService extends Service {
             }
         } else {
             // ステータスバーの通知
-            updateCpuUsageNotifications(cpuUsages, currentCpuClock);
+            updateNotifications(cpuUsages, currentCpuClock, minFreq, maxFreq);
             
             // コールバック経由で通知
             distributeToCallbacks(cpuUsages, fi);
         }
         
         // 今回の snapshot を保存
-        mLastInfo = currentInfo;
+        mLastInfo = currentCpuUsages;
         
         mLastExecTask = System.currentTimeMillis();
+    }
+
+    private boolean isUpdated(int currentCpuClock, int[] cpuUsages) {
+
+        if (mLastCpuClock != currentCpuClock) {
+            return true;
+        } else if (mLastCpuUsages == null || cpuUsages == null) {
+            return true;
+        } else if (cpuUsages.length != mLastCpuUsages.length) {
+            // コア数変動のケア(Galaxy S II等でよくあるらしい)
+            return true;
+        } else {
+            // 同一でない値があれば更新する
+            final int n = cpuUsages.length;
+            for (int i=0; i<n; i++) {
+                if (cpuUsages[i] != mLastCpuUsages[i]) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void distributeToCallbacks(int[] cpuUsages, AllCoreFrequencyInfo fi) {
@@ -379,7 +372,7 @@ public class UsageUpdateService extends Service {
      * ステータスバー通知の設定
      */
     @SuppressWarnings("deprecation")
-    private void updateCpuUsageNotifications(int[] cpuUsages, int currentCpuClock) {
+    private void updateNotifications(int[] cpuUsages, int currentCpuClock, int minFreq, int maxFreq) {
         
         // N分おきに通知時刻を更新する
         final long now = System.currentTimeMillis();
@@ -421,7 +414,7 @@ public class UsageUpdateService extends Service {
         if (currentCpuClock > 0 && mConfig.showFrequencyNotification) {
 
             // 周波数通知
-            nm.notify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(currentCpuClock, pendingIntent).build());
+            nm.notify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(minFreq, maxFreq, currentCpuClock, pendingIntent).build());
         }
     }
 
@@ -573,7 +566,8 @@ public class UsageUpdateService extends Service {
 
 
     @NonNull
-    private NotificationCompat.Builder makeFrequencyNotification(int currentCpuClock, PendingIntent pendingIntent) {
+    private NotificationCompat.Builder makeFrequencyNotification(int minFreq, int maxFreq,
+                                                                 int currentCpuClock, PendingIntent pendingIntent) {
 
         // 通知ウインドウのメッセージ
         final String notificationTitle0 = "CPU Frequency";
@@ -594,7 +588,7 @@ public class UsageUpdateService extends Service {
 
         // 通知文字列の生成
         final String notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock);
-        final String notificationContent = "Max Freq " + mMaxFreqText + " Min Freq " + mMinFreqText;
+        final String notificationContent = "Max Freq " + MyUtil.formatFreq(maxFreq) + " Min Freq " + MyUtil.formatFreq(minFreq);
 
         builder.setContentTitle(notificationTitle);
         builder.setContentText(notificationContent);
