@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#222"
@@ -31,21 +32,9 @@
                 android:paddingLeft="@dimen/padding_medium"
                 android:paddingTop="@dimen/padding_small"
                 android:paddingBottom="@dimen/padding_small"
-                android:text="Freq:"
+                tools:text="Freq:"
                 android:textColor="#fff"
-                android:gravity="center_horizontal" />
-            <TextView
-                android:id="@+id/freqText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/freqImage"
-                android:layout_below="@id/freqText1"
-                android:paddingLeft="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_small"
-                android:paddingBottom="@dimen/padding_small"
-                android:text="Min: XXXMHz, Max: XXXGHz"
-                android:textColor="#fff"
-                android:gravity="center_horizontal" />
+                android:gravity="left" />
 
         </RelativeLayout>
 

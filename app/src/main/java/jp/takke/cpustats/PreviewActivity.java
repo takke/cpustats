@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,8 +42,8 @@ public class PreviewActivity extends Activity {
          * サービスからの通知受信メソッド
          */
         @Override
-        public void updateUsage(final int[] cpuUsages, final int currentFreq,
-                                final int minFreq, final int maxFreq) throws RemoteException {
+        public void updateUsage(final int[] cpuUsages,
+                                int[] freqs, int[] minFreqs, int[] maxFreqs) throws RemoteException {
 
             mHandler.post(() -> {
 
@@ -49,12 +52,12 @@ public class PreviewActivity extends Activity {
 
                 if (mIsForeground) {
                     // CPUクロック周波数表示
-                    showCpuFrequency(currentFreq, minFreq, maxFreq);
+                    showCpuFrequency(freqs, minFreqs, maxFreqs);
 
                     // CPU使用率表示更新
-                    showCpuUsages(cpuUsages);
+                    showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs);
 
-                    setTitle("CPU Stats  Freq: " + MyUtil.formatFreq(currentFreq) + "");
+//                    setTitle(getString(R.string.app_name) + "  Freq: " + MyUtil.formatFreq(currentFreq) + "");
                 }
             });
         }
@@ -94,10 +97,18 @@ public class PreviewActivity extends Activity {
         hideAllCoreFreqInfo();
         
         // CPU クロック更新
-        final int minFreq = CpuInfoCollector.takeMinCpuFreq(0);
-        final int maxFreq = CpuInfoCollector.takeMaxCpuFreq(0);
-        showCpuFrequency(CpuInfoCollector.takeCurrentCpuFreq(0), minFreq, maxFreq);
-        
+        final int coreCount = CpuInfoCollector.calcCpuCoreCount();
+        final AllCoreFrequencyInfo fi = new AllCoreFrequencyInfo(coreCount);
+        showCpuFrequency(fi.freqs, fi.minFreqs, fi.maxFreqs);
+
+        // CPU使用率表示更新
+        final int[] dummyCpuUsages = new int[coreCount];
+        for (int i = 0; i < dummyCpuUsages.length; i++) {
+            dummyCpuUsages[i] = 0;
+        }
+        CpuInfoCollector.takeAllCoreFreqs(fi);
+        showCpuUsages(dummyCpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs);
+
         // アクションバーのアイコン変更
         setActionBarLogo(R.drawable.single000);
         
@@ -134,7 +145,6 @@ public class PreviewActivity extends Activity {
         // Freq
         findViewById(R.id.freqImage).setVisibility(View.GONE);
         findViewById(R.id.freqText1).setVisibility(View.GONE);
-        findViewById(R.id.freqText2).setVisibility(View.GONE);
     }
 
     @Override
@@ -296,12 +306,60 @@ public class PreviewActivity extends Activity {
         
         super.onResume();
     }
-    
+
+    /**
+     * CPU クロック周波数を画面に表示する
+     */
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
+    @SuppressLint("SetTextI18n")
+    private void showCpuFrequency(final int[] freqs, int[] minFreqs, int[] maxFreqs) {
+
+        // 全コアのうち最適なクロック周波数を探す
+        final int activeCoreIndex = MyUtil.getActiveCoreIndex(freqs);
+        final int currentFreq = freqs[activeCoreIndex];
+        final int minFreq = minFreqs[activeCoreIndex];
+        final int maxFreq = maxFreqs[activeCoreIndex];
+
+        final TextView textView1 = (TextView) findViewById(R.id.freqText1);
+        final SpannableStringBuilder ssb = new SpannableStringBuilder();
+
+        ssb.append(MyUtil.formatFreq(currentFreq));
+
+        // アクティブなコア番号と(周波数による)負荷
+        {
+            final int start = ssb.length();
+            final int clockPercent = MyUtil.getClockPercent(currentFreq, minFreq, maxFreq);
+            ssb.append("  [Core " + (activeCoreIndex+1) + ": " + clockPercent + "%]");
+            ssb.setSpan(new RelativeSizeSpan(0.8f), start, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//          MyLog.i(" clock[" + currentFreq + "] => " + clockPercent + "%");
+        }
+
+        // 周波数の min/max
+        {
+            ssb.append("\n");
+            final String minFreqText = MyUtil.formatFreq(minFreq);
+            final String maxFreqText = MyUtil.formatFreq(maxFreq);
+            final int start = ssb.length();
+            ssb.append(" (" + minFreqText + " - " + maxFreqText + ")");
+            ssb.setSpan(new RelativeSizeSpan(0.8f), start, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        textView1.setText(ssb);
+        textView1.setVisibility(View.VISIBLE);
+
+
+        final int id = ResourceUtil.getIconIdForCpuFreq(currentFreq);
+        final ImageView imageView = (ImageView) findViewById(R.id.freqImage);
+        imageView.setImageResource(id);
+        imageView.setVisibility(View.VISIBLE);
+    }
+
     /**
      * CPU 使用率を画面に表示する
      */
+    @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
     @SuppressLint("SetTextI18n")
-    private void showCpuUsages(int[] cpuUsages) {
+    private void showCpuUsages(int[] cpuUsages, int[] freqs, int[] minFreqs, int[] maxFreqs) {
         
 //        MyLog.d("PreviewActivity.updateCpuUsages");
         
@@ -320,53 +378,66 @@ public class PreviewActivity extends Activity {
             if (coreCount <= i) {
                 // Coreが少ないので消去
                 findViewById(cores[i]).setVisibility(View.GONE);
+                continue;
+            }
+
+
+            final View coreView = findViewById(cores[i]);
+            coreView.setVisibility(View.VISIBLE);
+
+            int cpuUsage = 0;
+            if (cpuUsages != null && cpuUsages.length > i+1) {
+                cpuUsage = cpuUsages[i+1];
+            }
+
+            //--------------------------------------------------
+            // アイコン設定
+            //--------------------------------------------------
+            final int id = ResourceUtil.getIconIdForCpuUsageSingle(cpuUsage);
+            final ImageView imageView = (ImageView) coreView.findViewById(R.id.coreImage);
+            imageView.setImageResource(id);
+            imageView.setVisibility(View.VISIBLE);
+
+            //--------------------------------------------------
+            // テキスト設定
+            //--------------------------------------------------
+            final TextView textView = (TextView) coreView.findViewById(R.id.coreText);
+            final SpannableStringBuilder ssb = new SpannableStringBuilder();
+            ssb.append("Core" + (i + 1) + ": " + cpuUsage + "%");
+
+            // 周波数
+            String freqText = MyUtil.formatFreq(freqs[i]);
+            ssb.append("\n");
+            ssb.append(" " + freqText);
+
+            // 周波数による負荷
+            final int clockPercent = MyUtil.getClockPercent(freqs[i], minFreqs[i], maxFreqs[i]);
+            {
+                final int start = ssb.length();
+                ssb.append(" [" + clockPercent + "%]");
+                ssb.setSpan(new RelativeSizeSpan(0.8f), start, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            // 周波数の min/max
+            {
+                ssb.append("\n");
+                final int start = ssb.length();
+                final String minFreqText = MyUtil.formatFreq(minFreqs[i]);
+                final String maxFreqText = MyUtil.formatFreq(maxFreqs[i]);
+                ssb.append(" (" + minFreqText + " - " + maxFreqText + ")");
+                ssb.setSpan(new RelativeSizeSpan(0.8f), start, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            textView.setText(ssb);
+            textView.setVisibility(View.VISIBLE);
+
+            // アクティブコアの背景色を変える
+            if (clockPercent > 0) {
+                coreView.setBackgroundColor(0xff333333);
             } else {
-                final View coreView = findViewById(cores[i]);
-                coreView.setVisibility(View.VISIBLE);
-
-                int cpuUsage = 0;
-                if (cpuUsages != null && cpuUsages.length > i+1) {
-                    cpuUsage = cpuUsages[i+1];
-                }
-
-
-                final TextView textView = (TextView) coreView.findViewById(R.id.coreText);
-                textView.setText("Core" + (i+1) + ": " + cpuUsage + "%");
-                textView.setVisibility(View.VISIBLE);
-
-                final int id = ResourceUtil.getIconIdForCpuUsageSingle(cpuUsage);
-                final ImageView imageView = (ImageView) coreView.findViewById(R.id.coreImage);
-                imageView.setImageResource(id);
-                imageView.setVisibility(View.VISIBLE);
+                coreView.setBackgroundColor(0xff222222);
             }
         }
     }
 
-    /**
-     * CPU クロック周波数を画面に表示する
-     */
-    @SuppressLint("SetTextI18n")
-    private void showCpuFrequency(final int currentFreq, int minFreq, int maxFreq) {
-        
-//        MyLog.d("PreviewActivity.updateCpuFrequency");
-        
-        final TextView textView1 = (TextView) findViewById(R.id.freqText1);
-        textView1.setText("Freq: " + MyUtil.formatFreq(currentFreq));
-        textView1.setVisibility(View.VISIBLE);
-        
-        final TextView textView2 = (TextView) findViewById(R.id.freqText2);
-        final String minFreqText = MyUtil.formatFreq(minFreq);
-        final String maxFreqText = MyUtil.formatFreq(maxFreq);
-        textView2.setText("(" + minFreqText + " - " + maxFreqText + ")");
-        textView2.setVisibility(View.VISIBLE);
-
-//      final int clockPercent = mMaxFreq >= 0 ? ((currentFreq - mMinFreq) * 100 / (mMaxFreq - mMinFreq)) : 0;
-//      MyLog.i(" clock[" + currentFreq + "] => " + clockPercent + "%");
-        
-        final int id = ResourceUtil.getIconIdForCpuFreq(currentFreq);
-        final ImageView imageView = (ImageView) findViewById(R.id.freqImage);
-        imageView.setImageResource(id);
-        imageView.setVisibility(View.VISIBLE);
-    }
-    
 }

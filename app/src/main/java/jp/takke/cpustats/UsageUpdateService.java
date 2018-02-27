@@ -242,7 +242,12 @@ public class UsageUpdateService extends Service {
         //-------------------------------------------------
         // CPU クロック周波数の取得
         //-------------------------------------------------
+        // TODO 最適なものを選ぶこと
         final int currentCpuClock = CpuInfoCollector.takeCurrentCpuFreq(0);
+        final AllCoreFrequencyInfo fi = new AllCoreFrequencyInfo(CpuInfoCollector.calcCpuCoreCount());
+        CpuInfoCollector.takeAllCoreFreqs(fi);
+
+
         if (mMinFreq < 0) {
             mMinFreq = CpuInfoCollector.takeMinCpuFreq(0);
             mMinFreqText = MyUtil.formatFreq(mMinFreq);
@@ -305,24 +310,7 @@ public class UsageUpdateService extends Service {
             updateCpuUsageNotifications(cpuUsages, currentCpuClock);
             
             // コールバック経由で通知
-            if (mCallbackListSize >= 1) {
-                final int n = mCallbackList.beginBroadcast();
-                
-                // コールバック数を念のため更新しておく
-                mCallbackListSize = n;
-                
-//                if (MyLog.debugMode) {
-//                    MyLog.d("- broadcast:" + n);
-//                }
-                for (int i=0; i<n; i++) {
-                    try {
-                        mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages, currentCpuClock, mMinFreq, mMaxFreq);
-                    } catch (RemoteException e) {
-//                      MyLog.e(e);
-                    }
-                }
-                mCallbackList.finishBroadcast();
-            }
+            distributeToCallbacks(cpuUsages, fi);
         }
         
         // 今回の snapshot を保存
@@ -331,7 +319,33 @@ public class UsageUpdateService extends Service {
         mLastExecTask = System.currentTimeMillis();
     }
 
-    
+    private void distributeToCallbacks(int[] cpuUsages, AllCoreFrequencyInfo fi) {
+
+        if (mCallbackListSize >= 1) {
+            final int n = mCallbackList.beginBroadcast();
+
+            // コールバック数を念のため更新しておく
+            mCallbackListSize = n;
+
+//                if (MyLog.debugMode) {
+//                    MyLog.d("- broadcast:" + n);
+//                }
+
+            // 全コアのCPU周波数を収集する
+            for (int i=0; i<n; i++) {
+                try {
+                    mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages,
+//                            currentCpuClock, mMinFreq, mMaxFreq,
+                            fi.freqs, fi.minFreqs, fi.maxFreqs);
+                } catch (RemoteException e) {
+//                      MyLog.e(e);
+                }
+            }
+            mCallbackList.finishBroadcast();
+        }
+    }
+
+
     @Override
     public void onDestroy() {
         

@@ -82,6 +82,19 @@ public class CpuInfoCollector {
         return readIntegerFile("/sys/devices/system/cpu/cpu" + coreIndex + "/cpufreq/cpuinfo_max_freq");
     }
 
+    /**
+     * 全コアのCPUクロックを取得する
+     */
+    public static void takeAllCoreFreqs(AllCoreFrequencyInfo fi) {
+        final int n = calcCpuCoreCount();
+
+        for (int i = 0; i < n; i++) {
+            fi.freqs[i] = takeCurrentCpuFreq(i);
+            fi.minFreqs[i] = takeMinCpuFreq(i);
+            fi.maxFreqs[i] = takeMaxCpuFreq(i);
+        }
+    }
+
     private static int readIntegerFile(String filePath) {
 
         try {

@@ -76,4 +76,28 @@ public class MyUtil {
         final int b = (clockHz / 1000 / 100) % 10;  // a.b GHz の b 値
         return a + "." + b + " GHz";
     }
+
+    /**
+     * 最もアクティブなコアのインデックスを返す
+     */
+    public static int getActiveCoreIndex(int[] freqs) {
+
+        int targetCore = 0;
+        for (int i = 1; i < freqs.length; i++) {
+            if (freqs[i] > freqs[targetCore]) {
+                targetCore = i;
+            }
+        }
+        return targetCore;
+    }
+
+    /**
+     * クロック周波数の current/min/max から [0, 100] % を算出する
+     */
+    public static int getClockPercent(int currentFreq, int minFreq, int maxFreq) {
+        if (maxFreq - minFreq <= 0) {
+            return 0;
+        }
+        return maxFreq >= 0 ? ((currentFreq - minFreq) * 100 / (maxFreq - minFreq)) : 0;
+    }
 }
