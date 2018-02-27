@@ -26,10 +26,6 @@ public class PreviewActivity extends Activity {
     // 表示確認
     private boolean mIsForeground = false;
 
-    // CPUクロック周波数(最小、最大)の文字列キャッシュ
-    private String mMinFreqText = "";
-    private String mMaxFreqText = "";
-
     // サービス実行フラグ(メニュー切り替え用。コールバックがあれば実行中と判定する)
     private boolean mServiceMaybeRunning = false;
     
@@ -38,28 +34,27 @@ public class PreviewActivity extends Activity {
     
     // コールバックIFの実装
     private IUsageUpdateCallback mCallback = new IUsageUpdateCallback.Stub() {
-        
+
         /**
          * サービスからの通知受信メソッド
          */
-        public void updateUsage(final int[] cpuUsages, final int currentFreq) throws RemoteException {
-            
-            mHandler.post(new Runnable() {
-                
-                public void run() {
-                    
-                    // サービス実行中フラグを立てておく
-                    mServiceMaybeRunning = true;
-                    
-                    if (mIsForeground) {
-                        // CPU使用率表示更新
-                        updateCpuUsages(cpuUsages);
-                        
-                        // CPUクロック周波数表示更新
-                        updateCpuFrequency(currentFreq);
-                        
-                        setTitle("CPU Stats  Freq: " + MyUtil.formatFreq(currentFreq) + "");
-                    }
+        @Override
+        public void updateUsage(final int[] cpuUsages, final int currentFreq,
+                                final int minFreq, final int maxFreq) throws RemoteException {
+
+            mHandler.post(() -> {
+
+                // サービス実行中フラグを立てておく
+                mServiceMaybeRunning = true;
+
+                if (mIsForeground) {
+                    // CPUクロック周波数表示
+                    showCpuFrequency(currentFreq, minFreq, maxFreq);
+
+                    // CPU使用率表示更新
+                    showCpuUsages(cpuUsages);
+
+                    setTitle("CPU Stats  Freq: " + MyUtil.formatFreq(currentFreq) + "");
                 }
             });
         }
@@ -99,8 +94,9 @@ public class PreviewActivity extends Activity {
         hideAllCoreFreqInfo();
         
         // CPU クロック更新
-        updateCpuFrequencyMinMax();
-        updateCpuFrequency(CpuInfoCollector.takeCurrentCpuFreq());
+        final int minFreq = CpuInfoCollector.takeMinCpuFreq(0);
+        final int maxFreq = CpuInfoCollector.takeMaxCpuFreq(0);
+        showCpuFrequency(CpuInfoCollector.takeCurrentCpuFreq(0), minFreq, maxFreq);
         
         // アクションバーのアイコン変更
         setActionBarLogo(R.drawable.single000);
@@ -109,17 +105,6 @@ public class PreviewActivity extends Activity {
         final Intent intent = new Intent(IUsageUpdateService.class.getName());
         intent.setPackage(getPackageName());
         bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
-    }
-
-    /**
-     * CPU周波数のmin/maxを収集する
-     */
-    private void updateCpuFrequencyMinMax() {
-        final int minFreq = CpuInfoCollector.takeMinCpuFreq();
-        mMinFreqText = MyUtil.formatFreq(minFreq);
-
-        final int maxFreq = CpuInfoCollector.takeMaxCpuFreq();
-        mMaxFreqText = MyUtil.formatFreq(maxFreq);
     }
 
     private void setActionBarLogo(int iconId) {
@@ -316,7 +301,7 @@ public class PreviewActivity extends Activity {
      * CPU 使用率を画面に表示する
      */
     @SuppressLint("SetTextI18n")
-    private void updateCpuUsages(int[] cpuUsages) {
+    private void showCpuUsages(int[] cpuUsages) {
         
 //        MyLog.d("PreviewActivity.updateCpuUsages");
         
@@ -360,7 +345,8 @@ public class PreviewActivity extends Activity {
     /**
      * CPU クロック周波数を画面に表示する
      */
-    private void updateCpuFrequency(final int currentFreq) {
+    @SuppressLint("SetTextI18n")
+    private void showCpuFrequency(final int currentFreq, int minFreq, int maxFreq) {
         
 //        MyLog.d("PreviewActivity.updateCpuFrequency");
         
@@ -369,7 +355,9 @@ public class PreviewActivity extends Activity {
         textView1.setVisibility(View.VISIBLE);
         
         final TextView textView2 = (TextView) findViewById(R.id.freqText2);
-        textView2.setText("(" + mMinFreqText + " - " + mMaxFreqText + ")");
+        final String minFreqText = MyUtil.formatFreq(minFreq);
+        final String maxFreqText = MyUtil.formatFreq(maxFreq);
+        textView2.setText("(" + minFreqText + " - " + maxFreqText + ")");
         textView2.setVisibility(View.VISIBLE);
 
 //      final int clockPercent = mMaxFreq >= 0 ? ((currentFreq - mMinFreq) * 100 / (mMaxFreq - mMinFreq)) : 0;

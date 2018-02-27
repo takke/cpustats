@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@SuppressWarnings("WeakerAccess")
 class CpuNotificationData {
     public int[] cpuUsages;
     public int coreNoStart;
@@ -120,12 +121,14 @@ public class UsageUpdateService extends Service {
             mConfig.loadSettings(UsageUpdateService.this);
             
             // 設定で消された通知を消去
+            final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            assert nm != null;
             if (!mConfig.showUsageNotification) {
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_USAGE_NOTIFICATION_ID1);
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_USAGE_NOTIFICATION_ID2);
+                nm.cancel(MY_USAGE_NOTIFICATION_ID1);
+                nm.cancel(MY_USAGE_NOTIFICATION_ID2);
             }
             if (!mConfig.showFrequencyNotification) {
-                ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_FREQ_NOTIFICATION_ID);
+                nm.cancel(MY_FREQ_NOTIFICATION_ID);
             }
         }
     };
@@ -137,7 +140,12 @@ public class UsageUpdateService extends Service {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+            final String action = intent.getAction();
+            if (action == null) {
+                return;
+            }
+
+            if (action.equals(Intent.ACTION_SCREEN_ON)) {
                 
                 MyLog.d("screen on");
                 
@@ -155,7 +163,7 @@ public class UsageUpdateService extends Service {
                     startThread();
                 }
                 
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+            } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 
                 MyLog.d("screen off");
                 
@@ -234,13 +242,13 @@ public class UsageUpdateService extends Service {
         //-------------------------------------------------
         // CPU クロック周波数の取得
         //-------------------------------------------------
-        final int currentCpuClock = CpuInfoCollector.takeCurrentCpuFreq();
+        final int currentCpuClock = CpuInfoCollector.takeCurrentCpuFreq(0);
         if (mMinFreq < 0) {
-            mMinFreq = CpuInfoCollector.takeMinCpuFreq();
+            mMinFreq = CpuInfoCollector.takeMinCpuFreq(0);
             mMinFreqText = MyUtil.formatFreq(mMinFreq);
         }
         if (mMaxFreq < 0) {
-            mMaxFreq = CpuInfoCollector.takeMaxCpuFreq();
+            mMaxFreq = CpuInfoCollector.takeMaxCpuFreq(0);
             mMaxFreqText = MyUtil.formatFreq(mMaxFreq);
         }
         if (MyLog.debugMode) {
@@ -308,7 +316,7 @@ public class UsageUpdateService extends Service {
 //                }
                 for (int i=0; i<n; i++) {
                     try {
-                        mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages, currentCpuClock);
+                        mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages, currentCpuClock, mMinFreq, mMaxFreq);
                     } catch (RemoteException e) {
 //                      MyLog.e(e);
                     }
@@ -338,7 +346,9 @@ public class UsageUpdateService extends Service {
         getApplicationContext().unregisterReceiver(mReceiver);
         
         // 通知を消す
-        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
+        final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert nm != null;
+        nm.cancelAll();
 
         super.onDestroy();
     }
@@ -364,6 +374,7 @@ public class UsageUpdateService extends Service {
         }
         
         final NotificationManager nm = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+        assert nm != null;
 
         // 通知ウインドウをクリックした際に起動するインテント
         final Intent intent = new Intent(this, PreviewActivity.class);
@@ -476,6 +487,7 @@ public class UsageUpdateService extends Service {
     }
 
 
+    @SuppressWarnings("SameParameterValue")
     private static int min(int a, int b) {
         return a < b ? a : b;
     }
@@ -652,6 +664,7 @@ public class UsageUpdateService extends Service {
         }
 
         final KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        assert km != null;
         if (km.inKeyguardRestrictedInputMode()) {
             MyLog.d("set notification priority: min");
             final int Notification_PRIORITY_MIN = -2;   // Notification.PRIORITY_MIN
@@ -686,7 +699,8 @@ public class UsageUpdateService extends Service {
         // ※onStartCommandが呼ばれるように設定する
         
         final AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        
+        assert am != null;
+
         am.set(AlarmManager.RTC, now + intervalMs, alarmSender);
         
         MyLog.d("-- scheduled[" + intervalMs + "ms]");
@@ -707,7 +721,9 @@ public class UsageUpdateService extends Service {
         stopAlarm();
         
         // 通知を消す
-        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancelAll();
+        final NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert nm != null;
+        nm.cancelAll();
 
         // 常駐停止
         stopSelf();
@@ -731,6 +747,7 @@ public class UsageUpdateService extends Service {
         );
         
         final AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        assert am != null;
         am.cancel(pendingIntent);
         // @see http://creadorgranoeste.blogspot.com/2011/06/alarmmanager.html
     }

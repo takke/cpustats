@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("WeakerAccess")
 public class CpuInfoCollector {
 
     // core count cache
@@ -59,8 +60,8 @@ public class CpuInfoCollector {
      *
      * @return 384000 のような数値(取得エラー時は0)
      */
-    public static int takeCurrentCpuFreq() {
-        return readIntegerFile("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
+    public static int takeCurrentCpuFreq(int coreIndex) {
+        return readIntegerFile("/sys/devices/system/cpu/cpu" + coreIndex + "/cpufreq/scaling_cur_freq");
     }
 
     /**
@@ -68,8 +69,8 @@ public class CpuInfoCollector {
      *
      * @return 384000 のような数値(取得エラー時は0)
      */
-    public static int takeMinCpuFreq() {
-        return readIntegerFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
+    public static int takeMinCpuFreq(int coreIndex) {
+        return readIntegerFile("/sys/devices/system/cpu/cpu" + coreIndex + "/cpufreq/cpuinfo_min_freq");
     }
 
     /**
@@ -77,8 +78,8 @@ public class CpuInfoCollector {
      *
      * @return 384000 のような数値(取得エラー時は0)
      */
-    public static int takeMaxCpuFreq() {
-        return readIntegerFile("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+    public static int takeMaxCpuFreq(int coreIndex) {
+        return readIntegerFile("/sys/devices/system/cpu/cpu" + coreIndex + "/cpufreq/cpuinfo_max_freq");
     }
 
     private static int readIntegerFile(String filePath) {
