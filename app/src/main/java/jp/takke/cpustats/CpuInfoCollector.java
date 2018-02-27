@@ -60,7 +60,7 @@ public class CpuInfoCollector {
      *
      * @return 384000 のような数値(取得エラー時は0)
      */
-    public static int takeCurrentCpuFreq(int coreIndex) {
+    private static int takeCurrentCpuFreq(int coreIndex) {
         return readIntegerFile("/sys/devices/system/cpu/cpu" + coreIndex + "/cpufreq/scaling_cur_freq");
     }
 
@@ -69,7 +69,7 @@ public class CpuInfoCollector {
      *
      * @return 384000 のような数値(取得エラー時は0)
      */
-    public static int takeMinCpuFreq(int coreIndex) {
+    private static int takeMinCpuFreq(int coreIndex) {
         return readIntegerFile("/sys/devices/system/cpu/cpu" + coreIndex + "/cpufreq/cpuinfo_min_freq");
     }
 
@@ -78,7 +78,7 @@ public class CpuInfoCollector {
      *
      * @return 384000 のような数値(取得エラー時は0)
      */
-    public static int takeMaxCpuFreq(int coreIndex) {
+    private static int takeMaxCpuFreq(int coreIndex) {
         return readIntegerFile("/sys/devices/system/cpu/cpu" + coreIndex + "/cpufreq/cpuinfo_max_freq");
     }
 
