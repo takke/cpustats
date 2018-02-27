@@ -18,21 +18,17 @@ import android.widget.TextView;
 
 public class PreviewActivity extends Activity {
     
-    final Handler mHandler = new Handler();
-    
-    // 表示確認
-    private boolean mIsForeground = false;
-    
-    // CPUクロック周波数(最小、最大)の文字列キャッシュ
-    @SuppressWarnings("FieldCanBeLocal")
-    private int mMinFreq = 0;
-    private String mMinFreqText = "";
-    @SuppressWarnings("FieldCanBeLocal")
-    private int mMaxFreq = 0;
-    private String mMaxFreqText = "";
-
     // 設定画面
     private final static int REQUEST_CONFIG_ACTIVITY = 0;
+
+    final Handler mHandler = new Handler();
+
+    // 表示確認
+    private boolean mIsForeground = false;
+
+    // CPUクロック周波数(最小、最大)の文字列キャッシュ
+    private String mMinFreqText = "";
+    private String mMaxFreqText = "";
 
     // サービス実行フラグ(メニュー切り替え用。コールバックがあれば実行中と判定する)
     private boolean mServiceMaybeRunning = false;
@@ -103,11 +99,7 @@ public class PreviewActivity extends Activity {
         hideAllCoreFreqInfo();
         
         // CPU クロック更新
-        mMinFreq = CpuInfoCollector.takeMinCpuFreq();
-        mMinFreqText = MyUtil.formatFreq(mMinFreq);
-        
-        mMaxFreq = CpuInfoCollector.takeMaxCpuFreq();
-        mMaxFreqText = MyUtil.formatFreq(mMaxFreq);
+        updateCpuFrequencyMinMax();
         updateCpuFrequency(CpuInfoCollector.takeCurrentCpuFreq());
         
         // アクションバーのアイコン変更
@@ -117,6 +109,17 @@ public class PreviewActivity extends Activity {
         final Intent intent = new Intent(IUsageUpdateService.class.getName());
         intent.setPackage(getPackageName());
         bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    /**
+     * CPU周波数のmin/maxを収集する
+     */
+    private void updateCpuFrequencyMinMax() {
+        final int minFreq = CpuInfoCollector.takeMinCpuFreq();
+        mMinFreqText = MyUtil.formatFreq(minFreq);
+
+        final int maxFreq = CpuInfoCollector.takeMaxCpuFreq();
+        mMaxFreqText = MyUtil.formatFreq(maxFreq);
     }
 
     private void setActionBarLogo(int iconId) {
