@@ -9,13 +9,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -37,15 +35,8 @@ public class UsageUpdateService extends Service {
     private static final int MY_USAGE_NOTIFICATION_ID2 = 11;
     private static final int MY_FREQ_NOTIFICATION_ID = 20;
 
-    // 更新間隔
-    private long mIntervalMs = C.PREF_DEFAULT_UPDATE_INTERVAL_SEC * 1000;
-    
-    // 通知
-    private boolean mShowUsageNotification = true;
-    private boolean mShowFrequencyNotification = false;
-
-    // CPU使用率通知のアイコンモード
-    private int mCoreDistributionMode = C.CORE_DISTRIBUTION_MODE_2ICONS;
+    // 設定値
+    private MyConfig mConfig = new MyConfig();
 
     // 常駐停止フラグ
     private boolean mStopResident = false;
@@ -125,15 +116,15 @@ public class UsageUpdateService extends Service {
          * 設定のリロード
          */
         public void reloadSettings() throws RemoteException {
-            
-            loadSettings();
+
+            mConfig.loadSettings(UsageUpdateService.this);
             
             // 設定で消された通知を消去
-            if (!mShowUsageNotification) {
+            if (!mConfig.showUsageNotification) {
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_USAGE_NOTIFICATION_ID1);
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_USAGE_NOTIFICATION_ID2);
             }
-            if (!mShowFrequencyNotification) {
+            if (!mConfig.showFrequencyNotification) {
                 ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).cancel(MY_FREQ_NOTIFICATION_ID);
             }
         }
@@ -202,7 +193,7 @@ public class UsageUpdateService extends Service {
         MyLog.d("UsageUpdateService.onCreate");
         
         // 設定のロード
-        loadSettings();
+        mConfig.loadSettings(this);
         
         if (mLastInfo == null) {
             mLastInfo = CpuInfoCollector.takeCpuUsageSnapshot();
@@ -217,40 +208,6 @@ public class UsageUpdateService extends Service {
 
         // スレッド開始
         startThread();
-    }
-
-
-    /**
-     * 設定のロード
-     */
-    private void loadSettings() {
-
-        MyLog.i("load settings");
-        
-        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        
-        // 更新間隔
-        final String updateIntervalSec = pref.getString(C.PREF_KEY_UPDATE_INTERVAL_SEC, ""+C.PREF_DEFAULT_UPDATE_INTERVAL_SEC);
-        try {
-            mIntervalMs = (int)(Double.parseDouble(updateIntervalSec) * 1000.0);
-            MyLog.i(" interval[" + mIntervalMs + "ms]");
-        } catch (NumberFormatException e) {
-            MyLog.e(e);
-        }
-        
-        // CPU使用率通知
-        mShowUsageNotification = pref.getBoolean(C.PREF_KEY_SHOW_USAGE_NOTIFICATION, true);
-
-        // クロック周波数通知
-        mShowFrequencyNotification = pref.getBoolean(C.PREF_KEY_SHOW_FREQUENCY_NOTIFICATION, false);
-
-        // CPU使用率通知のアイコンモード
-        try {
-            final String s = pref.getString(C.PREF_KEY_CORE_DISTRIBUTION_MODE, ""+C.CORE_DISTRIBUTION_MODE_2ICONS);
-            mCoreDistributionMode = Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            MyLog.e(e);
-        }
     }
 
 
@@ -413,10 +370,10 @@ public class UsageUpdateService extends Service {
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
         
-        if (cpuUsages != null && mShowUsageNotification) {
+        if (cpuUsages != null && mConfig.showUsageNotification) {
 
             // cpuUsagesを各通知アイコンのデータに振り分ける
-            final CpuNotificationData[] data = distributeNotificationData(cpuUsages, mCoreDistributionMode);
+            final CpuNotificationData[] data = distributeNotificationData(cpuUsages, mConfig.coreDistributionMode);
 
             if (MyLog.debugMode) {
                 dumpCpuUsagesForDebug(cpuUsages, data);
@@ -436,7 +393,7 @@ public class UsageUpdateService extends Service {
             }
         }
         
-        if (currentCpuClock > 0 && mShowFrequencyNotification) {
+        if (currentCpuClock > 0 && mConfig.showFrequencyNotification) {
 
             // 周波数通知
             nm.notify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(currentCpuClock, pendingIntent).build());
@@ -825,7 +782,7 @@ public class UsageUpdateService extends Service {
 
             while (mThread != null && mThreadActive) {
 
-                SystemClock.sleep(mIntervalMs);
+                SystemClock.sleep(mConfig.intervalMs);
 
                 if (mThreadActive && !mStopResident) {
                     execTask();
