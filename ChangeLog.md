@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v2.0.1 (2018.02.28)
+-------------------
+- Add landscape layout
+
 v2.0.0 (2018.02.27)
 -------------------
 - Re-support Android 8.0 or later
