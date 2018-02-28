@@ -1,42 +1,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#222"
     >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginBottom="@dimen/padding_tiny"
-            >
-
-            <!-- Frequency -->
-            <ImageView
-                android:id="@+id/freqImage"
-                android:src="@drawable/digit0"
-                android:layout_width="72dip"
-                android:layout_height="72dip"
-                android:layout_alignParentTop="true"
-                 />
-            <TextView
-                android:id="@+id/freqText1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/freqImage"
-                android:layout_alignParentTop="true"
-                android:paddingLeft="@dimen/padding_medium"
-                android:paddingTop="@dimen/padding_small"
-                android:paddingBottom="@dimen/padding_small"
-                tools:text="Freq:"
-                android:textColor="#fff"
-                android:gravity="left" />
-
-        </RelativeLayout>
+        <include layout="@layout/activity_preview_freq" android:id="@+id/freq" />
 
         <!-- Core1 - Core8 -->
         <include layout="@layout/activity_preview_core" android:id="@+id/core1" />

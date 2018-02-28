@@ -1,29 +1,30 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:layout_marginBottom="@dimen/padding_tiny"
     >
 
-    <!-- Core -->
+    <!-- Frequency -->
     <ImageView
-        android:id="@+id/coreImage"
+        android:id="@+id/freqImage"
+        android:src="@drawable/digit0"
         android:layout_width="72dip"
         android:layout_height="72dip"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/single000"
         />
     <TextView
-        android:id="@+id/coreText"
+        android:id="@+id/freqText1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/freqImage"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/coreImage"
-        tools:text="CPU Usage:"
-        android:padding="@dimen/padding_medium"
+        android:paddingLeft="@dimen/padding_medium"
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small"
+        tools:text="Freq:"
         android:textColor="#fff"
-        android:gravity="left"
-        />
+        android:gravity="left" />
+
 </RelativeLayout>
