@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:textAppearance="@android:style/TextAppearance.Small"
+            android:textIsSelectable="true"
             android:paddingLeft="@dimen/about_horizontal_margin"
             android:paddingRight="@dimen/about_horizontal_margin"
             android:paddingBottom="@dimen/padding_small"
