@@ -27,7 +27,7 @@ class NotificationPresenter {
     // 通知時刻の非更新時刻(この時間になるまで更新しない。スリープ復帰時にはすぐに更新するとステータスバーの順序がずれてうざいので)[ms]
     long mNotificationTimeKeep = 0;
 
-    NotificationPresenter(Context context, MyConfig config) {
+    /*package*/ NotificationPresenter(Context context, MyConfig config) {
         mContextRef = new WeakReference<>(context);
         mConfig = config;
     }
@@ -36,7 +36,7 @@ class NotificationPresenter {
      * ステータスバー通知の設定
      */
     @SuppressWarnings("deprecation")
-    void updateNotifications(int[] cpuUsages, int currentCpuClock, int minFreq, int maxFreq) {
+    /*package*/ void updateNotifications(int[] cpuUsages, int currentCpuClock, int minFreq, int maxFreq) {
 
         final Context context = mContextRef.get();
         if (context == null) {
@@ -87,7 +87,7 @@ class NotificationPresenter {
         }
     }
 
-    public void cancelNotifications() {
+    /*package*/  void cancelNotifications() {
 
         final Context context = mContextRef.get();
         if (context == null) {
