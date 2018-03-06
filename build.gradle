@@ -27,8 +27,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    versionCode = 15
-    versionName = '2.0.1'
+    versionCode = 16
+    versionName = '2.0.2'
 
     compileSdkVersion = 23
     buildToolsVersion = '27.0.3'

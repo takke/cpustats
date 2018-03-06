@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v2.0.2 (2018.03.06)
+-------------------
+- Suppress error log outputs (care for frozen core)
+
 v2.0.1 (2018.02.28)
 -------------------
 - Add landscape layout
