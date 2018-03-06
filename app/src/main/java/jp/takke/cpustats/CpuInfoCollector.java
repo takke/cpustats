@@ -105,7 +105,10 @@ public class CpuInfoCollector {
 
             return Integer.parseInt(line);
         } catch (Exception e) {
-            MyLog.e(e);
+
+            // 冬眠してるコアのデータは取れないのでログを出力しない
+            //MyLog.e(e);
+
             return 0;
         }
     }
