@@ -1,12 +1,15 @@
 package jp.takke.cpustats;
 
 import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import java.lang.ref.WeakReference;
@@ -17,6 +20,8 @@ class NotificationPresenter {
     private static final int MY_USAGE_NOTIFICATION_ID1 = 10;
     private static final int MY_USAGE_NOTIFICATION_ID2 = 11;
     private static final int MY_FREQ_NOTIFICATION_ID = 20;
+    private static final String CHANNEL_ID_CPU_USAGE = "CPU Usage";
+    private static final String CHANNEL_ID_CPU_FREQUENCY = "CPU Frequency";
 
     private final WeakReference<Context> mContextRef;
     private final MyConfig mConfig;
@@ -57,6 +62,9 @@ class NotificationPresenter {
         final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
+        //--------------------------------------------------
+        // CPU使用率通知
+        //--------------------------------------------------
         if (cpuUsages != null && mConfig.showUsageNotification) {
 
             // cpuUsagesを各通知アイコンのデータに振り分ける
@@ -65,6 +73,9 @@ class NotificationPresenter {
             if (MyLog.debugMode) {
                 dumpCpuUsagesForDebug(cpuUsages, data);
             }
+
+            // Android O (8.0) 以降では通知チャンネルが必要
+            createNotificationChannel(context, CHANNEL_ID_CPU_USAGE, "CPU Usage");
 
             // Notification(icon1)
             if (data.length >= 1) {
@@ -80,11 +91,47 @@ class NotificationPresenter {
             }
         }
 
+        //--------------------------------------------------
+        // 周波数通知
+        //--------------------------------------------------
         if (currentCpuClock > 0 && mConfig.showFrequencyNotification) {
 
-            // 周波数通知
+            // Android O (8.0) 以降では通知チャンネルが必要
+            createNotificationChannel(context, CHANNEL_ID_CPU_FREQUENCY, "CPU Frequency");
+
             nm.notify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(minFreq, maxFreq, currentCpuClock, pendingIntent).build());
         }
+    }
+
+    private void createNotificationChannel(Context context, String channelId, String channelName) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            final NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            assert manager != null;
+            if (manager.getNotificationChannel(channelId) == null) {
+                _createNotificationChannel(manager, channelId, channelName);
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static void _createNotificationChannel(NotificationManager manager, String channelId, String channelName) {
+
+        final NotificationChannel channel = new NotificationChannel(
+                channelId,
+                // ユーザが「設定」アプリで見ることになるチャンネル名
+                channelName,
+                NotificationManager.IMPORTANCE_LOW
+        );
+
+        channel.enableLights(false);
+        channel.enableVibration(false);
+        channel.setSound(null, null);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+        manager.createNotificationChannel(channel);
+
     }
 
     /*package*/  void cancelNotifications() {
@@ -129,7 +176,7 @@ class NotificationPresenter {
         String notificationTitle0 = "CPU Usage";
 
         final int iconId = ResourceUtil.getIconIdForCpuUsage(data.cpuUsages);
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContextRef.get());
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContextRef.get(), CHANNEL_ID_CPU_USAGE);
 
         builder.setSmallIcon(iconId);
         builder.setTicker(notificationTitle0);
@@ -195,7 +242,7 @@ class NotificationPresenter {
 
         // Notification.Builder は API Level11 以降からなので旧方式で作成する
         final int iconId = ResourceUtil.getIconIdForCpuFreq(currentCpuClock);
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContextRef.get());
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContextRef.get(), CHANNEL_ID_CPU_FREQUENCY);
 
         builder.setSmallIcon(iconId);
         builder.setTicker(notificationTitle0);

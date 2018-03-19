@@ -27,16 +27,16 @@ task clean(type: Delete) {
 }
 
 ext {
-    versionCode = 16
-    versionName = '2.0.2'
+    versionCode = 17
+    versionName = '2.1.0'
 
-    compileSdkVersion = 23
+    compileSdkVersion = 27
     buildToolsVersion = '27.0.3'
-    targetSdkVersion = 15
-    minSdkVersion = 9
+    targetSdkVersion = 27
+    minSdkVersion = 14
 
     // library
-    supportLibraryVersion = '25.3.1'
+    supportLibraryVersion = '27.1.0'
 
     robolectricVersion = "3.7.1"
 }
