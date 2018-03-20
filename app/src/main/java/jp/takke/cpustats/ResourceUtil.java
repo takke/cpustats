@@ -3,7 +3,7 @@ package jp.takke.cpustats;
 
 public class ResourceUtil {
 
-    public static int getIconIdForCpuUsage(int[] cpuUsages) {
+    static int getIconIdForCpuUsage(int[] cpuUsages) {
         
         if (cpuUsages.length == 0) {
             return R.drawable.single000;
@@ -13,10 +13,13 @@ public class ResourceUtil {
 //      MyLog.i("core:" + coreCount);
         final int coreCount = cpuUsages.length-1;
 
+        // デバッグ用にコア数を変更する
+//      final int coreCount = 1;
+
         switch (coreCount) {
         case 1:
             // シングルコア
-            return getIconIdForCpuUsageSingle(cpuUsages[0]);
+            return getIconIdForCpuUsageSingleMono(cpuUsages[0]);
         case 2:
             // 2コア
             return getIconIdForCpuUsageDual(cpuUsages);
@@ -29,9 +32,27 @@ public class ResourceUtil {
         }
     }
 
-    
-    public static int getIconIdForCpuUsageSingle(int cpuUsage) {
-        
+    /**
+     * 1コアアイコンの取得 カラー版(プレビュー画面用)
+     */
+    static int getIconIdForCpuUsageSingleColor(int cpuUsage) {
+
+        switch (ResourceUtil.cpuUsageToLevel5(cpuUsage)) {
+        case 0: return R.drawable.color_single000;
+        case 1: return R.drawable.color_single020;
+        case 2: return R.drawable.color_single040;
+        case 3: return R.drawable.color_single060;
+        case 4: return R.drawable.color_single080;
+        case 5: return R.drawable.color_single100;
+        }
+        return R.drawable.single000;
+    }
+
+    /**
+     * 1コアアイコンの取得 モノクロ版(通知アイコン用)
+     */
+    private static int getIconIdForCpuUsageSingleMono(int cpuUsage) {
+
         switch (ResourceUtil.cpuUsageToLevel5(cpuUsage)) {
         case 0: return R.drawable.single000;
         case 1: return R.drawable.single020;
@@ -42,15 +63,14 @@ public class ResourceUtil {
         }
         return R.drawable.single000;
     }
-    
-    
+
     /**
      * CPU 使用率を「レベル」に変換する
      * 
      * @param cpuUsage CPU使用率[0,100]
      * @return レベル値[0,5]
      */
-    public static int cpuUsageToLevel5(int cpuUsage) {
+    private static int cpuUsageToLevel5(int cpuUsage) {
         
         if (cpuUsage < 5) {
             return 0;
@@ -139,7 +159,6 @@ public class ResourceUtil {
         }
         return R.drawable.dual_0_0;
     }
-
 
     /**
      * CPUクロック周波数のアイコンを取得する

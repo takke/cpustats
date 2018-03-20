@@ -367,7 +367,7 @@ public class PreviewActivity extends Activity {
         
         // アクションバーのアイコン変更
         if (cpuUsages != null && cpuUsages.length >= 1) {
-            final int id = ResourceUtil.getIconIdForCpuUsageSingle(cpuUsages[0]);
+            final int id = ResourceUtil.getIconIdForCpuUsageSingleColor(cpuUsages[0]);
             setActionBarLogo(id);
         }
         
@@ -395,7 +395,7 @@ public class PreviewActivity extends Activity {
             //--------------------------------------------------
             // アイコン設定
             //--------------------------------------------------
-            final int id = ResourceUtil.getIconIdForCpuUsageSingle(cpuUsage);
+            final int id = ResourceUtil.getIconIdForCpuUsageSingleColor(cpuUsage);
             final ImageView imageView = (ImageView) coreView.findViewById(R.id.coreImage);
             imageView.setImageResource(id);
             imageView.setVisibility(View.VISIBLE);

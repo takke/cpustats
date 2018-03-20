@@ -5,30 +5,32 @@
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_large">16dp</dimen>
 
-    <dimen name="dual_left">2.7dip</dimen>
-    <dimen name="dual_right">2.7dip</dimen>
+    <dimen name="single_left">0.0dp</dimen>
+
+    <dimen name="dual_left">2.7dp</dimen>
+    <dimen name="dual_right">2.7dp</dimen>
 
     <!-- |== 45dp                            ==| -->
     <!-- |1|  10  |1|  10  |1|  10  |1|  10  |1| -->
     <!-- | ^        ^        ^        ^        | -->
     <!-- | 1dp      12dp     23dp     34dp     | -->
-    <dimen name="quad_left1">1dip</dimen>
-    <dimen name="quad_left2">12dip</dimen>
-    <dimen name="quad_left3">23dip</dimen>
-    <dimen name="quad_left4">34dip</dimen>
+    <dimen name="quad_left1">1dp</dimen>
+    <dimen name="quad_left2">12dp</dimen>
+    <dimen name="quad_left3">23dp</dimen>
+    <dimen name="quad_left4">34dp</dimen>
 
     <!-- |== 45dp                            ==| -->
     <!-- |2|  13.66  |1|  13.66  |1|  13.66  |1| -->
     <!-- | ^           ^           ^           | -->
     <!-- | 2dp         16.7dp      31.3dp      | -->
-    <dimen name="tri_left1">2dip</dimen>
-    <dimen name="tri_left2">16.7dip</dimen>
-    <dimen name="tri_left3">31.3dip</dimen>
+    <dimen name="tri_left1">2dp</dimen>
+    <dimen name="tri_left2">16.7dp</dimen>
+    <dimen name="tri_left3">31.3dp</dimen>
 
-    <dimen name="freq_left1">2.5dip</dimen>
-    <dimen name="freq_left2">18.5dip</dimen>
-    <dimen name="freq_left3">27.5dip</dimen>
-    <dimen name="freq_top">10dip</dimen>
+    <dimen name="freq_left1">2.5dp</dimen>
+    <dimen name="freq_left2">18.5dp</dimen>
+    <dimen name="freq_left3">27.5dp</dimen>
+    <dimen name="freq_top">10dp</dimen>
 
     <dimen name="about_horizontal_margin">12dp</dimen>
 </resources>
