@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -23,7 +24,7 @@ class NotificationPresenter {
     private static final String CHANNEL_ID_CPU_USAGE = "CPU Usage";
     private static final String CHANNEL_ID_CPU_FREQUENCY = "CPU Frequency";
 
-    private final WeakReference<Context> mContextRef;
+    private final WeakReference<Service> mServiceRef;
     private final MyConfig mConfig;
 
     // 通知時刻[ms]
@@ -32,8 +33,8 @@ class NotificationPresenter {
     // 通知時刻の非更新時刻(この時間になるまで更新しない。スリープ復帰時にはすぐに更新するとステータスバーの順序がずれてうざいので)[ms]
     long mNotificationTimeKeep = 0;
 
-    /*package*/ NotificationPresenter(Context context, MyConfig config) {
-        mContextRef = new WeakReference<>(context);
+    /*package*/ NotificationPresenter(Service service, MyConfig config) {
+        mServiceRef = new WeakReference<>(service);
         mConfig = config;
     }
 
@@ -41,10 +42,10 @@ class NotificationPresenter {
      * ステータスバー通知の設定
      */
     @SuppressWarnings("deprecation")
-    /*package*/ void updateNotifications(int[] cpuUsages, int currentCpuClock, int minFreq, int maxFreq) {
+    /*package*/ void updateNotifications(int[] cpuUsages, int currentCpuClock, int minFreq, int maxFreq, boolean requestForeground) {
 
-        final Context context = mContextRef.get();
-        if (context == null) {
+        final Service service = mServiceRef.get();
+        if (service == null) {
             return;
         }
 
@@ -54,12 +55,12 @@ class NotificationPresenter {
             mNotificationTime = now;
         }
 
-        final NotificationManager nm = ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE));
+        final NotificationManager nm = ((NotificationManager) service.getSystemService(Context.NOTIFICATION_SERVICE));
         assert nm != null;
 
         // 通知ウインドウをクリックした際に起動するインテント
-        final Intent intent = new Intent(context, PreviewActivity.class);
-        final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
+        final Intent intent = new Intent(service, PreviewActivity.class);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(service, 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         //--------------------------------------------------
@@ -75,17 +76,17 @@ class NotificationPresenter {
             }
 
             // Android O (8.0) 以降では通知チャンネルが必要
-            createNotificationChannel(context, CHANNEL_ID_CPU_USAGE, "CPU Usage");
+            createNotificationChannel(service, CHANNEL_ID_CPU_USAGE, "CPU Usage");
 
             // Notification(icon1)
             if (data.length >= 1) {
-                nm.notify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(data[0], pendingIntent).build());
+                doNotify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(data[0], pendingIntent).build(), service, nm, requestForeground);
             } else {
                 nm.cancel(MY_USAGE_NOTIFICATION_ID1);
             }
             // Notification(icon2)
             if (data.length >= 2) {
-                nm.notify(MY_USAGE_NOTIFICATION_ID2, makeUsageNotification(data[1], pendingIntent).build());
+                doNotify(MY_USAGE_NOTIFICATION_ID2, makeUsageNotification(data[1], pendingIntent).build(), service, nm, requestForeground);
             } else {
                 nm.cancel(MY_USAGE_NOTIFICATION_ID2);
             }
@@ -97,9 +98,19 @@ class NotificationPresenter {
         if (currentCpuClock > 0 && mConfig.showFrequencyNotification) {
 
             // Android O (8.0) 以降では通知チャンネルが必要
-            createNotificationChannel(context, CHANNEL_ID_CPU_FREQUENCY, "CPU Frequency");
+            createNotificationChannel(service, CHANNEL_ID_CPU_FREQUENCY, "CPU Frequency");
 
-            nm.notify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(minFreq, maxFreq, currentCpuClock, pendingIntent).build());
+            doNotify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(minFreq, maxFreq, currentCpuClock, pendingIntent).build(),
+                    service, nm, requestForeground);
+        }
+    }
+
+    private void doNotify(int notificationId, Notification notification,
+                          Service service, NotificationManager nm, boolean requestForeground) {
+        if (requestForeground) {
+            service.startForeground(notificationId, notification);
+        } else {
+            nm.notify(notificationId, notification);
         }
     }
 
@@ -136,7 +147,7 @@ class NotificationPresenter {
 
     /*package*/  void cancelNotifications() {
 
-        final Context context = mContextRef.get();
+        final Context context = mServiceRef.get();
         if (context == null) {
             return;
         }
@@ -176,7 +187,7 @@ class NotificationPresenter {
         String notificationTitle0 = "CPU Usage";
 
         final int iconId = ResourceUtil.getIconIdForCpuUsage(data.cpuUsages);
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContextRef.get(), CHANNEL_ID_CPU_USAGE);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mServiceRef.get(), CHANNEL_ID_CPU_USAGE);
 
         builder.setSmallIcon(iconId);
         builder.setTicker(notificationTitle0);
@@ -224,7 +235,7 @@ class NotificationPresenter {
             return;
         }
 
-        final KeyguardManager km = (KeyguardManager) mContextRef.get().getSystemService(Context.KEYGUARD_SERVICE);
+        final KeyguardManager km = (KeyguardManager) mServiceRef.get().getSystemService(Context.KEYGUARD_SERVICE);
         assert km != null;
         if (km.inKeyguardRestrictedInputMode()) {
             MyLog.d("set notification priority: min");
@@ -242,7 +253,7 @@ class NotificationPresenter {
 
         // Notification.Builder は API Level11 以降からなので旧方式で作成する
         final int iconId = ResourceUtil.getIconIdForCpuFreq(currentCpuClock);
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mContextRef.get(), CHANNEL_ID_CPU_FREQUENCY);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(mServiceRef.get(), CHANNEL_ID_CPU_FREQUENCY);
 
         builder.setSmallIcon(iconId);
         builder.setTicker(notificationTitle0);

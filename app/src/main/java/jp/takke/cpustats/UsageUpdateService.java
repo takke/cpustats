@@ -28,6 +28,9 @@ public class UsageUpdateService extends Service {
     // 常駐停止フラグ
     private boolean mStopResident = false;
 
+    // (Android 8.0 以降用) BOOT_COMPLETED から startForeground を実行するためのフラグ
+    private boolean mRequestForeground = false;
+
     // スリープ中フラグ
     private boolean mSleeping = false;
 
@@ -101,6 +104,7 @@ public class UsageUpdateService extends Service {
          */
         public void reloadSettings() throws RemoteException {
 
+            MyLog.d("reloadSettings");
             mConfig.loadSettings(UsageUpdateService.this);
             
             // 設定で消された通知を消去
@@ -156,7 +160,9 @@ public class UsageUpdateService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        
+
+        MyLog.i("UsageUpdateService.onBind");
+
         if (IUsageUpdateService.class.getName().equals(intent.getAction())) {
             return mBinder;
         }
@@ -171,7 +177,7 @@ public class UsageUpdateService extends Service {
     public void onCreate() {
         super.onCreate();
         
-        MyLog.d("UsageUpdateService.onCreate");
+        MyLog.i("UsageUpdateService.onCreate");
         
         // 設定のロード
         mConfig.loadSettings(this);
@@ -195,7 +201,8 @@ public class UsageUpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         final int result = super.onStartCommand(intent, flags, startId);
 
-        MyLog.d("UsageUpdateService.onStartCommand");
+        mRequestForeground = intent.getBooleanExtra("FOREGROUND_REQUEST", false);
+        MyLog.i("UsageUpdateService.onStartCommand[" + mRequestForeground + "]");
 
         // 通信量取得スレッド開始
         if (mThread == null) {
@@ -269,7 +276,8 @@ public class UsageUpdateService extends Service {
             }
         } else {
             // ステータスバーの通知
-            mNotificationPresenter.updateNotifications(cpuUsages, currentCpuClock, minFreq, maxFreq);
+            mNotificationPresenter.updateNotifications(cpuUsages, currentCpuClock, minFreq, maxFreq, mRequestForeground);
+            mRequestForeground = false;
             
             // コールバック経由で通知
             distributeToCallbacks(cpuUsages, fi);

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 public class BootReceiver extends BroadcastReceiver {
@@ -25,7 +26,12 @@ public class BootReceiver extends BroadcastReceiver {
             if (startOnBoot) {
                 // サービス起動
                 final Intent serviceIntent = new Intent(context, UsageUpdateService.class);
-                context.startService(serviceIntent);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    serviceIntent.putExtra("FOREGROUND_REQUEST", true);
+                    context.startForegroundService(serviceIntent);
+                } else {
+                    context.startService(serviceIntent);
+                }
             }
         }
         
