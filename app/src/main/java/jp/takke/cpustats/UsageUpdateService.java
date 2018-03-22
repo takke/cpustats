@@ -201,7 +201,7 @@ public class UsageUpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         final int result = super.onStartCommand(intent, flags, startId);
 
-        mRequestForeground = intent.getBooleanExtra("FOREGROUND_REQUEST", false);
+        mRequestForeground = intent != null && intent.getBooleanExtra("FOREGROUND_REQUEST", false);
         MyLog.i("UsageUpdateService.onStartCommand[" + mRequestForeground + "]");
 
         // 通信量取得スレッド開始
