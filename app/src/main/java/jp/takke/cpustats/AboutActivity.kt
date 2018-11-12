@@ -58,8 +58,8 @@ class AboutActivity : Activity() {
             val textView = findViewById<View>(R.id.license_info) as TextView
 
             // リンク有効化
-            val movementmethod = LinkMovementMethod.getInstance()
-            textView.movementMethod = movementmethod
+            val movementMethod = LinkMovementMethod.getInstance()
+            textView.movementMethod = movementMethod
 
             // HTML設定
             val spanned = makeLicenceInfoText()
@@ -105,17 +105,17 @@ class AboutActivity : Activity() {
     }
 
     private fun makeLicenceInfoText(): CharSequence {
-        val html = "<p>" +
-                "Source code : <a href=\"https://github.com/takke/cpustats\">github/takke/cpustats</a>" +
-                "</p>" +
-                "<p>" +
-                "Using cpuid code from " +
-                "<a href=\"http://android-er.blogspot.in/2009/09/read-android-cpu-info.html\">" +
-                "http://android-er.blogspot.in/2009/09/read-android-cpu-info.html" +
-                "</a>" +
-                "</p>" +
-                "<b>Android CPU Info.:</b><br />" +
-                "<pre>" + cpuInfoText + "</pre>"
+        val html = """
+<p>Source code : <a href="https://github.com/takke/cpustats">github/takke/cpustats</a></p>
+
+<p>Using cpuid code from
+ <a href="http://android-er.blogspot.in/2009/09/read-android-cpu-info.html">http://android-er.blogspot.in/2009/09/read-android-cpu-info.html</a>
+</p>
+
+<b>Android CPU Info.:</b><br />
+<pre>$cpuInfoText</pre>
+""".trimIndent()
+
         @Suppress("DEPRECATION")
         return Html.fromHtml(html)
     }

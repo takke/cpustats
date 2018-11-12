@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package jp.takke.cpustats
 
 import java.util.*
@@ -9,13 +11,13 @@ internal object CpuNotificationDataDistributor {
         // cpuUsages の index=0 は「全CPU使用率の平均」
         val coreCount = cpuUsages.size - 1
 
-        when (coreDistributionMode) {
-            C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED -> return distributeNotificationData_1IconUnsorted(coreCount, cpuUsages)
+        return when (coreDistributionMode) {
+            C.CORE_DISTRIBUTION_MODE_1ICON_UNSORTED -> distributeNotificationData_1IconUnsorted(coreCount, cpuUsages)
 
-            C.CORE_DISTRIBUTION_MODE_1ICON_SORTED -> return distributeNotificationData_1IconSorted(coreCount, cpuUsages)
+            C.CORE_DISTRIBUTION_MODE_1ICON_SORTED -> distributeNotificationData_1IconSorted(coreCount, cpuUsages)
 
-            C.CORE_DISTRIBUTION_MODE_2ICONS -> return distributeNotificationData_2Icons(coreCount, cpuUsages)
-            else -> return distributeNotificationData_2Icons(coreCount, cpuUsages)
+            C.CORE_DISTRIBUTION_MODE_2ICONS -> distributeNotificationData_2Icons(coreCount, cpuUsages)
+            else -> distributeNotificationData_2Icons(coreCount, cpuUsages)
         }
     }
 

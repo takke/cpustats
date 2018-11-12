@@ -26,22 +26,20 @@ object CpuInfoCollector {
             return sLastCpuCoreCount
         }
 
-        try {
+        sLastCpuCoreCount = try {
             // Get directory containing CPU info
             val dir = File("/sys/devices/system/cpu/")
             // Filter to only list the devices we care about
             val files = dir.listFiles { pathname ->
                 //Check if filename is "cpu", followed by a single digit number
-                if (Pattern.matches("cpu[0-9]", pathname.name)) {
-                    true
-                } else false
+                Pattern.matches("cpu[0-9]", pathname.name)
             }
 
             // Return the number of cores (virtual CPU devices)
-            sLastCpuCoreCount = files.size
+            files.size
 
         } catch (e: Exception) {
-            sLastCpuCoreCount = Runtime.getRuntime().availableProcessors()
+            Runtime.getRuntime().availableProcessors()
         }
 
         return sLastCpuCoreCount
@@ -90,12 +88,13 @@ object CpuInfoCollector {
     private fun readIntegerFile(filePath: String): Int {
 
         try {
-            val reader = BufferedReader(
-                    InputStreamReader(FileInputStream(filePath)), 1000)
-            val line = reader.readLine()
-            reader.close()
+            BufferedReader(
+                    InputStreamReader(FileInputStream(filePath)), 1000).use { reader ->
 
-            return Integer.parseInt(line)
+                val line = reader.readLine()
+                return Integer.parseInt(line)
+            }
+
         } catch (e: Exception) {
 
             // 冬眠してるコアのデータは取れないのでログを出力しない
@@ -117,7 +116,7 @@ object CpuInfoCollector {
         val result = ArrayList<OneCpuInfo>()
 
         try {
-            BufferedReader(InputStreamReader(FileInputStream("/proc/stat")), C.READ_BUFFER_SIZE).use {
+            BufferedReader(InputStreamReader(FileInputStream("/proc/stat")), C.READ_BUFFER_SIZE).use { it ->
                 it.forEachLine { line ->
 
                     if (!line.startsWith("cpu")) {

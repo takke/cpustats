@@ -55,7 +55,7 @@ class PreviewActivity : Activity() {
                     // CPU使用率表示更新
                     showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs)
 
-                    //                    setTitle(getString(R.string.app_name) + "  Freq: " + MyUtil.formatFreq(currentFreq) + "");
+//                    setTitle(getString(R.string.app_name) + "  Freq: " + MyUtil.formatFreq(currentFreq) + "");
                 }
             }
         }
@@ -230,7 +230,7 @@ class PreviewActivity : Activity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         when (requestCode) {
             REQUEST_CONFIG_ACTIVITY -> {
@@ -419,12 +419,10 @@ class PreviewActivity : Activity() {
             textView.visibility = View.VISIBLE
 
             // アクティブコアの背景色を変える
-            if (clockPercent >= 60) {
-                coreView.setBackgroundColor(-0xbbddde)
-            } else if (clockPercent > 0) {
-                coreView.setBackgroundColor(-0xcccccd)
-            } else {
-                coreView.setBackgroundColor(-0xddddde)
+            when {
+                clockPercent >= 60 -> coreView.setBackgroundColor(-0xbbddde)
+                clockPercent > 0   -> coreView.setBackgroundColor(-0xcccccd)
+                else -> coreView.setBackgroundColor(-0xddddde)
             }
         }
     }
@@ -432,7 +430,7 @@ class PreviewActivity : Activity() {
     companion object {
 
         // 設定画面
-        private val REQUEST_CONFIG_ACTIVITY = 0
+        private const val REQUEST_CONFIG_ACTIVITY = 0
     }
 
 }

@@ -60,7 +60,7 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
             createNotificationChannel(service, CHANNEL_ID_CPU_USAGE, "CPU Usage")
 
             // Notification(icon1)
-            if (data.size >= 1) {
+            if (data.isNotEmpty()) {
                 doNotify(MY_USAGE_NOTIFICATION_ID1, makeUsageNotification(data[0], pendingIntent).build(), service, nm, requestForeground)
             } else {
                 nm.cancel(MY_USAGE_NOTIFICATION_ID1)
@@ -101,7 +101,7 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
 
             val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             if (manager.getNotificationChannel(channelId) == null) {
-                _createNotificationChannel(manager, channelId, channelName)
+                createNotificationChannel(manager, channelId, channelName)
             }
         }
     }
@@ -178,8 +178,8 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
         val km = mServiceRef.get()!!.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         if (km.inKeyguardRestrictedInputMode()) {
             MyLog.d("set notification priority: min")
-            val Notification_PRIORITY_MIN = -2   // Notification.PRIORITY_MIN
-            builder.priority = Notification_PRIORITY_MIN
+            @Suppress("DEPRECATION")
+            builder.priority = Notification.PRIORITY_MIN
         }
     }
 
@@ -216,14 +216,14 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
     companion object {
 
         // 通知のID
-        private val MY_USAGE_NOTIFICATION_ID1 = 10
-        private val MY_USAGE_NOTIFICATION_ID2 = 11
-        private val MY_FREQ_NOTIFICATION_ID = 20
-        private val CHANNEL_ID_CPU_USAGE = "CPU Usage"
-        private val CHANNEL_ID_CPU_FREQUENCY = "CPU Frequency"
+        private const val MY_USAGE_NOTIFICATION_ID1 = 10
+        private const val MY_USAGE_NOTIFICATION_ID2 = 11
+        private const val MY_FREQ_NOTIFICATION_ID = 20
+        private const val CHANNEL_ID_CPU_USAGE = "CPU Usage"
+        private const val CHANNEL_ID_CPU_FREQUENCY = "CPU Frequency"
 
         @RequiresApi(api = Build.VERSION_CODES.O)
-        private fun _createNotificationChannel(manager: NotificationManager, channelId: String, channelName: String) {
+        private fun createNotificationChannel(manager: NotificationManager, channelId: String, channelName: String) {
 
             val channel = NotificationChannel(
                     channelId,
