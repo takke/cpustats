@@ -66,14 +66,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile "com.android.support:support-v4:${supportLibraryVersion}"
-    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
+    implementation "com.android.support:support-v4:${supportLibraryVersion}"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
 
-    testCompile "org.robolectric:robolectric:${robolectricVersion}"
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.apache.maven:maven-ant-tasks:2.1.3'
+    testImplementation "org.robolectric:robolectric:${robolectricVersion}"
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
 }
 
 // load signing settings from gradle.properties
