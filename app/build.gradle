@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     //noinspection GroovyAssignabilityCheck
@@ -74,6 +75,8 @@ dependencies {
     testImplementation "org.robolectric:robolectric:${robolectricVersion}"
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 // load signing settings from gradle.properties
