@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+v2.1.0 (2018.11.xx)
+-------------------
+- Change notification icon color to Monochrome
+- Support Android 4.0 or later (Stop supporting Android 2.3 to 3.2)
+- targetSdkVersion 15 -> 27
+- Update library
+  - Support Library 25.3.1 -> 27.1.0
+  - Gradle 4.1 -> 4.10.1
+  - AGP 3.0.1 -> 3.4.0-alpha02
+  - BuildTools 27.0.3 -> 28.0.3
+
 v2.0.2 (2018.03.06)
 -------------------
 - Suppress error log outputs (care for frozen core)
