@@ -36,7 +36,7 @@ class ConfigActivity : PreferenceActivity() {
                         C.CORE_DISTRIBUTION_MODE_1ICON_SORTED.toString())
                 pref.setEntries(R.array.core_distribution_mode_entries)
                 pref.entryValues = entryValues
-                pref.setDefaultValue(C.CORE_DISTRIBUTION_MODE_2ICONS.toString())
+                pref.setDefaultValue(C.CORE_DISTRIBUTION_MODE_1ICON_SORTED.toString())
                 pc.addPreference(pref)
             }
 

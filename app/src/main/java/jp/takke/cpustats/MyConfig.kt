@@ -41,7 +41,7 @@ internal class MyConfig {
 
         // CPU使用率通知のアイコンモード
         try {
-            val s = pref.getString(C.PREF_KEY_CORE_DISTRIBUTION_MODE, "" + C.CORE_DISTRIBUTION_MODE_2ICONS)
+            val s = pref.getString(C.PREF_KEY_CORE_DISTRIBUTION_MODE, "" + C.CORE_DISTRIBUTION_MODE_1ICON_SORTED)
             coreDistributionMode = Integer.parseInt(s)
         } catch (e: NumberFormatException) {
             MyLog.e(e)
