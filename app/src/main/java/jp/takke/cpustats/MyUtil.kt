@@ -131,4 +131,15 @@ object MyUtil {
         return if (maxFreq >= 0) (currentFreq - minFreq) * 100 / (maxFreq - minFreq) else 0
     }
 
+    /**
+     * CPU使用率から背景色を取得する
+     */
+    fun getBackgroundColor(clockPercent: Int): Int {
+        return when {
+            clockPercent >= 60 -> 0xff442222.toInt()
+            clockPercent > 0 -> 0xff333333.toInt()
+            else -> 0xff222222.toInt()
+        }
+    }
+
 }
