@@ -40,7 +40,6 @@ ext {
     minSdkVersion = 14
 
     // library
-    supportLibraryVersion = '27.1.0'
 
     robolectricVersion = "3.7.1"
 }
