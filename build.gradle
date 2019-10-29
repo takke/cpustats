@@ -34,9 +34,9 @@ ext {
     versionCode = 17
     versionName = '2.1.0'
 
-    compileSdkVersion = 27
+    compileSdkVersion = 28
     buildToolsVersion = '28.0.3'
-    targetSdkVersion = 27
+    targetSdkVersion = 28
     minSdkVersion = 14
 
     // library
