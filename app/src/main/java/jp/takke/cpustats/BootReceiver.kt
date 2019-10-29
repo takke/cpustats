@@ -17,7 +17,7 @@ class BootReceiver : BroadcastReceiver() {
 
             // 自動起動の確認
             val pref = PreferenceManager.getDefaultSharedPreferences(context)
-            val startOnBoot = pref.getBoolean(C.PREF_KEY_START_ON_BOOT, false)
+            val startOnBoot = pref.getBoolean(C.PREF_KEY_START_ON_BOOT, true)
 
             MyLog.i("start on boot[" + (if (startOnBoot) "YES" else "NO") + "]")
 

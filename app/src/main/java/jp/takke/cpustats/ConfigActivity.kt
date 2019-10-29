@@ -76,7 +76,7 @@ class ConfigActivity : PreferenceActivity() {
                 pref.key = C.PREF_KEY_START_ON_BOOT
                 pref.setTitle(R.string.config_start_on_boot_title)
                 pref.setSummary(R.string.config_start_on_boot_summary)
-                pref.setDefaultValue(false)
+                pref.setDefaultValue(true)
                 pc.addPreference(pref)
             }
         }
