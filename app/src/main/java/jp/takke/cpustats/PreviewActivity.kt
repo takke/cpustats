@@ -1,7 +1,6 @@
 package jp.takke.cpustats
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -19,8 +18,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
-class PreviewActivity : Activity() {
+class PreviewActivity : AppCompatActivity() {
 
     internal val mHandler = Handler()
 
@@ -84,10 +84,10 @@ class PreviewActivity : Activity() {
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview)
 
-        //        MyLog.debugMode = true;
         MyLog.d("PreviewActivity.onCreate")
 
         // とりあえず全消去

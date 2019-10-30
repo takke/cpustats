@@ -1,29 +1,35 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_settings"
-          android:icon="@android:drawable/ic_menu_manage"
-          android:title="@string/menu_settings"
-          android:orderInCategory="100"
-          android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:orderInCategory="100"
+        android:title="@string/menu_settings"
+        app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/menu_start_service"
-          android:title="@string/menu_start_service"
-          android:orderInCategory="101"
-          android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_start_service"
+        android:orderInCategory="101"
+        android:title="@string/menu_start_service"
+        app:showAsAction="never" />
 
-    <item android:id="@+id/menu_stop_service"
-          android:title="@string/menu_stop_service"
-          android:orderInCategory="102"
-          android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_stop_service"
+        android:orderInCategory="102"
+        android:title="@string/menu_stop_service"
+        app:showAsAction="never" />
 
-    <item android:id="@+id/menu_about"
-          android:title="@string/title_activity_about"
-          android:orderInCategory="103"
-          android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="103"
+        android:title="@string/title_activity_about"
+        app:showAsAction="never" />
 
-    <item android:id="@+id/menu_exut"
-          android:title="@string/menu_exit"
-          android:orderInCategory="110"
-          android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_exut"
+        android:orderInCategory="110"
+        android:title="@string/menu_exit"
+        app:showAsAction="never" />
 
 </menu>
