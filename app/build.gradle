@@ -16,7 +16,14 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion as Integer
         versionCode rootProject.ext.versionCode as Integer
         versionName rootProject.ext.versionName as String
+
+        // Rename APK/AAB filename
+        def shortVersionName = versionName.replaceAll('\\.', '')
+        //noinspection UnnecessaryQualifiedReference
+        def d = new java.text.SimpleDateFormat("yyyyMMdd_HHmm").format(new Date())
+        setProperty("archivesBaseName", "${apkNamePrefix}_${shortVersionName}_${d}")
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -27,25 +34,6 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix 'd'
-
-            // use Built-in Shrinker instead of ProGuard
-//            minifyEnabled true
-//            useProguard false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
-        }
-    }
-
-    applicationVariants.all { variant ->
-        if (variant.buildType.name.equals("release")) {
-
-            variant.outputs.each { output ->
-                if (output.outputFileName.endsWith('.apk')) {
-                    def shortVersionName = defaultConfig.versionName.replaceAll('\\.', '')
-                    def d = new java.text.SimpleDateFormat("yyyyMMdd_HHmm").format(new Date())
-                    def newName = "CpuStats_r${defaultConfig.versionCode}_${shortVersionName}_${d}.apk"
-                    output.outputFileName = newName
-                }
-            }
         }
     }
 
