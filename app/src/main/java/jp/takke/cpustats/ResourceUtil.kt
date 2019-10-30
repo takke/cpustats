@@ -9,12 +9,12 @@ object ResourceUtil {
             return R.drawable.single000
         }
 
-//        final int coreCount = MyUtil.calcCpuCoreCount();
-//      MyLog.i("core:" + coreCount);
+//        val coreCount = MyUtil.calcCpuCoreCount()
+//      MyLog.i("core:" + coreCount)
         val coreCount = cpuUsages.size - 1
 
         // デバッグ用にコア数を変更する
-//      final int coreCount = 1;
+//      val coreCount = 1
 
         return when (coreCount) {
             // シングルコア

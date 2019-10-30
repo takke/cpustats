@@ -70,7 +70,7 @@ object MyUtil {
         // 各コアの CPU 使用率を算出する
 //        MyLog.i("---");
         for (i in 0 until coreCount) {
-            cpuUsages[i + 1] = MyUtil.getClockPercent(fi.freqs[i], fi.minFreqs[i], fi.maxFreqs[i])
+            cpuUsages[i + 1] = getClockPercent(fi.freqs[i], fi.minFreqs[i], fi.maxFreqs[i])
 //            MyLog.i("calc core[" + i + "] = " + cpuUsages[i+1] + "% (max=" + fi.maxFreqs[i] + ")");
         }
 
@@ -84,7 +84,7 @@ object MyUtil {
             minFreqSum += fi.minFreqs[i]
             maxFreqSum += fi.maxFreqs[i]
         }
-        cpuUsages[0] = MyUtil.getClockPercent(freqSum, minFreqSum, maxFreqSum)
+        cpuUsages[0] = getClockPercent(freqSum, minFreqSum, maxFreqSum)
 
         return cpuUsages
     }
@@ -104,7 +104,7 @@ object MyUtil {
         // a.b GHz
         val a = clockHz / 1000 / 1000      // a.b GHz の a 値
         val b = clockHz / 1000 / 100 % 10  // a.b GHz の b 値
-        return a.toString() + "." + b + " GHz"
+        return "$a.$b GHz"
     }
 
     /**

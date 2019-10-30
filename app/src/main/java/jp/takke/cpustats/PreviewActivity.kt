@@ -350,7 +350,7 @@ class PreviewActivity : Activity() {
 //        MyLog.d("PreviewActivity.updateCpuUsages");
 
         // アクションバーのアイコン変更
-        if (cpuUsages != null && cpuUsages.size >= 1) {
+        if (cpuUsages != null && cpuUsages.isNotEmpty()) {
             val id = ResourceUtil.getIconIdForCpuUsageSingleColor(cpuUsages[0])
             setActionBarLogo(id)
         }
@@ -390,7 +390,7 @@ class PreviewActivity : Activity() {
             val textView = coreView.findViewById<View>(R.id.coreText) as TextView
             val ssb = SpannableStringBuilder()
             ssb.append("Core" + (i + 1) + ": " + cpuUsage + "%")
-            //            MyLog.i("disp core[" + i + "] = " + cpuUsage + "% (max=" + maxFreqs[i] + ")");
+//            MyLog.i("disp core[" + i + "] = " + cpuUsage + "% (max=" + maxFreqs[i] + ")");
 
             // 周波数
             val freqText = MyUtil.formatFreq(freqs[i])
