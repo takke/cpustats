@@ -1,8 +1,7 @@
 @echo off
 
-::: clean, aab, APK
+::: clean, APK
 call gradlew clean ^
- :app:bundlePublishQuad5Release ^
  :app:publishQuad5ReleaseApk
 
 pause
