@@ -1,15 +1,19 @@
 Change Log
 ==========
 
-v2.1.0 (2018.11.xx)
+v2.1.0 (2019.10.30)
 -------------------
 - Change notification icon color to Monochrome
+- Set "Start on boot" by default
 - Support Android 4.0 or later (Stop supporting Android 2.3 to 3.2)
-- targetSdkVersion 15 -> 27
-- Update library
+- targetSdkVersion 15 -> 28
+- Set icon mode as "1 Icon (sorted)" by default
+- Migrate to AndroidX
+- Update libraries
   - Support Library 25.3.1 -> 27.1.0
-  - Gradle 4.1 -> 4.10.1
-  - AGP 3.0.1 -> 3.4.0-alpha02
+  - Gradle 4.1 -> 5.4.1
+  - AGP 3.0.1 -> 3.5.1
+  - Kotlin 1.3.0 -> 1.3.50
   - BuildTools 27.0.3 -> 28.0.3
 
 v2.0.2 (2018.03.06)

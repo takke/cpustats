@@ -29,6 +29,6 @@
     </string-array>
 
     <string name="app_version" translatable="false">Version {VERSION} [r{REVISION}]</string>
-    <string name="app_copyright" translatable="false">Copyright &#169; 2012-2018 Hiroaki TAKEUCHI</string>
+    <string name="app_copyright" translatable="false">Copyright &#169; 2012-2019 Hiroaki TAKEUCHI</string>
 
 </resources>
