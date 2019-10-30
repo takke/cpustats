@@ -5,7 +5,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -119,18 +118,7 @@ class PreviewActivity : AppCompatActivity() {
 
     private fun setActionBarLogo(iconId: Int) {
 
-        if (Build.VERSION.SDK_INT >= 14) {
-            // getActionBar().setLogo(R.drawable.single000);
-            try {
-                val actionBar = this.javaClass.getMethod("getActionBar")
-                        .invoke(this)
-                actionBar.javaClass.getMethod("setLogo", Int::class.javaPrimitiveType)
-                        .invoke(actionBar, iconId)
-            } catch (th: Throwable) {
-                MyLog.e(th)
-            }
-
-        }
+        actionBar?.setLogo(iconId)
     }
 
     private fun hideAllCoreFreqInfo() {
