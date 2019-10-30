@@ -48,6 +48,47 @@ android {
         }
     }
 
+    // publish task
+    def publish = project.tasks.create("publishAll")
+    applicationVariants.all { variant ->
+
+        if (variant.buildType.name == "release") {
+
+            variant.outputs.each { output ->
+                if (output.outputFileName.endsWith('.apk')) {
+
+                    // publishXxxApk
+                    def task = project.tasks.create("publish${variant.name.capitalize()}Apk", Copy)
+
+                    def srcDir = variant.packageApplicationProvider.get().outputDirectory
+                    def srcPath = new File(srcDir, output.outputFileName)
+                    task.from(srcPath)
+                    task.into(deployTo)
+                    task.dependsOn variant.assembleProvider.get()
+                    publish.dependsOn task
+                }
+            }
+        }
+    }
+
+    // bundlePublishXxxRelease task
+    applicationVariants.all { variant ->
+
+        if (variant.buildType.name == "release") {
+            def flavorName0 = variant.productFlavors[0].name
+            def buildTypeName = variant.buildType.name
+
+            def task = project.tasks.create("bundlePublish${variant.name.capitalize()}", Copy)
+
+            def path = "${buildDir}/outputs/bundle/${variant.name}/${archivesBaseName}-${flavorName0}-${buildTypeName}.aab"
+//            System.println("*** aab path = $path ($task) [$flavorName0] [$buildTypeName]")
+
+            task.from(path)
+            task.into(deployTo)
+            task.dependsOn "bundle${variant.name.capitalize()}"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

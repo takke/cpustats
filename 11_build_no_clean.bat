@@ -1,6 +1,6 @@
 @echo off
 
 ::: APK
-call gradlew :app:assembleQuad5Release
+call gradlew :app:publishQuad5ReleaseApk
 
 pause
