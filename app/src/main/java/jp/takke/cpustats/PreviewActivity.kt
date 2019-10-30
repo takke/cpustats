@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class PreviewActivity : AppCompatActivity() {
 
@@ -107,7 +108,10 @@ class PreviewActivity : AppCompatActivity() {
         System.arraycopy(fi.minFreqs, 0, fi.freqs, 0, fi.freqs.size)
         showCpuUsages(dummyCpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs)
 
-        // アクションバーのアイコン変更
+        // Toolbar初期化
+        setSupportActionBar(findViewById(R.id.my_toolbar))
+
+        // Toolbarのアイコン変更
         setActionBarLogo(R.drawable.single000)
 
         // サービスへのバインド開始
@@ -118,7 +122,12 @@ class PreviewActivity : AppCompatActivity() {
 
     private fun setActionBarLogo(iconId: Int) {
 
-        actionBar?.setLogo(iconId)
+//        val actionBar = supportActionBar
+//        actionBar?.setLogo(iconId)
+
+        val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
+        toolbar.setNavigationIcon(iconId)
+//        toolbar.setLogo(iconId)
     }
 
     private fun hideAllCoreFreqInfo() {
@@ -194,7 +203,7 @@ class PreviewActivity : AppCompatActivity() {
                         // タイトル初期化
                         title = "CPU Stats"
 
-                        // アクションバーのアイコン初期化
+                        // Toolbarのアイコン初期化
                         setActionBarLogo(R.drawable.single000)
 
                     } catch (e: RemoteException) {
@@ -337,7 +346,7 @@ class PreviewActivity : AppCompatActivity() {
 
 //        MyLog.d("PreviewActivity.updateCpuUsages");
 
-        // アクションバーのアイコン変更
+        // Toolbarのアイコン変更
         if (cpuUsages != null && cpuUsages.isNotEmpty()) {
             val id = ResourceUtil.getIconIdForCpuUsageSingleColor(cpuUsages[0])
             setActionBarLogo(id)

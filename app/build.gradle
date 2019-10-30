@@ -103,6 +103,7 @@ dependencies {
     implementation "androidx.annotation:annotation:$annotation_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.preference:preference:${preference_version}"
+    implementation "androidx.constraintlayout:constraintlayout:${constraint_layout_version}"
 
     testImplementation "org.robolectric:robolectric:${robolectricVersion}"
     testImplementation 'junit:junit:4.12'
