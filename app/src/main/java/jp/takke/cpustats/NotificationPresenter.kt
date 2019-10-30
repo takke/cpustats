@@ -11,7 +11,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-
 import java.lang.ref.WeakReference
 
 internal class NotificationPresenter/*package*/(service: Service, private val mConfig: MyConfig) {
@@ -125,11 +124,13 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
         val notificationTitle0 = "CPU Usage"
 
         val cpuUsages = data.cpuUsages
+        val totalUsage = if (cpuUsages == null) 0 else cpuUsages[0]
         val iconId = ResourceUtil.getIconIdForCpuUsage(cpuUsages)
         val context = mServiceRef.get()
         val builder = NotificationCompat.Builder(context!!, CHANNEL_ID_CPU_USAGE)
 
         builder.setSmallIcon(iconId)
+        builder.color = ResourceUtil.getNotificationIconColorFromUsage(totalUsage)
         builder.setTicker(notificationTitle0)
         builder.setWhen(mNotificationTime)
 
@@ -159,7 +160,7 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
             MyLog.d("- $notificationContent")
         }
 
-        val notificationTitle = notificationTitle0 + " " + cpuUsages!![0] + "%"
+        val notificationTitle = "$notificationTitle0 $totalUsage%"
         builder.setContentTitle(notificationTitle)
         builder.setContentText(notificationContent)
         builder.setContentIntent(pendingIntent)

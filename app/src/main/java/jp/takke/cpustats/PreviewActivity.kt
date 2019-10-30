@@ -419,7 +419,7 @@ class PreviewActivity : Activity() {
             textView.visibility = View.VISIBLE
 
             // アクティブコアの背景色を変える
-            val color = MyUtil.getBackgroundColor(clockPercent)
+            val color = ResourceUtil.getBackgroundColor(clockPercent)
             coreView.setBackgroundColor(color)
         }
     }

@@ -36,7 +36,7 @@ object ResourceUtil {
      */
     internal fun getIconIdForCpuUsageSingleColor(cpuUsage: Int): Int {
 
-        when (ResourceUtil.cpuUsageToLevel5(cpuUsage)) {
+        when (cpuUsageToLevel5(cpuUsage)) {
             0 -> return R.drawable.color_single000
             1 -> return R.drawable.color_single020
             2 -> return R.drawable.color_single040
@@ -52,7 +52,7 @@ object ResourceUtil {
      */
     private fun getIconIdForCpuUsageSingleMono(cpuUsage: Int): Int {
 
-        when (ResourceUtil.cpuUsageToLevel5(cpuUsage)) {
+        when (cpuUsageToLevel5(cpuUsage)) {
             0 -> return R.drawable.single000
             1 -> return R.drawable.single020
             2 -> return R.drawable.single040
@@ -82,8 +82,8 @@ object ResourceUtil {
     }
 
     private fun getIconIdForCpuUsageDual(cpuUsages: IntArray): Int {
-        val levelForCore1 = ResourceUtil.cpuUsageToLevel5(if (cpuUsages.size < 2) 0 else cpuUsages[1])
-        val levelForCore2 = ResourceUtil.cpuUsageToLevel5(if (cpuUsages.size < 3) 0 else cpuUsages[2])
+        val levelForCore1 = cpuUsageToLevel5(if (cpuUsages.size < 2) 0 else cpuUsages[1])
+        val levelForCore2 = cpuUsageToLevel5(if (cpuUsages.size < 3) 0 else cpuUsages[2])
         when (levelForCore1) {
             0 -> when (levelForCore2) {
                 0 -> return R.drawable.dual_0_0
@@ -210,6 +210,35 @@ object ResourceUtil {
             49 -> return R.drawable.freq_49
             50 -> return R.drawable.freq_50
             else -> return R.drawable.freq_50 // 5.0GHz over
+        }
+    }
+
+    /**
+     * CPU使用率から背景色を取得する
+     */
+    fun getBackgroundColor(clockPercent: Int): Int {
+        return when {
+            clockPercent >= 60 -> 0xff442222.toInt()
+            clockPercent > 0 -> 0xff333333.toInt()
+            else -> 0xff222222.toInt()
+        }
+    }
+
+    /**
+     * CPU使用率から通知アイコンの色を取得する
+     */
+    fun getNotificationIconColorFromUsage(cpuUsage: Int): Int {
+
+//        MyLog.i("iconcolor $cpuUsage -> " + ResourceUtil.cpuUsageToLevel5(cpuUsage))
+
+        return when (cpuUsageToLevel5(cpuUsage)) {
+            0 -> 0xff000000.toInt()
+            1 -> 0xff00c21c.toInt()
+            2 -> 0xff85c200.toInt()
+            3 -> 0xffc4bd00.toInt()
+            4 -> 0xffcf7400.toInt()
+            5 -> 0xffcf0000.toInt()
+            else -> 0xff000000.toInt()
         }
     }
 
