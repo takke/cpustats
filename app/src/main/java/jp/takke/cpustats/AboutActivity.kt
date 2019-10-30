@@ -1,6 +1,5 @@
 package jp.takke.cpustats
 
-import android.app.Activity
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,13 +10,14 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.*
 
-class AboutActivity : Activity() {
+class AboutActivity : AppCompatActivity() {
 
     /**
      * http://android-er.blogspot.in/2009/09/read-android-cpu-info.html
