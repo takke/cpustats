@@ -2,6 +2,7 @@ Change Log
 ==========
 
 v2.1.1 (2019.11.01)
+-------------------
 - Fix to stop notification by system after closing the main activity
 (Call Service.startForeground when starting up the service from main activity)
 
