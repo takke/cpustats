@@ -66,12 +66,14 @@ class PreviewActivity : AppCompatActivity() {
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
 
+            MyLog.i("onServiceConnected")
+
             // サービスのインターフェースを取得する
             mServiceIf = IUsageUpdateService.Stub.asInterface(service)
 
             // コールバック登録
             try {
-                mServiceIf!!.registerCallback(mCallback)
+                mServiceIf?.registerCallback(mCallback)
             } catch (e: RemoteException) {
                 MyLog.e(e)
             }
@@ -79,6 +81,9 @@ class PreviewActivity : AppCompatActivity() {
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
+
+            MyLog.i("onServiceDisconnected")
+
             mServiceIf = null
         }
     }
