@@ -159,14 +159,10 @@ class UsageUpdateService : Service() {
 
         MyLog.i("UsageUpdateService.onBind")
 
-        if (IUsageUpdateService::class.java.name == intent.action) {
-            return mBinder
-        }
-
         // スレッド開始
         startThread()
 
-        return null
+        return mBinder
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
@@ -207,7 +203,7 @@ class UsageUpdateService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val result = super.onStartCommand(intent, flags, startId)
+        super.onStartCommand(intent, flags, startId)
 
         mRequestForeground = intent != null && intent.getBooleanExtra("FOREGROUND_REQUEST", false)
         MyLog.i("UsageUpdateService.onStartCommand[$mRequestForeground]")
@@ -220,7 +216,7 @@ class UsageUpdateService : Service() {
         // Alarmループ続行
         scheduleNextTime(C.ALARM_INTERVAL_MSEC.toLong())
 
-        return result
+        return START_STICKY
     }
 
     private fun execTask() {
@@ -365,11 +361,12 @@ class UsageUpdateService : Service() {
      */
     fun scheduleNextTime(intervalMs: Long) {
 
-        // サービス終了の指示が出ていたら，次回の予約はしない。
         if (mStopResident) {
+            MyLog.d("scheduleNextTime: サービス終了の指示が出ているので次回の予約はしない")
             return
         }
         if (mSleeping) {
+            MyLog.d("scheduleNextTime: sleeping")
             return
         }
 

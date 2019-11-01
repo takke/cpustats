@@ -3,6 +3,7 @@
     package="jp.takke.cpustats">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -36,9 +37,6 @@
             android:name=".UsageUpdateService"
             android:enabled="true"
             android:exported="false">
-            <intent-filter>
-                <action android:name="jp.takke.cpustats.IUsageUpdateService" />
-            </intent-filter>
         </service>
 
         <receiver android:name=".BootReceiver">

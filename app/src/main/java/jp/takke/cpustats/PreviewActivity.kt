@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -66,7 +67,7 @@ class PreviewActivity : AppCompatActivity() {
 
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
 
-            MyLog.i("onServiceConnected")
+            MyLog.i("PreviewActivity.onServiceConnected")
 
             // サービスのインターフェースを取得する
             mServiceIf = IUsageUpdateService.Stub.asInterface(service)
@@ -82,7 +83,7 @@ class PreviewActivity : AppCompatActivity() {
 
         override fun onServiceDisconnected(name: ComponentName) {
 
-            MyLog.i("onServiceDisconnected")
+            MyLog.i("PreviewActivity.onServiceDisconnected")
 
             mServiceIf = null
         }
@@ -119,10 +120,26 @@ class PreviewActivity : AppCompatActivity() {
         // Toolbarのアイコン変更
         setActionBarLogo(R.drawable.single000)
 
+        // サービス開始
+        doBindService()
+    }
+
+    private fun doBindService() {
+
         // サービスへのバインド開始
-        val intent = Intent(IUsageUpdateService::class.java.name)
-        intent.setPackage(packageName)
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        val serviceIntent = Intent(this, UsageUpdateService::class.java)
+
+        // start
+        MyLog.d("PreviewActivity: startService of UsageUpdateService")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            serviceIntent.putExtra("FOREGROUND_REQUEST", true)
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+
+        // bind
+        bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private fun setActionBarLogo(iconId: Int) {
