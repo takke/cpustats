@@ -329,7 +329,7 @@ class UsageUpdateService : Service() {
 
     override fun onDestroy() {
 
-        MyLog.d("UsageUpdateService.onDestroy")
+        MyLog.i("UsageUpdateService.onDestroy")
 
         stopAlarm()
 
@@ -425,10 +425,10 @@ class UsageUpdateService : Service() {
         if (mThread == null) {
             mThread = GatherThread()
             mThreadActive = true
-            mThread!!.start()
-            MyLog.d("UsageUpdateService.startThread: thread start")
+            mThread?.start()
+            MyLog.i("UsageUpdateService.startThread: thread start")
         } else {
-            MyLog.d("UsageUpdateService.startThread: already running")
+            MyLog.i("UsageUpdateService.startThread: already running")
         }
     }
 
@@ -460,7 +460,7 @@ class UsageUpdateService : Service() {
 
         override fun run() {
 
-            MyLog.d("UsageUpdateService\$GatherThread: start")
+            MyLog.i("UsageUpdateService.GatherThread: start")
 
             while (mThread != null && mThreadActive) {
 
@@ -471,7 +471,7 @@ class UsageUpdateService : Service() {
                 }
             }
 
-            MyLog.d("UsageUpdateService\$GatherThread: done")
+            MyLog.i("UsageUpdateService.GatherThread: done")
         }
     }
 }
