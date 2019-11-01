@@ -4,7 +4,7 @@ import android.util.Log
 
 object MyLog {
 
-    var debugMode = false
+    var debugMode = BuildConfig.DEBUG
 
     fun v(msg: String) {
         if (debugMode) {
