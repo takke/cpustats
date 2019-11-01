@@ -249,14 +249,21 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
             for (cpuUsage in cpuUsages) {
                 sb.append(cpuUsage).append("% ")
             }
-            sb.append("\nusage1: ")
-            data[0].cpuUsages?.forEach {
-                sb.append(it).append("% ")
+
+            if (data.isNotEmpty()) {
+                sb.append("\nusage1: ")
+                data[0].cpuUsages?.forEach {
+                    sb.append(it).append("% ")
+                }
             }
-            sb.append("\nusage2: ")
-            data[1].cpuUsages?.forEach {
-                sb.append(it).append("% ")
+
+            if (data.size >= 2) {
+                sb.append("\nusage2: ")
+                data[1].cpuUsages?.forEach {
+                    sb.append(it).append("% ")
+                }
             }
+
             MyLog.d(sb.toString())
         }
     }
