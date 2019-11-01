@@ -169,6 +169,20 @@ class UsageUpdateService : Service() {
         return null
     }
 
+    override fun onUnbind(intent: Intent?): Boolean {
+
+        MyLog.i("UsageUpdateService.onUnbind")
+
+        return super.onUnbind(intent)
+    }
+
+    override fun onRebind(intent: Intent?) {
+
+        MyLog.i("UsageUpdateService.onRebind")
+
+        super.onRebind(intent)
+    }
+
     override fun onCreate() {
         super.onCreate()
 
