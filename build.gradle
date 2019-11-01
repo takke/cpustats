@@ -32,8 +32,8 @@ task clean(type: Delete) {
 
 ext {
     apkNamePrefix = "CpuStats"
-    versionCode = 18
-    versionName = '2.1.0'
+    versionCode = 19
+    versionName = '2.1.1'
 
     compileSdkVersion = 28
     buildToolsVersion = '28.0.3'
