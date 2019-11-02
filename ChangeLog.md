@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+v2.1.2 (2019.11.02)
+-------------------
+- setForeground more early at the first time run
+- Fix NPE
+
 v2.1.1 (2019.11.01)
 -------------------
 - Fix to stop notification by system after closing the main activity
