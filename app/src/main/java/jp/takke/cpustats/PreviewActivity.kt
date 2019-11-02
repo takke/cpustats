@@ -147,8 +147,8 @@ class PreviewActivity : AppCompatActivity() {
 //        val actionBar = supportActionBar
 //        actionBar?.setLogo(iconId)
 
-        val toolbar = findViewById<Toolbar>(R.id.my_toolbar)
-        toolbar.setNavigationIcon(iconId)
+        val toolbar = findViewById<Toolbar?>(R.id.my_toolbar)
+        toolbar?.setNavigationIcon(iconId)
 //        toolbar.setLogo(iconId)
     }
 
