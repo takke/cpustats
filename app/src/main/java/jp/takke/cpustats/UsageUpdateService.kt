@@ -323,26 +323,30 @@ class UsageUpdateService : Service() {
     private fun distributeToCallbacks(cpuUsages: IntArray, fi: AllCoreFrequencyInfo) {
 
         if (mCallbackListSize >= 1) {
-            val n = mCallbackList.beginBroadcast()
+            try {
+                val n = mCallbackList.beginBroadcast()
 
-            // コールバック数を念のため更新しておく
-            mCallbackListSize = n
+                // コールバック数を念のため更新しておく
+                mCallbackListSize = n
 
-//          if (MyLog.debugMode) {
-//              MyLog.d("- broadcast:" + n);
-//          }
+//              if (MyLog.debugMode) {
+//                  MyLog.d("- broadcast:" + n);
+//              }
 
-            // 全コアのCPU周波数を収集する
-            for (i in 0 until n) {
-                try {
-                    mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages,
-                            fi.freqs, fi.minFreqs, fi.maxFreqs)
-                } catch (e: RemoteException) {
-//                  MyLog.e(e);
+                // 全コアのCPU周波数を収集する
+                for (i in 0 until n) {
+                    try {
+                        mCallbackList.getBroadcastItem(i).updateUsage(cpuUsages,
+                                fi.freqs, fi.minFreqs, fi.maxFreqs)
+                    } catch (e: RemoteException) {
+//                      MyLog.e(e);
+                    }
+
                 }
-
+                mCallbackList.finishBroadcast()
+            } catch (e: IllegalStateException) {
+                MyLog.e(e)
             }
-            mCallbackList.finishBroadcast()
         }
     }
 
