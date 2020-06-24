@@ -1,6 +1,18 @@
 Change Log
 ==========
 
+v2.1.3 (2020.06.24)
+-------------------
+- Fix not reload settings after ConfigActivity closed
+- Update libraries
+  - AGP 3.5.1 -> 4.0.0
+  - Gradle 5.4.1 -> 6.5
+  - Kotlin 1.3.50 -> 1.3.72
+  - AssertJ 3.16.1
+  - BuildTools 28.0.3 -> 29.0.3
+  - Preference 1.0.0 -> 1.1.1
+  - Core 1.0.2 -> 1.3.0
+
 v2.1.2 (2019.11.02)
 -------------------
 - setForeground more early at the first time run
