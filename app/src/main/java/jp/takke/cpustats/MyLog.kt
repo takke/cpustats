@@ -23,7 +23,7 @@ object MyLog {
             Log.d(C.LOG_NAME, msg)
         }
 
-        MyLog.dumpToExternalLogFile(Log.DEBUG, msg)
+        dumpToExternalLogFile(Log.DEBUG, msg)
     }
 
     /**
@@ -45,14 +45,14 @@ object MyLog {
             Log.d(C.LOG_NAME, msg, th)
         }
 
-        MyLog.dumpToExternalLogFile(Log.DEBUG, msg)
-        MyLog.dumpToExternalLogFile(Log.DEBUG, Log.getStackTraceString(th))
+        dumpToExternalLogFile(Log.DEBUG, msg)
+        dumpToExternalLogFile(Log.DEBUG, Log.getStackTraceString(th))
     }
 
     fun i(msg: String) {
         Log.i(C.LOG_NAME, msg)
 
-        MyLog.dumpToExternalLogFile(Log.INFO, msg)
+        dumpToExternalLogFile(Log.INFO, msg)
     }
 
     fun iWithElapsedTime(msg: String, startTick: Long) {
@@ -63,14 +63,14 @@ object MyLog {
     fun i(msg: String, th: Throwable) {
         Log.i(C.LOG_NAME, msg, th)
 
-        MyLog.dumpToExternalLogFile(Log.INFO, msg)
-        MyLog.dumpToExternalLogFile(Log.INFO, Log.getStackTraceString(th))
+        dumpToExternalLogFile(Log.INFO, msg)
+        dumpToExternalLogFile(Log.INFO, Log.getStackTraceString(th))
     }
 
     fun w(msg: String) {
         Log.w(C.LOG_NAME, msg)
 
-        MyLog.dumpToExternalLogFile(Log.WARN, msg)
+        dumpToExternalLogFile(Log.WARN, msg)
     }
 
     fun wWithElapsedTime(msg: String, startTick: Long) {
@@ -83,33 +83,33 @@ object MyLog {
     fun w(msg: String, th: Throwable) {
         Log.w(C.LOG_NAME, msg, th)
 
-        MyLog.dumpToExternalLogFile(Log.WARN, msg)
-        MyLog.dumpToExternalLogFile(Log.WARN, Log.getStackTraceString(th))
+        dumpToExternalLogFile(Log.WARN, msg)
+        dumpToExternalLogFile(Log.WARN, Log.getStackTraceString(th))
     }
 
     fun w(th: Throwable) {
         Log.w(C.LOG_NAME, th.message, th)
 
-        MyLog.dumpToExternalLogFile(Log.WARN, Log.getStackTraceString(th))
+        dumpToExternalLogFile(Log.WARN, Log.getStackTraceString(th))
     }
 
     fun e(msg: String) {
         Log.e(C.LOG_NAME, msg)
 
-        MyLog.dumpToExternalLogFile(Log.ERROR, msg)
+        dumpToExternalLogFile(Log.ERROR, msg)
     }
 
     fun e(msg: String, th: Throwable) {
         Log.e(C.LOG_NAME, msg, th)
 
-        MyLog.dumpToExternalLogFile(Log.ERROR, msg)
-        MyLog.dumpToExternalLogFile(Log.ERROR, Log.getStackTraceString(th))
+        dumpToExternalLogFile(Log.ERROR, msg)
+        dumpToExternalLogFile(Log.ERROR, Log.getStackTraceString(th))
     }
 
     fun e(th: Throwable) {
         Log.e(C.LOG_NAME, th.message, th)
 
-        MyLog.dumpToExternalLogFile(Log.ERROR, Log.getStackTraceString(th))
+        dumpToExternalLogFile(Log.ERROR, Log.getStackTraceString(th))
     }
 
     /**
@@ -118,6 +118,7 @@ object MyLog {
      * @param error エラーレベル
      * @param msg メッセージ
      */
+    @Suppress("UNUSED_PARAMETER")
     private fun dumpToExternalLogFile(error: Int, msg: String) {
         if (!debugMode) {
             return
