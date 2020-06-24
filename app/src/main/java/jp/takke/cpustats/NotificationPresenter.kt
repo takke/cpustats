@@ -13,7 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import java.lang.ref.WeakReference
 
-internal class NotificationPresenter/*package*/(service: Service, private val mConfig: MyConfig) {
+internal class NotificationPresenter(service: Service, private val mConfig: MyConfig) {
 
     private val mServiceRef: WeakReference<Service> = WeakReference(service)
 
@@ -83,7 +83,7 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
             doNotify(MY_FREQ_NOTIFICATION_ID, makeFrequencyNotification(minFreq, maxFreq, currentCpuClock, pendingIntent).build(),
                     service, nm, requestForeground)
         }
-    }/*package*/
+    }
 
     private fun doNotify(notificationId: Int, notification: Notification,
                          service: Service, nm: NotificationManager, requestForeground: Boolean) {
@@ -105,7 +105,7 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
         }
     }
 
-    /*package*/   fun cancelNotifications() {
+    fun cancelNotifications() {
 
         val context = mServiceRef.get() ?: return
 
