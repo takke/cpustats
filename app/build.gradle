@@ -60,7 +60,7 @@ android {
                     // publishXxxApk
                     def task = project.tasks.create("publish${variant.name.capitalize()}Apk", Copy)
 
-                    def srcDir = variant.packageApplicationProvider.get().outputDirectory
+                    def srcDir = variant.packageApplicationProvider.get().outputDirectory.getAsFile().get()
                     def srcPath = new File(srcDir, output.outputFileName)
                     task.from(srcPath)
                     task.into(deployTo)
