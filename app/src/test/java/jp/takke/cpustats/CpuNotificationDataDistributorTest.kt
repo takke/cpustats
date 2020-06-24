@@ -10,7 +10,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowLog
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = [21])
+@Config(sdk = [21])
 class CpuNotificationDataDistributorTest {
     @Before
     @Throws(Exception::class)
