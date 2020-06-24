@@ -83,6 +83,7 @@ class AboutActivity : AppCompatActivity() {
             var versionCode = "?"
             var version = "x.x.x"
             if (pinfo != null) {
+                @Suppress("DEPRECATION")
                 versionCode = pinfo.versionCode.toString()
                 version = pinfo.versionName
             }
