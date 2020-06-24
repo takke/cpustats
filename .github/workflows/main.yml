@@ -30,6 +30,19 @@ jobs:
         ./make_plain_gradle_properties.sh
         cd -
 
+    # Dependency Graph
+    - name: Setup Graphviz environment
+      uses: kamiazya/setup-graphviz@v1
+
+    - name: Generate Dependency Graph
+      run: ./gradlew projectDependencyGraph
+
+    - name: Upload Dependency Graph
+      uses: actions/upload-artifact@v2
+      with:
+        name: Dependency Graph
+        path: build/reports/dependency-graph/project.dot.png
+
     # Generates a debug APK
     - name: Build debug version with Gradle
       run: ./gradlew assembleQuad5Debug

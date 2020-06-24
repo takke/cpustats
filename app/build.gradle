@@ -1,6 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+// Module graph (Dependency Graph)
+// ./gradlew projectDependencyGraph
+apply from: 'https://raw.githubusercontent.com/JakeWharton/SdkSearch/master/gradle/projectDependencyGraph.gradle'
+
 android {
     //noinspection GroovyAssignabilityCheck
     signingConfigs {
