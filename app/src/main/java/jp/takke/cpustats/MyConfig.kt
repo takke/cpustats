@@ -27,7 +27,7 @@ internal class MyConfig {
         // 更新間隔
         val updateIntervalSec = pref.getString(C.PREF_KEY_UPDATE_INTERVAL_SEC, "" + C.PREF_DEFAULT_UPDATE_INTERVAL_SEC)
         try {
-            intervalMs = (java.lang.Double.parseDouble(updateIntervalSec) * 1000.0).toInt().toLong()
+            intervalMs = (java.lang.Double.parseDouble(updateIntervalSec!!) * 1000.0).toInt().toLong()
             MyLog.i(" interval[" + intervalMs + "ms]")
         } catch (e: NumberFormatException) {
             MyLog.e(e)
@@ -42,7 +42,7 @@ internal class MyConfig {
         // CPU使用率通知のアイコンモード
         try {
             val s = pref.getString(C.PREF_KEY_CORE_DISTRIBUTION_MODE, "" + C.CORE_DISTRIBUTION_MODE_1ICON_SORTED)
-            coreDistributionMode = Integer.parseInt(s)
+            coreDistributionMode = s!!.toInt()
         } catch (e: NumberFormatException) {
             MyLog.e(e)
         }
