@@ -177,7 +177,7 @@ internal class NotificationPresenter/*package*/(service: Service, private val mC
         }
 
         val km = mServiceRef.get()!!.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-        if (km.inKeyguardRestrictedInputMode()) {
+        if (km.isKeyguardLocked) {
             MyLog.d("set notification priority: min")
             @Suppress("DEPRECATION")
             builder.priority = Notification.PRIORITY_MIN
