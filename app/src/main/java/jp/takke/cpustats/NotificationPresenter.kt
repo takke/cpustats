@@ -87,6 +87,10 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
 
     private fun doNotify(notificationId: Int, notification: Notification,
                          service: Service, nm: NotificationManager, requestForeground: Boolean) {
+
+//        if (MyLog.debugMode) {
+//            MyLog.d("doNotify[$notificationId], ticker[${notification.tickerText}], usage[${mConfig.showUsageNotification}], frequency[${mConfig.showFrequencyNotification}]")
+//        }
         if (requestForeground) {
             service.startForeground(notificationId, notification)
         } else {

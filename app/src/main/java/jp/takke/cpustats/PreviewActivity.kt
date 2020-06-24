@@ -72,9 +72,12 @@ class PreviewActivity : AppCompatActivity() {
             // サービスのインターフェースを取得する
             mServiceIf = IUsageUpdateService.Stub.asInterface(service)
 
-            // コールバック登録
             try {
+                // コールバック登録
                 mServiceIf?.registerCallback(mCallback)
+
+                // onActivityResult 後に設定がロードされていないかもしれないのでここで強制再ロードする
+                mServiceIf?.reloadSettings()
             } catch (e: RemoteException) {
                 MyLog.e(e)
             }
@@ -259,11 +262,14 @@ class PreviewActivity : AppCompatActivity() {
                 if (mServiceIf != null) {
                     try {
                         // 設定のリロード
+                        MyLog.d("request reloadSettings")
                         mServiceIf!!.reloadSettings()
                     } catch (e: RemoteException) {
                         MyLog.e(e)
                     }
-
+                } else {
+                    MyLog.w("cannot reloadSettings (no service i.f.)")
+                    // 接続後に再ロードする
                 }
             }
         }
