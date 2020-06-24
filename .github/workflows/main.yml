@@ -23,6 +23,13 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
+    - name: Make dummy gradle.properties
+      run: |
+        chmod +x app/make_plain_gradle_properties.sh
+        cd app
+        ./make_plain_gradle_properties.sh
+        cd -
+
     # Generates a debug APK
     - name: Build debug version with Gradle
       run: ./gradlew assembleQuad5Debug
