@@ -20,12 +20,8 @@ jobs:
       with:
         java-version: 1.8
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
-
     - name: Make dummy gradle.properties
       run: |
-        chmod +x app/make_plain_gradle_properties.sh
         cd app
         ./make_plain_gradle_properties.sh
         cd -
