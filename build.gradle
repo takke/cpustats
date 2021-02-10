@@ -5,8 +5,13 @@ buildscript {
     ext.gradleToolsVersion = '4.2.0-beta04'
 
     repositories {
-        jcenter()
+        mavenCentral()
         google()
+
+        // TODO AGP が依存しなくなったら削除すること
+        jcenter().mavenContent {
+            includeGroup("org.jetbrains.trove4j")
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleToolsVersion"
@@ -23,8 +28,13 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
+
+        // TODO AGP が依存しなくなったら削除すること
+        jcenter().mavenContent {
+            includeGroup("org.jetbrains.trove4j")
+        }
     }
 }
 
