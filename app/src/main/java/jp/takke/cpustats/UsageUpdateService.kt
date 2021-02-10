@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.RemoteCallbackList
 import android.os.RemoteException
 import android.os.SystemClock
@@ -217,7 +218,7 @@ class UsageUpdateService : Service() {
         if (mRequestForeground) {
             // 5秒以内に setForeground を実行する必要があるので早めに実行する
             // (すぐ実行すると PreviewActivity の bind に間に合わないのでちょっとだけ遅延する)
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 execTask()
             }, C.ALARM_STARTUP_DELAY_MSEC.toLong())
         }
