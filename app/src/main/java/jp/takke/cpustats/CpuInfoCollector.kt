@@ -1,5 +1,6 @@
 package jp.takke.cpustats
 
+import android.os.Build
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
@@ -114,6 +115,12 @@ object CpuInfoCollector {
 
         // [0] が全体、[1]以降が個別CPU
         val result = ArrayList<OneCpuInfo>()
+
+        // O 以降(N以降?)は取得できないので null を返し fallback させる
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            MyLog.i("fallback[${Build.VERSION.SDK_INT}]")
+            return null
+        }
 
         try {
             BufferedReader(InputStreamReader(FileInputStream("/proc/stat")), C.READ_BUFFER_SIZE).use { it ->
