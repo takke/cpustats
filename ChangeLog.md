@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+v2.1.5 (2021.02.10)
+-------------------
+- Fix crash error on Android 10+ devices
+
 v2.1.4 (2021.02.10)
 -------------------
 - targetSdkVersion 28 -> 30
