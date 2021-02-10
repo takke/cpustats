@@ -17,6 +17,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
@@ -32,6 +33,24 @@ class PreviewActivity : AppCompatActivity() {
 
     // サービスのIF
     private var mServiceIf: IUsageUpdateService? = null
+
+    private val mConfigActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        // 設定完了
+
+        // 設定変更の内容をサービスに反映させる
+        if (mServiceIf != null) {
+            try {
+                // 設定のリロード
+                MyLog.d("request reloadSettings")
+                mServiceIf!!.reloadSettings()
+            } catch (e: RemoteException) {
+                MyLog.e(e)
+            }
+        } else {
+            MyLog.w("cannot reloadSettings (no service i.f.)")
+            // 接続後に再ロードする
+        }
+    }
 
     // コールバックIFの実装
     private val mCallback = object : IUsageUpdateCallback.Stub() {
@@ -238,7 +257,7 @@ class PreviewActivity : AppCompatActivity() {
 
             R.id.menu_settings -> {
                 val intent = Intent(this, ConfigActivity::class.java)
-                startActivityForResult(intent, REQUEST_CONFIG_ACTIVITY)
+                mConfigActivityLauncher.launch(intent)
             }
 
             R.id.menu_about -> startActivity(Intent(this, AboutActivity::class.java))
@@ -249,31 +268,6 @@ class PreviewActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        when (requestCode) {
-            REQUEST_CONFIG_ACTIVITY -> {
-                // 設定完了
-
-                // 設定変更の内容をサービスに反映させる
-                if (mServiceIf != null) {
-                    try {
-                        // 設定のリロード
-                        MyLog.d("request reloadSettings")
-                        mServiceIf!!.reloadSettings()
-                    } catch (e: RemoteException) {
-                        MyLog.e(e)
-                    }
-                } else {
-                    MyLog.w("cannot reloadSettings (no service i.f.)")
-                    // 接続後に再ロードする
-                }
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onDestroy() {
@@ -446,12 +440,6 @@ class PreviewActivity : AppCompatActivity() {
             val color = ResourceUtil.getBackgroundColor(clockPercent)
             coreView.setBackgroundColor(color)
         }
-    }
-
-    companion object {
-
-        // 設定画面
-        private const val REQUEST_CONFIG_ACTIVITY = 0
     }
 
 }
