@@ -1,6 +1,21 @@
 Change Log
 ==========
 
+v2.1.4 (2021.02.10)
+-------------------
+- targetSdkVersion 28 -> 30
+- Update libraries
+  - Gradle 6.5 -> 6.7.1
+  - AGP 4.0.0 -> 4.2.0-beta04
+  - Kotlin 1.3.72 -> 1.4.30
+  - BuildTools 29.0.3 -> 30.0.2
+  - AppCompat 1.3.0-alpha01 -> 1.3.0-beta01
+  - Core 1.3.0 -> 1.3.2
+  - ConstraintLayout 1.1.3 -> 2.0.4
+  - JUnit 4.13.1
+  - AssertJ 3.19.0
+  - Robolectric 4.5.1
+
 v2.1.3 (2020.06.24)
 -------------------
 - Fix not reload settings after ConfigActivity closed
