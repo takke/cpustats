@@ -1,7 +1,7 @@
 package jp.takke.cpustats
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 
 internal class MyConfig {
 
