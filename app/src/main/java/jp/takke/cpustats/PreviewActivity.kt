@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
 import android.os.RemoteException
 import android.text.SpannableStringBuilder
@@ -20,10 +19,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class PreviewActivity : AppCompatActivity() {
-
-    internal val mHandler = Handler()
 
     // 表示確認
     private var mIsForeground = false
@@ -44,7 +43,7 @@ class PreviewActivity : AppCompatActivity() {
         override fun updateUsage(cpuUsages: IntArray,
                                  freqs: IntArray, minFreqs: IntArray, maxFreqs: IntArray) {
 
-            mHandler.post {
+            lifecycleScope.launch {
 
                 // サービス実行中フラグを立てておく
                 mServiceMaybeRunning = true
