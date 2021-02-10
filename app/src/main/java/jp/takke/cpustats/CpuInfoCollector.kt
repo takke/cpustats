@@ -36,7 +36,7 @@ object CpuInfoCollector {
             }
 
             // Return the number of cores (virtual CPU devices)
-            files.size
+            files?.size ?: 1
 
         } catch (e: Exception) {
             Runtime.getRuntime().availableProcessors()
