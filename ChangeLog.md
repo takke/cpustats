@@ -1,10 +1,16 @@
 Change Log
 ==========
 
-v2.1.6 (2021.03.xx)
+v2.2.0 (2023.11.06)
 -------------------
+- minSdkVersion 14 -> 23
+- targetSdkVersion 30 -> 33
 - Update libraries
   - AGP 4.2.0-beta04 -> 4.2.0-beta05
+  - Gradle 6.7.1 -> 8.4
+  - Kotlin 1.4.30 -> 1.9.10
+  - AGP 4.2.0-beta05 -> 8.1.2
+  - BuildTools 30.0.2 -> 33.0.1
 
 v2.1.5 (2021.02.10)
 -------------------
