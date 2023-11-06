@@ -14,6 +14,7 @@
             android:name=".PreviewActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:exported="true"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +25,8 @@
 
         <activity
             android:name=".ConfigActivity"
-            android:label="@string/title_activity_config" />
+            android:label="@string/title_activity_config"
+            />
 
         <activity
             android:name=".AboutActivity"
@@ -38,7 +40,7 @@
             android:exported="false">
         </service>
 
-        <receiver android:name=".BootReceiver">
+        <receiver android:name=".BootReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
