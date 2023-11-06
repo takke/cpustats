@@ -9,7 +9,9 @@
     <string name="menu_start_service">Zobrazit upozornění</string>
     <string name="menu_stop_service">Skrýt upozornění</string>
     <string name="menu_exit">Ukončit</string>
-    
+
+    <string name="require_notification_permission">Vyžaduje oprávnění upozornění</string>
+
     <string name="config_general_category_title">Všeobecné</string>
     <string name="config_update_interval_title">Interval aktualizace</string>
     <string name="config_start_on_boot_title">Při startu</string>

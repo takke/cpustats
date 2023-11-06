@@ -9,6 +9,8 @@
     <string name="menu_start_service">Afficher Notification</string>
     <string name="menu_stop_service">Cacher Notification</string>
     <string name="menu_exit">Quitter</string>
+
+    <string name="require_notification_permission">Require notification permission</string>
     
     <string name="config_general_category_title">Général</string>
     <string name="config_update_interval_title">Interval de Mise à jour</string>

@@ -9,7 +9,9 @@
     <string name="menu_start_service">Zeige Benachrichtigung</string>
     <string name="menu_stop_service">Verstecke Benachrichtigung</string>
     <string name="menu_exit">Beenden</string>
-    
+
+    <string name="require_notification_permission">Benötigt Benachrichtigungsberechtigung</string>
+
     <string name="config_general_category_title">Allgemein</string>
     <string name="config_update_interval_title">Aktualisierungsintervall</string>
     <string name="config_start_on_boot_title">Beim Booten</string>
