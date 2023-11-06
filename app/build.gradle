@@ -43,6 +43,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     flavorDimensions "edition"
 
     productFlavors {
