@@ -437,7 +437,7 @@ class UsageUpdateService : Service() {
                 this,
                 0, // ここを-1にすると解除に成功しない
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
