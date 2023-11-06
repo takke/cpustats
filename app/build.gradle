@@ -11,6 +11,8 @@ android {
         myConfig
     }
 
+    namespace 'jp.takke.cpustats'
+
     compileSdkVersion rootProject.ext.compileSdkVersion as Integer
     buildToolsVersion rootProject.ext.buildToolsVersion as String
 
