@@ -392,7 +392,7 @@ class UsageUpdateService : Service() {
                 this,
                 0,
                 intent,
-                0
+                PendingIntent.FLAG_IMMUTABLE
         )
         // ※onStartCommandが呼ばれるように設定する
 

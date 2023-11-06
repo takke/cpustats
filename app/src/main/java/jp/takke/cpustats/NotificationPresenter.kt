@@ -41,7 +41,7 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
         // 通知ウインドウをクリックした際に起動するインテント
         val intent = Intent(service, PreviewActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(service, 0, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT)
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         //--------------------------------------------------
         // CPU使用率通知
