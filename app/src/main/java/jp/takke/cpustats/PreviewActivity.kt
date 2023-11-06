@@ -1,10 +1,12 @@
 package jp.takke.cpustats
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -17,9 +19,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
@@ -110,10 +115,78 @@ class PreviewActivity : AppCompatActivity() {
         }
     }
 
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // 通知許可リクエストで許可を選択
+                MyLog.d("PreviewActivity: POST_NOTIFICATION: 通知許可")
+
+            } else {
+                // 通知許可リクエストで許可しないを選択
+                MyLog.i("PreviewActivity: POST_NOTIFICATION: 通知許可しない")
+                if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                    Toast.makeText(this, "通知を受け取るには許可が必要です", Toast.LENGTH_LONG).show()
+                } else {
+                    // 権限を永続的に許可しない状態
+                    MyLog.i("PreviewActivity: POST_NOTIFICATION: 通知許可しない(永続的)")
+
+                    NotificationPermissionUtil.showNotificationPermissionRationaleDialog(this,
+                        onOk = {
+                            // OK
+                            MyLog.d("通知権限: OK")
+                        },
+                        onCancel = {
+                            // Cancel
+                            MyLog.d("通知権限: キャンセル")
+                        }
+                    )
+                }
+            }
+        }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun checkNotificationPermission() {
+        val notificationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+        val notificationRationale = shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+
+        if (notificationPermission == PackageManager.PERMISSION_GRANTED) {
+            // 既に通知許可済み
+
+            MyLog.d("PreviewActivity: POST_NOTIFICATION: 通知許可済み")
+            // TODO 続行すること
+        } else {
+            if (notificationRationale) {
+                // 以前に「許可をしない」を選択済み
+                MyLog.i("PreviewActivity: POST_NOTIFICATION: 以前に「許可をしない」を選択済み")
+
+                NotificationPermissionUtil.showNotificationPermissionRationaleDialog(this,
+                    onOk = {
+                        // OK
+                        MyLog.d("通知権限: OK")
+                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    },
+                    onCancel = {
+                        // Cancel
+                        MyLog.d("通知権限: キャンセル")
+                    }
+                )
+            } else {
+                // 通知の許可をリクエストする
+                MyLog.d("PreviewActivity: POST_NOTIFICATION: 通知許可リクエスト")
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview)
+
+        // 通知権限の要求(Android 13 以上)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            checkNotificationPermission()
+        }
+
 
         MyLog.d("PreviewActivity.onCreate")
 
