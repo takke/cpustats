@@ -57,5 +57,5 @@ ext {
     annotation_version = "1.1.0"
     constraintlayout_version = '2.0.4'
     preference_version = '1.1.1'
-    robolectricVersion = '4.5.1'
+    robolectricVersion = '4.9.2'
 }
