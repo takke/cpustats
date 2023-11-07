@@ -116,10 +116,10 @@ dependencies {
     implementation libs.androidx.preference.ktx
 
     testImplementation libs.robolectric
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation libs.junit
+    testImplementation libs.assertj.core
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation libs.kotlin.stdlib.jdk7
 }
 
 // load signing settings from gradle.properties
