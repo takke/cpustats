@@ -50,9 +50,4 @@ ext {
     buildToolsVersion = '33.0.1'
     targetSdkVersion = 33
     minSdkVersion = 23
-
-    // library
-    constraintlayout_version = '2.0.4'
-    preference_version = '1.1.1'
-    robolectricVersion = '4.9.2'
 }
