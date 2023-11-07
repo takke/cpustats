@@ -13,8 +13,8 @@ android {
 
     namespace 'jp.takke.cpustats'
 
-    compileSdkVersion rootProject.ext.compileSdkVersion as Integer
-    buildToolsVersion rootProject.ext.buildToolsVersion as String
+    compileSdk rootProject.ext.compileSdkVersion as Integer
+    buildToolsVersion = rootProject.ext.buildToolsVersion as String
 
     defaultConfig {
         applicationId 'jp.takke.cpustats'
