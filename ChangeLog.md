@@ -1,15 +1,27 @@
 Change Log
 ==========
 
+v2.2.x (2024.xx.xx)
+-------------------
+- Update libraries
+  - Kotlin 1.9.10 to 1.9.23
+  - AGP from 8.1.2 to 8.3.0
+  - Core from 1.3.2 to 1.12.0
+  - AppCompat from 1.3.0-beta01 to 1.7.0-alpha03
+  - Annotation from 1.2.0-beta01 to 1.7.1
+  - Preference from 1.1.1 to 1.2.1
+  - ConstraintLayout from 2.0.4 to 2.1.4
+  - assertJ from 3.24.2 to 3.25.3
+  - Robolectric from 4.9.2 to 4.11.1
+
 v2.2.0 (2023.11.06)
 -------------------
 - minSdkVersion 14 -> 23
 - targetSdkVersion 30 -> 33
 - Update libraries
-  - AGP 4.2.0-beta04 -> 4.2.0-beta05
+  - AGP 4.2.0-beta04 -> 8.1.2
   - Gradle 6.7.1 -> 8.4
   - Kotlin 1.4.30 -> 1.9.10
-  - AGP 4.2.0-beta05 -> 8.1.2
   - BuildTools 30.0.2 -> 33.0.1
   - JUnit 4.13.1 -> 4.13.2
   - assertJ 3.19.0 -> 3.24.2
