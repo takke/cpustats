@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # GitHub Actionsのタイムラインの可視化
+    - uses: Kesin11/actions-timeline@v2
+
     - uses: actions/checkout@v4
       with:
         submodules: true
