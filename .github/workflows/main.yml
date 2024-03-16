@@ -23,6 +23,7 @@ jobs:
           8
           11
           17
+        cache: gradle
 
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
