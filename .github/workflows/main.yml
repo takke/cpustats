@@ -21,6 +21,9 @@ jobs:
         distribution: 'temurin'
         java-version: 8
 
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+
     - name: Make dummy gradle.properties
       run: (cd app; ./make_plain_gradle_properties.sh)
 
