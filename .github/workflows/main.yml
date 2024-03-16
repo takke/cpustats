@@ -11,30 +11,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: true
 
-    - name: set up JDK 1.8
-      uses: actions/setup-java@v1
+    - name: set up JDK 8
+      uses: actions/setup-java@v4
       with:
-        java-version: 1.8
+        java-version: 8
 
     - name: Make dummy gradle.properties
       run: (cd app; ./make_plain_gradle_properties.sh)
 
     # Dependency Graph
-    - name: Setup Graphviz environment
-      uses: kamiazya/setup-graphviz@v1
-
-    - name: Generate Dependency Graph
-      run: ./gradlew generateDependencyGraph
-
-    - name: Upload Dependency Graph
-      uses: actions/upload-artifact@v2
-      with:
-        name: Dependency Graph
-        path: app/build/reports/dependency-graph/dependency-graph.png
+    # - name: Setup Graphviz environment
+    #   uses: kamiazya/setup-graphviz@v1
+    #
+    # - name: Generate Dependency Graph
+    #   run: ./gradlew generateDependencyGraph
+    #
+    # - name: Upload Dependency Graph
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: Dependency Graph
+    #     path: app/build/reports/dependency-graph/dependency-graph.png
 
     # Generates a debug APK
     - name: Build debug version with Gradle
