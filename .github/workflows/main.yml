@@ -28,23 +28,12 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
 
+    - name: Setup Gradle Cacge
+      uses: gradle/gradle-build-action@v3
+
     - name: Make dummy gradle.properties
       run: (cd app; ./make_plain_gradle_properties.sh)
 
-    # Dependency Graph
-    # - name: Setup Graphviz environment
-    #   uses: kamiazya/setup-graphviz@v1
-    #
-    # - name: Generate Dependency Graph
-    #   run: ./gradlew generateDependencyGraph
-    #
-    # - name: Upload Dependency Graph
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: Dependency Graph
-    #     path: app/build/reports/dependency-graph/dependency-graph.png
-
-    # Generates a debug APK
     - name: Build debug version with Gradle
       run: ./gradlew assembleQuad5Debug
 
