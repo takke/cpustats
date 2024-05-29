@@ -7,7 +7,7 @@ v2.2.1 (2024.05.29)
   - BuildTools 33.0.1 -> 34.0.0
   - Kotlin from 1.9.10 to 2.0.0
   - Gradle from 8.4 to 8.7
-  - AGP from 8.1.2 to 8.3.0
+  - AGP from 8.1.2 to 8.4.1
   - AndroidX Core from 1.3.2 to 1.13.1
   - AppCompat from 1.3.0-beta01 to 1.7.0-rc01
   - Annotation from 1.2.0-beta01 to 1.8.0

@@ -38,8 +38,8 @@ tasks.register('clean', Delete) {
 
 ext {
     apkNamePrefix = "CpuStats"
-    versionCode = 24
-    versionName = '2.2.0'
+    versionName = '2.2.1'
+    versionCode = 25
 
     compileSdkVersion = 34
     buildToolsVersion = '34.0.0'
