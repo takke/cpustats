@@ -1,7 +1,7 @@
 [versions]
 annotation = "1.8.0"
 appcompat = "1.7.0-rc01"
-assertjCore = "3.25.3"
+assertjCore = "3.26.0"
 constraintlayout = "2.1.4"
 core-ktx = "1.13.1"
 junit = "4.13.2"
