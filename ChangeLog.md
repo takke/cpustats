@@ -4,6 +4,7 @@ Change Log
 v2.2.1 (2024.05.29)
 -------------------
 - Update libraries
+  - BuildTools 33.0.1 -> 34.0.0
   - Kotlin from 1.9.10 to 2.0.0
   - Gradle from 8.4 to 8.7
   - AGP from 8.1.2 to 8.3.0
