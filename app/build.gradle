@@ -87,7 +87,7 @@ android {
 
             def task = project.tasks.create("bundlePublish${variant.name.capitalize()}", Copy)
 
-            def aabFilename = "${base.archivesName.get()}-${buildTypeName}.aab"
+            def aabFilename = "${base.archivesName.get()}-$flavorName0-${buildTypeName}.aab"
             def path = "${layout.buildDirectory.get()}/outputs/bundle/${variant.name}/${aabFilename}"
             System.out.println("${task.name}: ${path} -> ${deployTo}")
 //            System.println("*** aab path = $path ($task) [$flavorName0] [$buildTypeName]")
