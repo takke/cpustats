@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+v2.2.2 (2024.07.16)
+-------------------
+- targetSdkVersion 33 -> 34
+- Update libraries
+  - AGP from 8.4.1 to 8.5.1
+  - Gradle from 8.7 to 8.8
+  - AppCompat from 1.7.0-rc01 to 1.7.0
+  - assertJ from 3.26.0 to 3.26.3
+  - Robolectric from 4.12.2 to 4.13
+
 v2.2.1 (2024.05.29)
 -------------------
 - Update libraries
