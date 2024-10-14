@@ -5,7 +5,7 @@ assertjCore = "3.26.3"
 constraintlayout = "2.1.4"
 core-ktx = "1.13.1"
 junit = "4.13.2"
-kotlinStdlibJdk7 = "2.0.0"
+kotlinStdlibJdk7 = "2.0.21"
 preference-ktx = "1.2.1"
 robolectricVersion = "4.13"
 
