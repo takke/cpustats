@@ -1,5 +1,5 @@
 [versions]
-annotation = "1.8.0"
+annotation = "1.9.0"
 appcompat = "1.7.0"
 assertjCore = "3.26.3"
 constraintlayout = "2.1.4"
