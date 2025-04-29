@@ -11,9 +11,11 @@ assertjCore = "3.27.3"
 constraintlayout = "2.2.1"
 # AndroidX Core
 core-ktx = "1.16.0"
-junit = "4.13.2"
-kotlinStdlibJdk7 = "2.0.0"
+# Preference-ktx
 preference-ktx = "1.2.1"
+# JUnit
+junit = "4.13.2"
+#  Robolectric
 robolectricVersion = "4.13"
 
 [libraries]
@@ -24,7 +26,7 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preference-ktx" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjCore" }
 junit = { module = "junit:junit", version.ref = "junit" }
-kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlinStdlibJdk7" }
+kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectricVersion" }
 
 [plugins]
