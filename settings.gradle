@@ -10,3 +10,4 @@ buildscript {
 }
 
 include ':app'
+include ':modules:quad5'
