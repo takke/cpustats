@@ -37,7 +37,7 @@
             android:name=".UsageUpdateService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="dataSync"></service>
+            android:foregroundServiceType="dataSync" />
 
         <receiver
             android:name=".BootReceiver"
