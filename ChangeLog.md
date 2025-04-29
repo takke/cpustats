@@ -5,6 +5,7 @@ v2.2.3 (2025.04.30)
 -------------------
 - Update libraries
   - BuildTools 34.0.0 -> 35.0.0
+  - JDK 1.8 -> 11
   - AGP from 8.5.1 to 8.9.2
   - Gradle from 8.8 to 8.14
   - Kotlin from 2.0.0 to 2.1.20

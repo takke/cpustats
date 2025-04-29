@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -22,10 +25,10 @@ android {
         targetSdk = rootProject.extra["targetSdkVersion"] as Int
         minSdk = rootProject.extra["minSdkVersion"] as Int
         versionCode = rootProject.extra["versionCode"] as Int
-        versionName = rootProject.extra["versionName"] as String
+        val versionName = rootProject.extra["versionName"] as String
 
         val shortVersionName = versionName.replace(".", "")
-        val d = SimpleDateFormat("yyyyMMdd_HHmm").format(java.util.Date())
+        val d = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
         setProperty("archivesBaseName", "${rootProject.extra["apkNamePrefix"]}_${shortVersionName}_${d}")
     }
 
@@ -59,16 +62,18 @@ android {
     }
 
     val publish = tasks.register("publishAll")
-    applicationVariants.all { variant ->
-        if (variant.buildType.name == "release") {
-            variant.outputs.forEach { output ->
-                if (output.outputFileName.endsWith(".apk")) {
-                    val task = tasks.register("publish${variant.name.capitalize()}Apk", Copy::class) {
-                        val srcDir = variant.packageApplicationProvider.get().outputDirectory.get().asFile
-                        val srcPath = srcDir.resolve(output.outputFileName)
+    applicationVariants.all {
+        if (buildType.name == "release") {
+            outputs.forEach { output ->
+                if (output.outputFile.name.endsWith(".apk")) {
+                    @Suppress("DEPRECATION")
+                    val variantName = name.capitalize()
+                    val task = tasks.register("publish${variantName}Apk", Copy::class) {
+                        val srcDir = packageApplicationProvider.get().outputDirectory.get().asFile
+                        val srcPath = srcDir.resolve(output.outputFile.name)
                         from(srcPath)
                         into(rootProject.extra["deployTo"] as String)
-                        dependsOn(variant.assembleProvider.get())
+                        dependsOn(assembleProvider.get())
                     }
                     publish.configure { dependsOn(task) }
                 }
@@ -76,19 +81,22 @@ android {
         }
     }
 
-    applicationVariants.all { variant ->
-        if (variant.buildType.name == "release") {
-            val flavorName0 = variant.productFlavors[0].name
-            val buildTypeName = variant.buildType.name
+    applicationVariants.all {
+        if (buildType.name == "release") {
+            val flavorName0 = productFlavors[0].name
+            val buildTypeName = buildType.name
 
-            val task = tasks.register("bundlePublish${variant.name.capitalize()}", Copy::class) {
-                val aabFilename = "${rootProject.extra["base.archivesName"]}-$flavorName0-$buildTypeName.aab"
-                val path = "${layout.buildDirectory.get()}/outputs/bundle/${variant.name}/$aabFilename"
+            @Suppress("DEPRECATION")
+            val variantName = name.capitalize()
+            tasks.register("bundlePublish${variantName}", Copy::class) {
+                val aabFilename = "${base.archivesName.get()}-$flavorName0-${buildTypeName}.aab"
+//                val aabFilename = "${rootProject.extra["base.archivesName"]}-$flavorName0-$buildTypeName.aab"
+                val path = "${layout.buildDirectory.get()}/outputs/bundle/${variantName}/$aabFilename"
                 println("${name}: $path -> ${rootProject.extra["deployTo"]}")
 //                println("*** aab path = $path ($task) [$flavorName0] [$buildTypeName]")
                 from(path)
                 into(rootProject.extra["deployTo"] as String)
-                dependsOn("bundle${variant.name.capitalize()}")
+                dependsOn("bundle${variantName}")
             }
         }
     }
