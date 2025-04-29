@@ -3,7 +3,7 @@
 ::: clean, aab, APK
 call gradlew clean ^
  test ^
- :app:bundlePublishQuad5Release ^
- :app:publishQuad5ReleaseApk
+ :app:bundlePublishRelease ^
+ :app:publishReleaseApk
 
 pause

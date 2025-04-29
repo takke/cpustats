@@ -2,6 +2,6 @@
 
 ::: clean, APK
 call gradlew clean ^
- :app:publishQuad5ReleaseApk
+ :app:publishReleaseApk
 
 pause
