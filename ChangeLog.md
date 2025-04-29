@@ -3,6 +3,7 @@ Change Log
 
 v2.2.3 (2025.04.30)
 -------------------
+- targetSdkVersion 34 -> 35
 - Update libraries
   - BuildTools 34.0.0 -> 35.0.0
   - JDK 1.8 -> 11

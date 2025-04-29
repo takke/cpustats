@@ -30,8 +30,8 @@ ext {
     set("versionName", "2.2.2")
     set("versionCode", 26)
 
-    set("compileSdkVersion", 34)
+    set("compileSdkVersion", 35)
     set("buildToolsVersion", "35.0.0")
-    set("targetSdkVersion", 34)
+    set("targetSdkVersion", 35)
     set("minSdkVersion", 23)
 }
