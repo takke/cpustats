@@ -1,1 +1,12 @@
+// Kotlin
+buildscript {
+    configurations.classpath {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.jetbrains.kotlin") {
+                useVersion(libs.versions.kotlin.get())
+            }
+        }
+    }
+}
+
 include ':app'
