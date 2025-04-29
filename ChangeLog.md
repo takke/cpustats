@@ -4,7 +4,7 @@ Change Log
 v2.2.3 (2025.04.30)
 -------------------
 
-- targetSdkVersion 34 -> 35
+- Support Android 15+ (targetSdkVersion 34 -> 35)
 - Update libraries
     - BuildTools 34.0.0 -> 35.0.0
     - JDK 1.8 -> 11
@@ -20,7 +20,7 @@ v2.2.3 (2025.04.30)
 v2.2.2 (2024.07.16)
 -------------------
 
-- targetSdkVersion 33 -> 34
+- Support Android 14+ (targetSdkVersion 33 -> 34)
 - Update libraries
     - AGP from 8.4.1 to 8.5.1
     - Gradle from 8.7 to 8.8
