@@ -1,7 +1,7 @@
 package jp.takke.cpustats.util
 
 import jp.takke.cpustats.R
-import jp.takke.cpustats.quad5.QuadResourceUtil
+import jp.takke.cpustats.quad5.QuadResource
 
 
 object ResourceUtil {
@@ -27,10 +27,10 @@ object ResourceUtil {
             2 -> getIconIdForCpuUsageDual(cpuUsages)
 
             // 3コア(6コアの2分割など)
-            3 -> QuadResourceUtil.getIconIdForCpuUsageTri(cpuUsages)
+            3 -> QuadResource.getIconIdForCpuUsageTri(cpuUsages)
 
             // 4コア以上
-            else -> QuadResourceUtil.getIconIdForCpuUsageQuad(cpuUsages)
+            else -> QuadResource.getIconIdForCpuUsageQuad(cpuUsages)
         }
     }
 

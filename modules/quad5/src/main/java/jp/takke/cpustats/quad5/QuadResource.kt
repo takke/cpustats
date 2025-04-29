@@ -1,19 +1,18 @@
 package jp.takke.cpustats.quad5
 
-object QuadResourceUtil {
+object QuadResource {
+
   fun getIconIdForCpuUsageTri(cpuUsages: IntArray): Int {
     // 3コア
 
     return getIconIdForCpuUsageTriLevel5(cpuUsages)
   }
 
-
   fun getIconIdForCpuUsageQuad(cpuUsages: IntArray): Int {
     // 4コア
 
     return getIconIdForCpuUsageQuadLevel5(cpuUsages)
   }
-
 
   /**
    * CPU 使用率を「レベル」に変換する
@@ -36,7 +35,6 @@ object QuadResourceUtil {
       5
     }
   }
-
 
   private fun getIconIdForCpuUsageQuadLevel5(cpuUsages: IntArray): Int {
     // 4コアのレベルを10進数に変換する
@@ -1350,7 +1348,6 @@ object QuadResourceUtil {
       else -> R.drawable.quad_0000
     }
   }
-
 
   private fun getIconIdForCpuUsageTriLevel5(cpuUsages: IntArray): Int {
     // 3コアのレベルを10進数に変換する
