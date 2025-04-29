@@ -1,22 +1,20 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="#222"
-    >
+    android:orientation="vertical">
 
-    <include layout="@layout/activity_preview_freq" android:id="@+id/freq"
+    <include
+        android:id="@+id/freq"
+        layout="@layout/activity_preview_freq"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -32,10 +30,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toStartOf="@+id/core2"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <include
                 android:id="@+id/core2"
@@ -45,10 +42,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/core1"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toEndOf="@+id/core1"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <include
                 android:id="@+id/core3"
@@ -58,10 +54,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toStartOf="@+id/core4"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/core1"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/core1" />
 
             <include
                 android:id="@+id/core4"
@@ -71,10 +66,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/core3"
-                app:layout_constraintTop_toBottomOf="@id/core2"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toEndOf="@+id/core3"
+                app:layout_constraintTop_toBottomOf="@id/core2" />
 
             <include
                 android:id="@+id/core5"
@@ -84,10 +78,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toStartOf="@+id/core6"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/core3"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/core3" />
 
             <include
                 android:id="@+id/core6"
@@ -97,10 +90,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/core5"
-                app:layout_constraintTop_toBottomOf="@id/core4"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toEndOf="@+id/core5"
+                app:layout_constraintTop_toBottomOf="@id/core4" />
 
             <include
                 android:id="@+id/core7"
@@ -110,10 +102,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toStartOf="@+id/core8"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/core5"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/core5" />
 
             <include
                 android:id="@+id/core8"
@@ -123,10 +114,9 @@
                 android:layout_marginTop="@dimen/padding_tiny"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/core7"
-                app:layout_constraintTop_toBottomOf="@id/core6"
                 app:layout_constraintHorizontal_weight="1"
-                />
+                app:layout_constraintStart_toEndOf="@+id/core7"
+                app:layout_constraintTop_toBottomOf="@id/core6" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

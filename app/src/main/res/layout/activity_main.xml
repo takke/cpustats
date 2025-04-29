@@ -1,0 +1,72 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintBottom_toTopOf="@+id/scrollView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:elevation="4dp" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#222"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/freq"
+                layout="@layout/activity_preview_freq" />
+
+            <!-- Core1 - Core8 -->
+            <include
+                android:id="@+id/core1"
+                layout="@layout/activity_preview_core" />
+
+            <include
+                android:id="@+id/core2"
+                layout="@layout/activity_preview_core" />
+
+            <include
+                android:id="@+id/core3"
+                layout="@layout/activity_preview_core" />
+
+            <include
+                android:id="@+id/core4"
+                layout="@layout/activity_preview_core" />
+
+            <include
+                android:id="@+id/core5"
+                layout="@layout/activity_preview_core" />
+
+            <include
+                android:id="@+id/core6"
+                layout="@layout/activity_preview_core" />
+
+            <include
+                android:id="@+id/core7"
+                layout="@layout/activity_preview_core" />
+
+            <include
+                android:id="@+id/core8"
+                layout="@layout/activity_preview_core" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

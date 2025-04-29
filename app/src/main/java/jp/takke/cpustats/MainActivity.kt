@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity() {
   public override fun onCreate(savedInstanceState: Bundle?) {
 
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_preview)
+    setContentView(R.layout.activity_main)
 
     // 通知権限の要求(Android 13 以上)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
