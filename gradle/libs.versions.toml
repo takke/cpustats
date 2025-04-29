@@ -7,7 +7,8 @@ annotation = "1.9.1"
 appcompat = "1.7.0"
 # AssertJ
 assertjCore = "3.27.3"
-constraintlayout = "2.1.4"
+# ConstraintLayout
+constraintlayout = "2.2.1"
 core-ktx = "1.13.1"
 junit = "4.13.2"
 kotlinStdlibJdk7 = "2.0.0"

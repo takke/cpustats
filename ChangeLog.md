@@ -11,6 +11,7 @@ v2.2.3 (2025.04.30)
   - Kotlin from 2.0.0 to 2.1.20
   - AndroidX Annotation from 1.8.0 to 1.9.1
   - AssertJ from 3.26.3 to 3.27.3
+  - ConstraintLayout from 2.1.4 to 2.2.1
 
 v2.2.2 (2024.07.16)
 -------------------
