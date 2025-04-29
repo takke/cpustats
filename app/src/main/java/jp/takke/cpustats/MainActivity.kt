@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import jp.takke.cpustats.util.EdgeToEdgeUtil
 import jp.takke.cpustats.util.MyUtil
 import jp.takke.cpustats.util.ResourceUtil
 import kotlinx.coroutines.launch
@@ -191,6 +192,9 @@ class MainActivity : AppCompatActivity() {
 
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+
+    // Edge to Edge 対応
+    EdgeToEdgeUtil.optimizeEdgeToEdge(findViewById(R.id.root))
 
     // 通知権限の要求(Android 13 以上)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
