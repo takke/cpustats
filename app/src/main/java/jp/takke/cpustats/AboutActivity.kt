@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import jp.takke.cpustats.util.EdgeToEdgeUtil
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
@@ -50,6 +51,9 @@ class AboutActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.activity_about)
+
+    // Edge to Edge 対応
+    EdgeToEdgeUtil.optimizeEdgeToEdge(findViewById(R.id.root))
 
 
     // ライセンス情報

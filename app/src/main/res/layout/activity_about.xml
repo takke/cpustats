@@ -1,73 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:gravity="center_horizontal"
-              tools:ignore="RtlHardcoded"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:ignore="RtlHardcoded">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginTop="@dimen/padding_medium"
-        >
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_launcher"
-            />
+            android:src="@drawable/ic_launcher" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:textAppearance="@android:style/TextAppearance.Large"
-            android:text="@string/app_name"
-            android:layout_toRightOf="@+id/icon"
             android:layout_alignBottom="@+id/icon"
             android:layout_marginLeft="@dimen/padding_small"
+            android:layout_toRightOf="@+id/icon"
             android:gravity="center_vertical"
-            />
+            android:text="@string/app_name"
+            android:textAppearance="@android:style/TextAppearance.Large" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/app_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_version"
         android:layout_marginTop="12dp"
-        android:textAppearance="@android:style/TextAppearance.Small"
-        />
+        android:text="@string/app_version"
+        android:textAppearance="@android:style/TextAppearance.Small" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_copyright"
         android:layout_marginTop="4dp"
-        android:textAppearance="@android:style/TextAppearance.Small"
-        />
+        android:text="@string/app_copyright"
+        android:textAppearance="@android:style/TextAppearance.Small" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginTop="@dimen/padding_large"
-        >
+        android:layout_weight="1">
+
         <TextView
             android:id="@+id/license_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:textAppearance="@android:style/TextAppearance.Small"
-            android:textIsSelectable="true"
             android:paddingLeft="@dimen/about_horizontal_margin"
             android:paddingRight="@dimen/about_horizontal_margin"
             android:paddingBottom="@dimen/padding_small"
-            />
+            android:textAppearance="@android:style/TextAppearance.Small"
+            android:textIsSelectable="true" />
     </ScrollView>
 
 </LinearLayout>
