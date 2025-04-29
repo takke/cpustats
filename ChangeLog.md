@@ -9,6 +9,7 @@ v2.2.3 (2025.04.30)
   - AGP from 8.5.1 to 8.9.2
   - Gradle from 8.8 to 8.14
   - Kotlin from 2.0.0 to 2.1.20
+  - AndroidX Annotation from 1.8.0 to 1.9.1
 
 v2.2.2 (2024.07.16)
 -------------------
