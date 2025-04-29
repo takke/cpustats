@@ -20,15 +20,6 @@ allprojects {
     }
 }
 
-allprojects {
-    //noinspection UnnecessaryQualifiedReference
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-}
-
 tasks.register('clean', Delete) {
     delete rootProject.layout.buildDirectory
 }
