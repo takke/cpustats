@@ -1,4 +1,5 @@
 [versions]
+agp = "8.9.2"
 annotation = "1.8.0"
 appcompat = "1.7.0"
 assertjCore = "3.26.3"

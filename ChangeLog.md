@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+v2.2.3 (2025.04.30)
+-------------------
+- Update libraries
+  - AGP from 8.5.1 to 8.9.2
+  - Gradle from 8.8 to 8.14
+
 v2.2.2 (2024.07.16)
 -------------------
 - targetSdkVersion 33 -> 34
