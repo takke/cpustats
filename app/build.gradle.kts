@@ -53,9 +53,6 @@ android {
     flavorDimensions += "edition"
 
     productFlavors {
-        create("quad3") {
-            dimension = "edition"
-        }
         create("quad5") {
             dimension = "edition"
         }
