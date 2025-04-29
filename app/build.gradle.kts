@@ -53,14 +53,6 @@ android {
     aidl = true
   }
 
-  flavorDimensions += "edition"
-
-  productFlavors {
-    create("quad5") {
-      dimension = "edition"
-    }
-  }
-
   val publish = tasks.register("publishAll")
   applicationVariants.all {
     if (buildType.name == "release") {
@@ -83,14 +75,12 @@ android {
 
   applicationVariants.all {
     if (buildType.name == "release") {
-      val flavorName0 = productFlavors[0].name
       val buildTypeName = buildType.name
 
       @Suppress("DEPRECATION")
       val variantName = name.capitalize()
       tasks.register("bundlePublish${variantName}", Copy::class) {
-        val aabFilename = "${base.archivesName.get()}-$flavorName0-${buildTypeName}.aab"
-//                val aabFilename = "${rootProject.extra["base.archivesName"]}-$flavorName0-$buildTypeName.aab"
+        val aabFilename = "${base.archivesName.get()}-${buildTypeName}.aab"
         val path = "${layout.buildDirectory.get()}/outputs/bundle/${variantName}/$aabFilename"
         println("${name}: $path -> ${rootProject.extra["deployTo"]}")
 //                println("*** aab path = $path ($task) [$flavorName0] [$buildTypeName]")
