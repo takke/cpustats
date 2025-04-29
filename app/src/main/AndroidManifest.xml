@@ -14,10 +14,9 @@
 
         <activity
             android:name=".PreviewActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:exported="true"
-            >
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,23 +26,22 @@
 
         <activity
             android:name=".ConfigActivity"
-            android:label="@string/title_activity_config"
-            />
+            android:label="@string/title_activity_config" />
 
         <activity
             android:name=".AboutActivity"
             android:label="@string/title_activity_about"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <service
             android:name=".UsageUpdateService"
-            android:foregroundServiceType="dataSync"
             android:enabled="true"
-            android:exported="false">
-        </service>
+            android:exported="false"
+            android:foregroundServiceType="dataSync"></service>
 
-        <receiver android:name=".BootReceiver" android:exported="true">
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
