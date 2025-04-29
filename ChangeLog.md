@@ -13,6 +13,7 @@ v2.2.3 (2025.04.30)
   - AssertJ from 3.26.3 to 3.27.3
   - ConstraintLayout from 2.1.4 to 2.2.1
   - AndroidX Core from 1.13.1 to 1.16.0
+  - Robolectric from 4.13 to 4.14.1
 
 v2.2.2 (2024.07.16)
 -------------------
