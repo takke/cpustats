@@ -30,7 +30,7 @@ import jp.takke.cpustats.util.MyUtil
 import jp.takke.cpustats.util.ResourceUtil
 import kotlinx.coroutines.launch
 
-class PreviewActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
   // 表示確認
   private var mIsForeground = false

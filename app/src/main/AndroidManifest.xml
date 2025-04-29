@@ -13,7 +13,7 @@
         android:theme="@style/Theme.AppCompat">
 
         <activity
-            android:name=".PreviewActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.AppCompat.NoActionBar">
