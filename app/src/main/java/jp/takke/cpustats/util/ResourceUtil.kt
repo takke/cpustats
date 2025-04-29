@@ -1,7 +1,7 @@
 package jp.takke.cpustats.util
 
-import jp.takke.cpustats.QuadResourceUtil
 import jp.takke.cpustats.R
+import jp.takke.cpustats.quad5.QuadResourceUtil
 
 
 object ResourceUtil {
