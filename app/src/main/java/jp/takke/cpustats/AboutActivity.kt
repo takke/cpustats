@@ -15,7 +15,6 @@ import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.*
 
 class AboutActivity : AppCompatActivity() {
 
@@ -85,7 +84,7 @@ class AboutActivity : AppCompatActivity() {
             if (pinfo != null) {
                 @Suppress("DEPRECATION")
                 versionCode = pinfo.versionCode.toString()
-                version = pinfo.versionName
+                version = pinfo.versionName ?: ""
             }
 
             val versionString = getString(R.string.app_version)
