@@ -1,6 +1,8 @@
-package jp.takke.cpustats
+package jp.takke.cpustats.util
 
-import java.util.*
+import jp.takke.cpustats.AllCoreFrequencyInfo
+import jp.takke.cpustats.MyLog
+import jp.takke.cpustats.OneCpuInfo
 
 object MyUtil {
 
@@ -21,7 +23,7 @@ object MyUtil {
         val nLast = lastInfo.size
         val nCurr = currentInfo.size
         if (nLast == 0 || nCurr == 0) {
-            MyLog.d(" no info: [$nLast][$nCurr]")
+          MyLog.d(" no info: [$nLast][$nCurr]")
             return null
         }
 

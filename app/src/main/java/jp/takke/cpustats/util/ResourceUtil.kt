@@ -1,4 +1,7 @@
-package jp.takke.cpustats
+package jp.takke.cpustats.util
+
+import jp.takke.cpustats.QuadResourceUtil
+import jp.takke.cpustats.R
 
 
 object ResourceUtil {

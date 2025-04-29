@@ -11,6 +11,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import jp.takke.cpustats.util.MyUtil
+import jp.takke.cpustats.util.ResourceUtil
 import java.lang.ref.WeakReference
 
 internal class NotificationPresenter(service: Service, private val mConfig: MyConfig) {

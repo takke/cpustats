@@ -26,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import jp.takke.cpustats.util.MyUtil
+import jp.takke.cpustats.util.ResourceUtil
 import kotlinx.coroutines.launch
 
 class PreviewActivity : AppCompatActivity() {
