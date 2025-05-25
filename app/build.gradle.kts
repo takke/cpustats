@@ -26,6 +26,7 @@ android {
     minSdk = rootProject.extra["minSdkVersion"] as Int
     versionCode = rootProject.extra["versionCode"] as Int
     val versionName = rootProject.extra["versionName"] as String
+    this.versionName = versionName
 
     val shortVersionName = versionName.replace(".", "")
     val d = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
