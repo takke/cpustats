@@ -16,7 +16,7 @@ preference-ktx = "1.2.1"
 # JUnit
 junit = "4.13.2"
 # Robolectric
-robolectricVersion = "4.14.1"
+robolectricVersion = "4.15.1"
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
