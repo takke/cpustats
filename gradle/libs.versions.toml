@@ -6,7 +6,7 @@ annotation = "1.9.1"
 # AndroidX AppCompat
 appcompat = "1.7.0"
 # AssertJ
-assertjCore = "3.27.3"
+assertjCore = "3.27.5"
 # ConstraintLayout
 constraintlayout = "2.2.1"
 # AndroidX Core
