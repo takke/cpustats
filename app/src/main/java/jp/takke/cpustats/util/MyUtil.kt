@@ -125,6 +125,21 @@ object MyUtil {
   }
 
   /**
+   * メモリサイズの表示用整形
+   *
+   * @param sizeMb サイズ[MB]
+   * @return "800 MB" または "3.2 GB" のような文字列
+   */
+  fun formatMemSize(sizeMb: Int): String {
+    if (sizeMb < 1024) {
+      return "$sizeMb MB"
+    }
+    val a = sizeMb / 1024
+    val b = sizeMb * 10 / 1024 % 10
+    return "$a.$b GB"
+  }
+
+  /**
    * 最もアクティブなコアのインデックスを返す
    */
   fun getActiveCoreIndex(freqs: IntArray): Int {

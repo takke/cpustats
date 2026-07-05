@@ -141,6 +141,21 @@ class MyUtilTest {
   }
 
   @Test
+  fun formatMemSize() {
+
+    // MB 表示
+    assertThat(MyUtil.formatMemSize(0)).isEqualTo("0 MB")
+    assertThat(MyUtil.formatMemSize(800)).isEqualTo("800 MB")
+    assertThat(MyUtil.formatMemSize(1023)).isEqualTo("1023 MB")
+
+    // GB 表示(小数第1位まで)
+    assertThat(MyUtil.formatMemSize(1024)).isEqualTo("1.0 GB")
+    assertThat(MyUtil.formatMemSize(3277)).isEqualTo("3.2 GB")
+    assertThat(MyUtil.formatMemSize(7987)).isEqualTo("7.7 GB")
+    assertThat(MyUtil.formatMemSize(16384)).isEqualTo("16.0 GB")
+  }
+
+  @Test
   fun formatFreq() {
 
     assertThat(MyUtil.formatFreq(300000)).isEqualTo("300 MHz")

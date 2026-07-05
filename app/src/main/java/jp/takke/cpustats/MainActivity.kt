@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
   // コールバックの実装(サービスの収集スレッドから呼ばれるのでメインスレッドに切り替える)
   private val mCallback =
-    UsageUpdateCallback { cpuUsages, freqs, minFreqs, maxFreqs, batteryTemperature ->
+    UsageUpdateCallback { cpuUsages, freqs, minFreqs, maxFreqs, systemStats ->
 
       lifecycleScope.launch {
 
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         if (mIsForeground) {
           // CPUクロック周波数表示
-          showCpuFrequency(freqs, minFreqs, maxFreqs, batteryTemperature)
+          showCpuFrequency(freqs, minFreqs, maxFreqs, systemStats)
 
           // CPU使用率表示更新
           showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs)
@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity() {
     // CPU クロック更新
     val coreCount = CpuInfoCollector.calcCpuCoreCount()
     val fi = AllCoreFrequencyInfo(coreCount)
-    showCpuFrequency(fi.freqs, fi.minFreqs, fi.maxFreqs, 0)
+    showCpuFrequency(fi.freqs, fi.minFreqs, fi.maxFreqs, SystemStats())
 
     // CPU使用率表示更新
     val dummyCpuUsages = IntArray(coreCount)
@@ -406,7 +406,7 @@ class MainActivity : AppCompatActivity() {
     freqs: IntArray,
     minFreqs: IntArray,
     maxFreqs: IntArray,
-    batteryTemperature: Int
+    systemStats: SystemStats
   ) {
 
     // 全コアのうち最適なクロック周波数を探す
@@ -440,10 +440,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     // バッテリー温度
-    if (batteryTemperature != 0) {
+    if (systemStats.batteryTemperature != 0) {
       ssb.append("\n")
       val start = ssb.length
-      ssb.append(" Battery: ${MyUtil.formatTemperature(batteryTemperature)}")
+      ssb.append(" Battery: ${MyUtil.formatTemperature(systemStats.batteryTemperature)}")
+      ssb.setSpan(RelativeSizeSpan(0.8f), start, ssb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+
+    // メモリ使用量
+    if (systemStats.memTotalMb > 0) {
+      ssb.append("\n")
+      val start = ssb.length
+      val usedText = MyUtil.formatMemSize(systemStats.memUsedMb)
+      val totalText = MyUtil.formatMemSize(systemStats.memTotalMb)
+      val percent = systemStats.memUsedMb * 100 / systemStats.memTotalMb
+      ssb.append(" Memory: $usedText / $totalText ($percent%)")
       ssb.setSpan(RelativeSizeSpan(0.8f), start, ssb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 

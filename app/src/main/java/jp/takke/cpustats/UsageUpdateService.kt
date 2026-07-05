@@ -1,5 +1,6 @@
 package jp.takke.cpustats
 
+import android.app.ActivityManager
 import android.app.NotificationManager
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -280,19 +281,20 @@ class UsageUpdateService : Service() {
 
 
     //-------------------------------------------------
-    // バッテリー温度の取得
+    // バッテリー温度・メモリ使用量の取得
     //-------------------------------------------------
-    val batteryTemperature = getBatteryTemperature()
+    val systemStats = getSystemStats()
 
     //-------------------------------------------------
     // 通知判定
     //-------------------------------------------------
     // 前回と同じ CPU 使用率なら通知しない
     // ※通知アイコンだけなら丸めた値で比較すればいいんだけど通知テキストにCPU使用率%が出るので完全一致で比較する
-    val updated = isUpdated(currentCpuClock, cpuUsages, batteryTemperature)
+    // ※メモリ使用量は変動が細かすぎるので通知更新判定には含めない
+    val updated = isUpdated(currentCpuClock, cpuUsages, systemStats.batteryTemperature)
     mLastCpuUsages = cpuUsages
     mLastCpuClock = currentCpuClock
-    mLastBatteryTemperature = batteryTemperature
+    mLastBatteryTemperature = systemStats.batteryTemperature
 
     //-------------------------------------------------
     // 通知
@@ -308,32 +310,42 @@ class UsageUpdateService : Service() {
         currentCpuClock,
         minFreq,
         maxFreq,
-        batteryTemperature,
+        systemStats,
         mRequestForeground,
         mConfig
       )
       mRequestForeground = false
 
       // コールバック経由で通知
-      distributeToCallbacks(cpuUsages, fi, batteryTemperature)
+      distributeToCallbacks(cpuUsages, fi, systemStats)
     }
 
     mLastExecTask = System.currentTimeMillis()
   }
 
   /**
-   * バッテリー温度を取得する
-   *
-   * @return 温度(0.1℃単位、取得できない場合は0)
+   * バッテリー温度・メモリ使用量を取得する
    */
-  private fun getBatteryTemperature(): Int {
+  private fun getSystemStats(): SystemStats {
 
     // ACTION_BATTERY_CHANGED は sticky broadcast なので受信登録なしで現在値を取得できる
-    val intent = applicationContext.registerReceiver(
+    val batteryIntent = applicationContext.registerReceiver(
       null,
       IntentFilter(Intent.ACTION_BATTERY_CHANGED)
     )
-    return intent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) ?: 0
+    val batteryTemperature =
+      batteryIntent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) ?: 0
+
+    // メモリ使用量
+    val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    val mi = ActivityManager.MemoryInfo()
+    am.getMemoryInfo(mi)
+
+    return SystemStats(
+      batteryTemperature = batteryTemperature,
+      memUsedMb = ((mi.totalMem - mi.availMem) / 1024 / 1024).toInt(),
+      memTotalMb = (mi.totalMem / 1024 / 1024).toInt(),
+    )
   }
 
   private fun isUpdated(
@@ -366,11 +378,11 @@ class UsageUpdateService : Service() {
   private fun distributeToCallbacks(
     cpuUsages: IntArray,
     fi: AllCoreFrequencyInfo,
-    batteryTemperature: Int
+    systemStats: SystemStats
   ) {
 
     for (callback in mCallbacks) {
-      callback.onUsageUpdated(cpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs, batteryTemperature)
+      callback.onUsageUpdated(cpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs, systemStats)
     }
   }
 

@@ -33,7 +33,7 @@ internal class NotificationPresenter(service: Service) {
     currentCpuClock: Int,
     minFreq: Int,
     maxFreq: Int,
-    batteryTemperature: Int,
+    systemStats: SystemStats,
     requestForeground: Boolean,
     config: MyConfig
   ) {
@@ -110,7 +110,7 @@ internal class NotificationPresenter(service: Service) {
       doNotify(
         MY_FREQ_NOTIFICATION_ID,
         makeFrequencyNotification(
-          minFreq, maxFreq, currentCpuClock, batteryTemperature, pendingIntent
+          minFreq, maxFreq, currentCpuClock, systemStats.batteryTemperature, pendingIntent
         ).build(),
         service,
         nm,

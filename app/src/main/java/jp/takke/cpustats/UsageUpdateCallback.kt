@@ -12,6 +12,6 @@ fun interface UsageUpdateCallback {
     freqs: IntArray,
     minFreqs: IntArray,
     maxFreqs: IntArray,
-    batteryTemperature: Int  // 0.1℃単位(取得できない場合は0)
+    systemStats: SystemStats
   )
 }

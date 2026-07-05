@@ -56,9 +56,9 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
   - 収集は `mServiceScope`(SupervisorJob + Dispatchers.Default)上の収集ループ(`startGatherLoop`)で行う。`delay(mConfig.intervalMs)` → `execTask()` の繰り返し。AlarmManager による keep-alive は廃止済み(FGS + START_STICKY で十分)。
   - 停止は `stopGatherLoop()` が `runBlocking { cancelAndJoin() }` で実行中の execTask 完了を待つ(停止直後の `cancelAll()` 後に通知が再表示されるのを防ぐため)。
   - `ACTION_SCREEN_ON/OFF` を受信して収集ループを停止/再開する(スリープ復帰後はステータスバーの並びが崩れないように 30 秒間は通知時刻を更新しない)。
-  - IPC は AIDL ではなく **`LocalBinder`(Service インスタンス直接参照)+ `UsageUpdateCallback`(fun interface)**。`MainActivity` が bind して `onUsageUpdated(cpuUsages, freqs, minFreqs, maxFreqs, batteryTemperature)` を受け取る。コールバックは収集スレッドから呼ばれるため受信側でメインスレッドへ切り替える。
+  - IPC は AIDL ではなく **`LocalBinder`(Service インスタンス直接参照)+ `UsageUpdateCallback`(fun interface)**。`MainActivity` が bind して `onUsageUpdated(cpuUsages, freqs, minFreqs, maxFreqs, systemStats)` を受け取る。コールバックは収集スレッドから呼ばれるため受信側でメインスレッドへ切り替える。
   - Android 8.0+ からは foreground 起動要求のフラグ(`FOREGROUND_REQUEST`)を extras に載せてもらい、5 秒以内に `startForeground` を呼び出す設計。
-  - バッテリー温度(0.1℃単位)も収集する(`ACTION_BATTERY_CHANGED` の sticky broadcast、権限不要)。
+  - CPU 以外の情報は `SystemStats`(data class)に集約して配信: バッテリー温度(`ACTION_BATTERY_CHANGED` の sticky broadcast、権限不要)とメモリ使用量(`ActivityManager.getMemoryInfo`)。メモリは変動が細かすぎるため通知の更新判定には含めない。
   - 全体使用率の履歴を `UsageHistoryBuffer`(容量 120 のリングバッファ)に毎サンプル記録し、`getUsageHistory()` で公開(スパークライン用)。
   - 常駐状態は companion の `isResidentRunning`(@Volatile)で公開。`ACTION_STOP_RESIDENT` を intent action で受けると常駐停止する(クイック設定タイル用)。
 - **`CpuInfoCollector`**(object)
