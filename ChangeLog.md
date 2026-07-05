@@ -14,6 +14,7 @@ v2.2.5 (2026.07.xx)
 - Internal: Make MyConfig immutable (single source of truth)
 - Internal: Enable Gradle Configuration Cache / Build Cache
 - Internal: Remove obsolete dependencies and replace deprecated APIs
+- Internal: Expand unit tests (2 -> 27 tests)
 - Fix possible crash on closing the main activity when service binding failed
 - compileSdkVersion 35 -> 37
 - Update libraries

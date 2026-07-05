@@ -113,9 +113,6 @@ object CpuInfoCollector {
    */
   fun takeCpuUsageSnapshot(): ArrayList<OneCpuInfo>? {
 
-    // [0] が全体、[1]以降が個別CPU
-    val result = ArrayList<OneCpuInfo>()
-
     // O 以降(N以降?)は取得できないので null を返し fallback させる
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       MyLog.i("fallback[${Build.VERSION.SDK_INT}]")
@@ -126,40 +123,53 @@ object CpuInfoCollector {
       BufferedReader(
         InputStreamReader(FileInputStream("/proc/stat")),
         C.READ_BUFFER_SIZE
-      ).use { it ->
-        it.forEachLine { line ->
-
-          if (!line.startsWith("cpu")) {
-            return@forEachLine
-          }
-//                  MyLog.i(" load:" + load);
-
-          //     user     nice    system  idle    iowait  irq     softirq     steal
-          //cpu  48200 4601 35693 979258 5095 1 855 0 0 0
-          //cpu0 26847 1924 25608 212324 2212 1 782 0 0 0
-          //cpu1 8371 1003 4180 254096 1026 0 50 0 0 0
-          //cpu2 8450 983 3916 252872 1304 0 9 0 0 0
-          //cpu3 4532 691 1989 259966 553 0 14 0 0 0
-
-          val tokens = line.split(" +".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-          val oci = OneCpuInfo()
-          oci.idle = java.lang.Long.parseLong(tokens[4])
-          oci.total = (java.lang.Long.parseLong(tokens[1])
-                  + java.lang.Long.parseLong(tokens[2])
-                  + java.lang.Long.parseLong(tokens[3])
-                  + oci.idle
-                  + java.lang.Long.parseLong(tokens[5])
-                  + java.lang.Long.parseLong(tokens[6])
-                  + java.lang.Long.parseLong(tokens[7]))
-          result.add(oci)
-        }
+      ).use { reader ->
+        return parseCpuUsageSnapshot(reader)
       }
-      return result
 
     } catch (ex: Exception) {
       MyLog.e(ex)
       return null
     }
 
+  }
+
+  /**
+   * /proc/stat 形式のテキストから各コアの CPU 値を解析する
+   *
+   * @return 各コアの CPU 値のリスト([0] が全体、[1]以降が個別CPU)
+   */
+  fun parseCpuUsageSnapshot(reader: BufferedReader): ArrayList<OneCpuInfo> {
+
+    // [0] が全体、[1]以降が個別CPU
+    val result = ArrayList<OneCpuInfo>()
+
+    reader.forEachLine { line ->
+
+      if (!line.startsWith("cpu")) {
+        return@forEachLine
+      }
+
+      //     user     nice    system  idle    iowait  irq     softirq     steal
+      //cpu  48200 4601 35693 979258 5095 1 855 0 0 0
+      //cpu0 26847 1924 25608 212324 2212 1 782 0 0 0
+      //cpu1 8371 1003 4180 254096 1026 0 50 0 0 0
+      //cpu2 8450 983 3916 252872 1304 0 9 0 0 0
+      //cpu3 4532 691 1989 259966 553 0 14 0 0 0
+
+      val tokens = line.split(" +".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+      val oci = OneCpuInfo()
+      oci.idle = java.lang.Long.parseLong(tokens[4])
+      oci.total = (java.lang.Long.parseLong(tokens[1])
+              + java.lang.Long.parseLong(tokens[2])
+              + java.lang.Long.parseLong(tokens[3])
+              + oci.idle
+              + java.lang.Long.parseLong(tokens[5])
+              + java.lang.Long.parseLong(tokens[6])
+              + java.lang.Long.parseLong(tokens[7]))
+      result.add(oci)
+    }
+
+    return result
   }
 }

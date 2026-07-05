@@ -3,8 +3,124 @@ package jp.takke.cpustats
 import jp.takke.cpustats.util.MyUtil
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+// MyLog 経由で android.util.Log を呼ぶ経路があるため Robolectric で実行する
+@RunWith(RobolectricTestRunner::class)
+@Config(manifest = Config.NONE, sdk = [24])
 class MyUtilTest {
+
+  private fun oneCpu(idle: Long, total: Long) = OneCpuInfo().also {
+    it.idle = idle
+    it.total = total
+  }
+
+  @Test
+  fun calcCpuUsages_normal() {
+
+    // totalDiff=1000, idleDiff=400 → 100 - 40 = 60%
+    val last = arrayListOf(oneCpu(1000, 2000), oneCpu(500, 1000))
+    val curr = arrayListOf(oneCpu(1400, 3000), oneCpu(1500, 2000))
+
+    val usages = MyUtil.calcCpuUsages(curr, last)
+
+    assertThat(usages).isNotNull()
+    assertThat(usages!!.size).isEqualTo(2)
+    assertThat(usages[0]).isEqualTo(60)
+    // totalDiff=1000, idleDiff=1000 → 0%
+    assertThat(usages[1]).isEqualTo(0)
+  }
+
+  @Test
+  fun calcCpuUsages_totalDiffZero() {
+
+    // 前回と同一(totalDiff=0)なら 0% とする
+    val last = arrayListOf(oneCpu(1000, 2000))
+    val curr = arrayListOf(oneCpu(1000, 2000))
+
+    val usages = MyUtil.calcCpuUsages(curr, last)
+
+    assertThat(usages).isNotNull()
+    assertThat(usages!![0]).isEqualTo(0)
+  }
+
+  @Test
+  fun calcCpuUsages_fullUsage() {
+
+    // idleDiff=0 → 100%
+    val last = arrayListOf(oneCpu(1000, 2000))
+    val curr = arrayListOf(oneCpu(1000, 3000))
+
+    val usages = MyUtil.calcCpuUsages(curr, last)
+
+    assertThat(usages).isNotNull()
+    assertThat(usages!![0]).isEqualTo(100)
+  }
+
+  @Test
+  fun calcCpuUsages_coreCountFluctuation() {
+
+    // コア数変動時(Galaxy S II 等)は少ない方のコア数で算出する
+    val last = arrayListOf(oneCpu(1000, 2000), oneCpu(500, 1000))
+    val curr = arrayListOf(
+      oneCpu(1400, 3000), oneCpu(1000, 2000), oneCpu(100, 200), oneCpu(100, 200)
+    )
+
+    val usages = MyUtil.calcCpuUsages(curr, last)
+
+    assertThat(usages).isNotNull()
+    assertThat(usages!!.size).isEqualTo(2)
+
+    // 逆方向(減少)
+    val usages2 = MyUtil.calcCpuUsages(last, curr)
+    assertThat(usages2).isNotNull()
+    assertThat(usages2!!.size).isEqualTo(2)
+  }
+
+  @Test
+  fun calcCpuUsages_nullOrEmpty() {
+
+    val valid = arrayListOf(oneCpu(1000, 2000))
+
+    assertThat(MyUtil.calcCpuUsages(null, valid)).isNull()
+    assertThat(MyUtil.calcCpuUsages(valid, null)).isNull()
+    assertThat(MyUtil.calcCpuUsages(arrayListOf(), valid)).isNull()
+    assertThat(MyUtil.calcCpuUsages(valid, arrayListOf())).isNull()
+  }
+
+  @Test
+  fun getClockPercent() {
+
+    // (574000 - 300000) * 100 / (1800000 - 300000) = 18%
+    assertThat(MyUtil.getClockPercent(574000, 300000, 1800000)).isEqualTo(18)
+
+    // 最小値・最大値
+    assertThat(MyUtil.getClockPercent(300000, 300000, 1800000)).isEqualTo(0)
+    assertThat(MyUtil.getClockPercent(1800000, 300000, 1800000)).isEqualTo(100)
+
+    // min == max(冬眠コアなどで 0,0 になるケース)
+    assertThat(MyUtil.getClockPercent(0, 0, 0)).isEqualTo(0)
+    assertThat(MyUtil.getClockPercent(500, 500, 500)).isEqualTo(0)
+
+    // min > max(不正値)
+    assertThat(MyUtil.getClockPercent(500, 1000, 100)).isEqualTo(0)
+  }
+
+  @Test
+  fun getActiveCoreIndex() {
+
+    // 最大周波数のコアを返す
+    assertThat(MyUtil.getActiveCoreIndex(intArrayOf(100, 300, 200))).isEqualTo(1)
+    assertThat(MyUtil.getActiveCoreIndex(intArrayOf(100, 200, 300))).isEqualTo(2)
+
+    // 同値なら先頭を返す
+    assertThat(MyUtil.getActiveCoreIndex(intArrayOf(300, 300, 300))).isEqualTo(0)
+
+    // 1コア
+    assertThat(MyUtil.getActiveCoreIndex(intArrayOf(100))).isEqualTo(0)
+  }
 
   @Test
   fun formatTemperature() {
