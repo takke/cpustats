@@ -23,7 +23,7 @@
         android:layout_toRightOf="@id/coreImage"
         tools:text="CPU Usage:"
         android:padding="@dimen/padding_medium"
-        android:textColor="#fff"
+        android:textColor="?android:attr/textColorPrimary"
         android:gravity="left"
         />
 </RelativeLayout>

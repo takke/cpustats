@@ -1,5 +1,14 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme" />
+    <!-- ライト/ダーク両対応の基本テーマ(システム設定に追従する) -->
+    <style name="Theme.CpuStats" parent="Theme.AppCompat.DayNight">
+        <!-- ライトモード時はステータスバーアイコンを暗色にする -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.CpuStats.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
 </resources>

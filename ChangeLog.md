@@ -6,6 +6,7 @@ v2.2.5 (2026.07.xx)
 
 - Fix "Start on boot" and long-running notification on Android 15+
   (foregroundServiceType: dataSync -> specialUse)
+- Support light/dark theme (follow the system dark mode setting)
 - Internal: Remove AIDL (replaced with in-process local binder)
 - Internal: Replace gather thread with Kotlin coroutines
 - compileSdkVersion 35 -> 37

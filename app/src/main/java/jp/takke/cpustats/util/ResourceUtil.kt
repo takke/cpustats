@@ -1,5 +1,7 @@
 package jp.takke.cpustats.util
 
+import android.content.Context
+import androidx.core.content.ContextCompat
 import jp.takke.cpustats.R
 import jp.takke.cpustats.quad5.QuadResource
 
@@ -217,14 +219,15 @@ object ResourceUtil {
   }
 
   /**
-   * CPU使用率から背景色を取得する
+   * CPU使用率から背景色を取得する(ライト/ダークテーマ対応)
    */
-  fun getBackgroundColor(clockPercent: Int): Int {
-    return when {
-      clockPercent >= 60 -> 0xff442222.toInt()
-      clockPercent > 0 -> 0xff333333.toInt()
-      else -> 0xff222222.toInt()
+  fun getBackgroundColor(context: Context, clockPercent: Int): Int {
+    val colorRes = when {
+      clockPercent >= 60 -> R.color.core_bg_high
+      clockPercent > 0 -> R.color.core_bg_active
+      else -> R.color.core_bg_idle
     }
+    return ContextCompat.getColor(context, colorRes)
   }
 
   /**

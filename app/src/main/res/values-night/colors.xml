@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- プレビュー画面の背景色(従来のダーク配色を維持) -->
+    <color name="preview_background">#222222</color>
+
+    <!-- コア行の背景色(周波数による負荷レベル別) -->
+    <color name="core_bg_high">#442222</color>
+    <color name="core_bg_active">#333333</color>
+    <color name="core_bg_idle">#222222</color>
+
+</resources>

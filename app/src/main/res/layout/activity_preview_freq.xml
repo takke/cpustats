@@ -1,5 +1,6 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -7,12 +8,14 @@
     >
 
     <!-- Frequency -->
+    <!-- アイコンはダーク背景用の淡色モノクロ画像なので、テーマの文字色で tint して両テーマで見えるようにする -->
     <ImageView
         android:id="@+id/freqImage"
         android:src="@drawable/digit0"
         android:layout_width="72dip"
         android:layout_height="72dip"
         android:layout_alignParentTop="true"
+        app:tint="?android:attr/textColorPrimary"
         />
     <TextView
         android:id="@+id/freqText1"
@@ -24,7 +27,7 @@
         android:paddingTop="@dimen/padding_small"
         android:paddingBottom="@dimen/padding_small"
         tools:text="Freq:"
-        android:textColor="#fff"
+        android:textColor="?android:attr/textColorPrimary"
         android:gravity="left" />
 
 </RelativeLayout>

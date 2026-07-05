@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="Theme.CpuStats" parent="Theme.AppCompat.DayNight">
+        <!-- ダークモード時はステータスバーアイコンを明色にする -->
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+</resources>

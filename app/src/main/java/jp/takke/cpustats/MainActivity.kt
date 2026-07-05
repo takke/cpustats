@@ -13,6 +13,7 @@ import android.os.IBinder
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -206,7 +207,7 @@ class MainActivity : AppCompatActivity() {
     setSupportActionBar(findViewById(R.id.my_toolbar))
 
     // Toolbarのアイコン変更
-    setActionBarLogo(R.drawable.single000)
+    setActionBarLogo(R.drawable.color_single000)
 
     // サービス開始
     doBindService()
@@ -267,6 +268,12 @@ class MainActivity : AppCompatActivity() {
 
     menuInflater.inflate(R.menu.activity_preview, menu)
 
+    // 設定アイコンはダーク背景用の淡色画像なので、テーマの文字色で tint して両テーマで見えるようにする
+    val tv = TypedValue()
+    theme.resolveAttribute(android.R.attr.textColorPrimary, tv, true)
+    val iconColor = ContextCompat.getColor(this, tv.resourceId)
+    menu.findItem(R.id.menu_settings)?.icon?.mutate()?.setTint(iconColor)
+
     return true
   }
 
@@ -319,7 +326,7 @@ class MainActivity : AppCompatActivity() {
           title = getString(R.string.app_name)
 
           // Toolbarのアイコン初期化
-          setActionBarLogo(R.drawable.single000)
+          setActionBarLogo(R.drawable.color_single000)
         }
 
       R.id.menu_settings -> {
@@ -511,7 +518,7 @@ class MainActivity : AppCompatActivity() {
       textView.visibility = View.VISIBLE
 
       // アクティブコアの背景色を変える
-      val color = ResourceUtil.getBackgroundColor(clockPercent)
+      val color = ResourceUtil.getBackgroundColor(this, clockPercent)
       coreView.setBackgroundColor(color)
     }
   }
