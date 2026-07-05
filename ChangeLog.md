@@ -4,6 +4,8 @@ Change Log
 v2.2.5 (2026.07.xx)
 -------------------
 
+- Fix "Start on boot" and long-running notification on Android 15+
+  (foregroundServiceType: dataSync -> specialUse)
 - compileSdkVersion 35 -> 37
 - Update libraries
     - AGP from 8.9.2 to 9.2.1
