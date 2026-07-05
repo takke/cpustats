@@ -1,22 +1,22 @@
 [versions]
-kotlin = "2.1.20"
-agp = "8.9.2"
+kotlin = "2.4.0"
+agp = "9.2.1"
 # AndroidX Annotation
-annotation = "1.9.1"
+annotation = "1.10.0"
 # AndroidX AppCompat
-appcompat = "1.7.0"
+appcompat = "1.7.1"
 # AssertJ
-assertjCore = "3.27.3"
+assertjCore = "3.27.7"
 # ConstraintLayout
 constraintlayout = "2.2.1"
 # AndroidX Core
-core-ktx = "1.16.0"
+core-ktx = "1.19.0"
 # Preference-ktx
 preference-ktx = "1.2.1"
 # JUnit
 junit = "4.13.2"
 # Robolectric
-robolectricVersion = "4.14.1"
+robolectricVersion = "4.16.1"
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }

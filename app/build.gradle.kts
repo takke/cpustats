@@ -3,7 +3,6 @@ import java.util.Date
 
 plugins {
   id("com.android.application")
-  id("kotlin-android")
 }
 
 kotlin {
@@ -30,10 +29,7 @@ android {
 
     val shortVersionName = versionName.replace(".", "")
     val d = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
-    setProperty(
-      "archivesBaseName",
-      "${rootProject.extra["apkNamePrefix"]}_${shortVersionName}_${d}"
-    )
+    base.archivesName.set("${rootProject.extra["apkNamePrefix"]}_${shortVersionName}_${d}")
   }
 
   buildTypes {

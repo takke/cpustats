@@ -1,6 +1,20 @@
 Change Log
 ==========
 
+v2.2.5 (2026.07.xx)
+-------------------
+
+- compileSdkVersion 35 -> 37
+- Update libraries
+    - AGP from 8.9.2 to 9.2.1
+    - Gradle from 8.14 to 9.6.1
+    - Kotlin from 2.1.20 to 2.4.0
+    - AndroidX Annotation from 1.9.1 to 1.10.0
+    - AndroidX AppCompat from 1.7.0 to 1.7.1
+    - AndroidX Core from 1.16.0 to 1.19.0
+    - AssertJ from 3.27.3 to 3.27.7
+    - Robolectric from 4.14.1 to 4.16.1
+
 v2.2.4 (2025.05.25)
 -------------------
 
