@@ -25,11 +25,12 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class UsageUpdateService : Service() {
 
-  // 設定値
-  private val mConfig = MyConfig()
+  // 設定値(reloadSettings で新しいインスタンスに差し替える)
+  @Volatile
+  private var mConfig = MyConfig()
 
   // 通知管理クラス
-  private val mNotificationPresenter = NotificationPresenter(this, mConfig)
+  private val mNotificationPresenter = NotificationPresenter(this)
 
   // 常駐停止フラグ
   private var mStopResident = false
@@ -99,10 +100,10 @@ class UsageUpdateService : Service() {
   fun reloadSettings() {
 
     MyLog.d("reloadSettings")
-    mConfig.loadSettings(this)
+    mConfig = MyConfig.load(this)
 
     // 設定で消された通知を消去
-    mNotificationPresenter.cancelNotifications()
+    mNotificationPresenter.cancelNotifications(mConfig)
   }
 
   /**
@@ -164,7 +165,7 @@ class UsageUpdateService : Service() {
     MyLog.i("UsageUpdateService.onCreate")
 
     // 設定のロード
-    mConfig.loadSettings(this)
+    mConfig = MyConfig.load(this)
 
     if (mLastCpuUsageSnapshot == null) {
       mLastCpuUsageSnapshot = CpuInfoCollector.takeCpuUsageSnapshot()
@@ -272,7 +273,8 @@ class UsageUpdateService : Service() {
         minFreq,
         maxFreq,
         batteryTemperature,
-        mRequestForeground
+        mRequestForeground,
+        mConfig
       )
       mRequestForeground = false
 

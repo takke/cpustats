@@ -11,6 +11,9 @@ v2.2.5 (2026.07.xx)
 - Internal: Remove AIDL (replaced with in-process local binder)
 - Internal: Replace gather thread with Kotlin coroutines
 - Internal: Remove AlarmManager keep-alive loop (foreground service is sufficient)
+- Internal: Make MyConfig immutable (single source of truth)
+- Internal: Enable Gradle Configuration Cache / Build Cache
+- Internal: Remove obsolete dependencies and replace deprecated APIs
 - Fix possible crash on closing the main activity when service binding failed
 - compileSdkVersion 35 -> 37
 - Update libraries

@@ -15,7 +15,7 @@ import jp.takke.cpustats.util.MyUtil
 import jp.takke.cpustats.util.ResourceUtil
 import java.lang.ref.WeakReference
 
-internal class NotificationPresenter(service: Service, private val mConfig: MyConfig) {
+internal class NotificationPresenter(service: Service) {
 
   private val mServiceRef: WeakReference<Service> = WeakReference(service)
 
@@ -34,7 +34,8 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
     minFreq: Int,
     maxFreq: Int,
     batteryTemperature: Int,
-    requestForeground: Boolean
+    requestForeground: Boolean,
+    config: MyConfig
   ) {
 
     val service = mServiceRef.get() ?: return
@@ -57,12 +58,12 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
     //--------------------------------------------------
     // CPU使用率通知
     //--------------------------------------------------
-    if (cpuUsages != null && mConfig.showUsageNotification) {
+    if (cpuUsages != null && config.showUsageNotification) {
 
       // cpuUsagesを各通知アイコンのデータに振り分ける
       val data = CpuNotificationDataDistributor.distributeNotificationData(
         cpuUsages,
-        mConfig.coreDistributionMode
+        config.coreDistributionMode
       )
 
       if (MyLog.debugMode) {
@@ -101,7 +102,7 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
     //--------------------------------------------------
     // 周波数通知
     //--------------------------------------------------
-    if (currentCpuClock > 0 && mConfig.showFrequencyNotification) {
+    if (currentCpuClock > 0 && config.showFrequencyNotification) {
 
       // Android O (8.0) 以降では通知チャンネルが必要
       createNotificationChannel(service, CHANNEL_ID_CPU_FREQUENCY, "CPU Frequency")
@@ -144,16 +145,16 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
     }
   }
 
-  fun cancelNotifications() {
+  fun cancelNotifications(config: MyConfig) {
 
     val context = mServiceRef.get() ?: return
 
     val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    if (!mConfig.showUsageNotification) {
+    if (!config.showUsageNotification) {
       nm.cancel(MY_USAGE_NOTIFICATION_ID1)
       nm.cancel(MY_USAGE_NOTIFICATION_ID2)
     }
-    if (!mConfig.showFrequencyNotification) {
+    if (!config.showFrequencyNotification) {
       nm.cancel(MY_FREQ_NOTIFICATION_ID)
     }
   }
@@ -179,8 +180,8 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
     // 消えないようにする
     builder.setOngoing(true)
 
-    // Lollipop:ロックスクリーンには表示しない
-    setPriorityForKeyguardOnLollipop(builder)
+    // ロックスクリーンには表示しない
+    setPriorityForKeyguard(builder)
 
     // 通知文字列の生成
     val sb = StringBuilder(128)
@@ -212,11 +213,7 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
   /**
    * ロックスクリーンであれば非表示にする
    */
-  private fun setPriorityForKeyguardOnLollipop(builder: NotificationCompat.Builder) {
-
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      return
-    }
+  private fun setPriorityForKeyguard(builder: NotificationCompat.Builder) {
 
     val km = mServiceRef.get()!!.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
     if (km.isKeyguardLocked) {
@@ -245,8 +242,8 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
     // 消えないようにする
     builder.setOngoing(true)
 
-    // Lollipop:ロックスクリーンには表示しない
-    setPriorityForKeyguardOnLollipop(builder)
+    // ロックスクリーンには表示しない
+    setPriorityForKeyguard(builder)
 
     // 通知文字列の生成
     val notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock)

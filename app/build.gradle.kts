@@ -23,9 +23,9 @@ android {
     val versionName = rootProject.extra["versionName"] as String
     this.versionName = versionName
 
+    // 日時は publish タスクの rename で埋め込むため、ここでは含めない(Configuration Cache 対応)
     val shortVersionName = versionName.replace(".", "")
-    val d = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
-    base.archivesName.set("${rootProject.extra["apkNamePrefix"]}_${shortVersionName}_${d}")
+    base.archivesName.set("${rootProject.extra["apkNamePrefix"]}_${shortVersionName}")
   }
 
   signingConfigs {
@@ -71,6 +71,12 @@ android {
 
 // release バリアントに publish{Variant}Apk / bundlePublish{Variant} タスクを生成し、
 // publishAll から一括起動できるようにする
+//
+// ファイル名の日時 (yyyyMMdd_HHmm) は Copy タスクの rename で埋め込む。
+// archivesName を Configuration フェーズで決定(日時抜き)→ Execution フェーズの rename で日時を埋め込む、
+// という分離により Configuration Cache を無効化せずファイル名のタイムスタンプを最新に保つ。
+// 例: "CpuStats_225-release.apk" -> "CpuStats_225_20260706_1234-release.apk"
+// ※rename のラムダは Configuration Cache のシリアライズ問題を避けるため何もキャプチャしないこと
 val publish = tasks.register("publishAll")
 androidComponents {
   onVariants(selector().withBuildType("release")) { variant ->
@@ -81,19 +87,29 @@ androidComponents {
         include("*.apk")
       }
       into(rootProject.extra["deployTo"] as String)
+      rename { fileName ->
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
+        val dashIdx = fileName.indexOf("-")
+        if (dashIdx < 0) "${fileName}_$timestamp"
+        else "${fileName.substring(0, dashIdx)}_$timestamp${fileName.substring(dashIdx)}"
+      }
     }
     publish.configure { dependsOn(apkTask) }
 
     tasks.register("bundlePublish${variantName}", Copy::class) {
       from(variant.artifacts.get(SingleArtifact.BUNDLE))
       into(rootProject.extra["deployTo"] as String)
+      rename { fileName ->
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmm").format(Date())
+        val dashIdx = fileName.indexOf("-")
+        if (dashIdx < 0) "${fileName}_$timestamp"
+        else "${fileName.substring(0, dashIdx)}_$timestamp${fileName.substring(dashIdx)}"
+      }
     }
   }
 }
 
 dependencies {
-  implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
   implementation(project(":modules:quad5"))
 
   implementation(libs.androidx.appcompat)
@@ -106,6 +122,4 @@ dependencies {
   testImplementation(libs.robolectric)
   testImplementation(libs.junit)
   testImplementation(libs.assertj.core)
-
-  implementation(libs.kotlin.stdlib.jdk7)
 }

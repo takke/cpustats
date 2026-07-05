@@ -3,7 +3,6 @@ package jp.takke.cpustats
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.view.View
@@ -11,6 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.pm.PackageInfoCompat
+import androidx.core.text.HtmlCompat
 import jp.takke.cpustats.util.EdgeToEdgeUtil
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -87,8 +88,7 @@ class AboutActivity : AppCompatActivity() {
       var versionCode = "?"
       var version = "x.x.x"
       if (pinfo != null) {
-        @Suppress("DEPRECATION")
-        versionCode = pinfo.versionCode.toString()
+        versionCode = PackageInfoCompat.getLongVersionCode(pinfo).toString()
         version = pinfo.versionName ?: ""
       }
 
@@ -121,8 +121,7 @@ class AboutActivity : AppCompatActivity() {
 <pre>$cpuInfoText</pre>
 """.trimIndent()
 
-    @Suppress("DEPRECATION")
-    return Html.fromHtml(html)
+    return HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
   }
 
   /**
@@ -151,8 +150,7 @@ class AboutActivity : AppCompatActivity() {
     val textView = findViewById<View>(R.id.license_info) as TextView
     val ssb = SpannableStringBuilder()
     ssb.append(makeLicenceInfoText())
-    @Suppress("DEPRECATION")
-    ssb.append(Html.fromHtml(sb.toString()))
+    ssb.append(HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY))
     textView.text = ssb
 
     Toast.makeText(this, "updated", Toast.LENGTH_SHORT).show()
