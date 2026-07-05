@@ -101,6 +101,7 @@ dependencies {
   implementation(libs.androidx.annotation)
   implementation(libs.androidx.constraintlayout)
   implementation(libs.androidx.preference.ktx)
+  implementation(libs.kotlinx.coroutines.android)
 
   testImplementation(libs.robolectric)
   testImplementation(libs.junit)

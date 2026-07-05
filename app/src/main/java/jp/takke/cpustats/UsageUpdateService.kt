@@ -9,11 +9,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Binder
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.os.SystemClock
 import jp.takke.cpustats.util.MyUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.CopyOnWriteArrayList
 
 
@@ -51,9 +58,9 @@ class UsageUpdateService : Service() {
 
   private var mLastExecTask = System.currentTimeMillis()
 
-  // 通信量取得スレッド管理
-  private var mThread: GatherThread? = null
-  private var mThreadActive = false
+  // 収集ループ管理(ジョブの起動・停止はメインスレッドからのみ行う)
+  private val mServiceScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+  private var mGatherJob: Job? = null
 
   // ローカルバインダ(同一プロセス内なので Service インスタンスを直接渡す)
   inner class LocalBinder : Binder() {
@@ -86,9 +93,8 @@ class UsageUpdateService : Service() {
     // すぐに次の onStart を呼ぶ
     scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
 
-    if (mThread == null) {
-      startThread()
-    }
+    // 収集ループ開始
+    startGatherLoop()
   }
 
   /**
@@ -123,9 +129,9 @@ class UsageUpdateService : Service() {
 
         this@UsageUpdateService.scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
 
-        // スレッド開始
+        // 収集ループ開始
         if (!mStopResident) {
-          startThread()
+          startGatherLoop()
         }
 
       } else if (action == Intent.ACTION_SCREEN_OFF) {
@@ -138,8 +144,8 @@ class UsageUpdateService : Service() {
         // アラーム停止
         stopAlarm()
 
-        // スレッド停止
-        stopThread()
+        // 収集ループ停止
+        stopGatherLoop()
       }
     }
   }
@@ -148,8 +154,8 @@ class UsageUpdateService : Service() {
 
     MyLog.i("UsageUpdateService.onBind")
 
-    // スレッド開始
-    startThread()
+    // 収集ループ開始
+    startGatherLoop()
 
     return mBinder
   }
@@ -187,8 +193,8 @@ class UsageUpdateService : Service() {
     // 定期処理開始
     scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
 
-    // スレッド開始
-    startThread()
+    // 収集ループ開始
+    startGatherLoop()
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -197,17 +203,16 @@ class UsageUpdateService : Service() {
     mRequestForeground = intent != null && intent.getBooleanExtra("FOREGROUND_REQUEST", false)
     MyLog.i("UsageUpdateService.onStartCommand[$mRequestForeground]")
 
-    // 通信量取得スレッド開始
-    if (mThread == null) {
-      startThread()
-    }
+    // 収集ループ開始
+    startGatherLoop()
 
     if (mRequestForeground) {
       // 5秒以内に setForeground を実行する必要があるので早めに実行する
       // (すぐ実行すると MainActivity の bind に間に合わないのでちょっとだけ遅延する)
-      Handler(Looper.getMainLooper()).postDelayed({
+      mServiceScope.launch {
+        delay(C.ALARM_STARTUP_DELAY_MSEC.toLong())
         execTask()
-      }, C.ALARM_STARTUP_DELAY_MSEC.toLong())
+      }
     }
 
     // Alarmループ続行
@@ -327,8 +332,11 @@ class UsageUpdateService : Service() {
 
     stopAlarm()
 
-    // 通信量取得スレッド停止
-    stopThread()
+    // 収集ループ停止
+    stopGatherLoop()
+
+    // スコープ全体をキャンセル(onStartCommand の遅延 execTask などを含む)
+    mServiceScope.cancel()
 
     // スリープ状態のレシーバ解除
     applicationContext.unregisterReceiver(mReceiver)
@@ -380,8 +388,8 @@ class UsageUpdateService : Service() {
 
     mStopResident = true
 
-    // スレッド停止
-    stopThread()
+    // 収集ループ停止
+    stopGatherLoop()
 
     // アラーム停止
     stopAlarm()
@@ -415,58 +423,47 @@ class UsageUpdateService : Service() {
     // @see http://creadorgranoeste.blogspot.com/2011/06/alarmmanager.html
   }
 
-  private fun startThread() {
+  /**
+   * 収集ループの開始
+   */
+  private fun startGatherLoop() {
 
-    if (mThread == null) {
-      mThread = GatherThread()
-      mThreadActive = true
-      mThread?.start()
-      MyLog.i("UsageUpdateService.startThread: thread start")
-    } else {
-      MyLog.i("UsageUpdateService.startThread: already running")
+    if (mGatherJob != null) {
+      MyLog.i("UsageUpdateService.startGatherLoop: already running")
+      return
     }
-  }
 
-  private fun stopThread() {
+    MyLog.i("UsageUpdateService.startGatherLoop: start")
+    mGatherJob = mServiceScope.launch {
+      while (isActive) {
 
-    if (mThreadActive && mThread != null) {
-      MyLog.d("UsageUpdateService.stopThread")
+        delay(mConfig.intervalMs)
 
-      mThreadActive = false
-      while (true) {
-        try {
-          mThread!!.join()
-          break
-        } catch (ignored: InterruptedException) {
-          MyLog.e(ignored)
+        if (!mStopResident) {
+          execTask()
         }
-
       }
-      mThread = null
-    } else {
-      MyLog.d("UsageUpdateService.stopThread: no thread")
     }
   }
 
   /**
-   * 通信量取得スレッド
+   * 収集ループの停止
    */
-  private inner class GatherThread : Thread() {
+  private fun stopGatherLoop() {
 
-    override fun run() {
-
-      MyLog.i("UsageUpdateService.GatherThread: start")
-
-      while (mThread != null && mThreadActive) {
-
-        SystemClock.sleep(mConfig.intervalMs)
-
-        if (mThreadActive && !mStopResident) {
-          execTask()
-        }
-      }
-
-      MyLog.i("UsageUpdateService.GatherThread: done")
+    val job = mGatherJob
+    if (job == null) {
+      MyLog.d("UsageUpdateService.stopGatherLoop: no job")
+      return
     }
+
+    MyLog.d("UsageUpdateService.stopGatherLoop")
+
+    // 実行中の execTask を完了させてから戻る
+    // (停止直後の nm.cancelAll() より後に通知が再表示されるのを防ぐため)
+    runBlocking {
+      job.cancelAndJoin()
+    }
+    mGatherJob = null
   }
 }

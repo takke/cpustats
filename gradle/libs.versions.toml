@@ -15,6 +15,8 @@ core-ktx = "1.19.0"
 preference-ktx = "1.2.1"
 # JUnit
 junit = "4.13.2"
+# Kotlinx Coroutines
+kotlinxCoroutines = "1.10.2"
 # Robolectric
 robolectricVersion = "4.16.1"
 
@@ -27,6 +29,7 @@ androidx-preference-ktx = { module = "androidx.preference:preference-ktx", versi
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjCore" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-stdlib-jdk7 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectricVersion" }
 
 [plugins]
