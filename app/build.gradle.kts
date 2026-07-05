@@ -17,7 +17,6 @@ android {
   namespace = "jp.takke.cpustats"
 
   compileSdk = rootProject.extra["compileSdkVersion"] as Int
-  buildToolsVersion = rootProject.extra["buildToolsVersion"] as String
 
   defaultConfig {
     applicationId = "jp.takke.cpustats"
