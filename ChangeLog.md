@@ -10,6 +10,8 @@ v2.2.5 (2026.07.xx)
 - Show battery temperature (main screen and CPU Frequency notification)
 - Internal: Remove AIDL (replaced with in-process local binder)
 - Internal: Replace gather thread with Kotlin coroutines
+- Internal: Remove AlarmManager keep-alive loop (foreground service is sufficient)
+- Fix possible crash on closing the main activity when service binding failed
 - compileSdkVersion 35 -> 37
 - Update libraries
     - AGP from 8.9.2 to 9.2.1

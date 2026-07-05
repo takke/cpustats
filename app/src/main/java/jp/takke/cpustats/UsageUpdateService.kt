@@ -1,8 +1,6 @@
 package jp.takke.cpustats
 
-import android.app.AlarmManager
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -38,9 +36,6 @@ class UsageUpdateService : Service() {
 
   // (Android 8.0 以降用) BOOT_COMPLETED から startForeground を実行するためのフラグ
   private var mRequestForeground = false
-
-  // スリープ中フラグ
-  private var mSleeping = false
 
   // 前回の CPU クロック周波数
   private var mLastCpuClock = -1
@@ -94,9 +89,6 @@ class UsageUpdateService : Service() {
     // 常駐停止フラグを解除
     mStopResident = false
 
-    // すぐに次の onStart を呼ぶ
-    scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
-
     // 収集ループ開始
     startGatherLoop()
   }
@@ -124,16 +116,10 @@ class UsageUpdateService : Service() {
 
         MyLog.d("screen on")
 
-        // 停止していれば再開する
-        mSleeping = false
-
-        // 次の onStart を呼ぶ
-        // 但し、「通知時刻」はすぐに更新するとステータスバーの順序がいきなり変わってしまってうざいので少し遅延させる
+        // 「通知時刻」はすぐに更新するとステータスバーの順序がいきなり変わってしまってうざいので少し遅延させる
         mNotificationPresenter.mNotificationTimeKeep = System.currentTimeMillis() + 30 * 1000
 
-        this@UsageUpdateService.scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
-
-        // 収集ループ開始
+        // 収集ループ再開
         if (!mStopResident) {
           startGatherLoop()
         }
@@ -141,12 +127,6 @@ class UsageUpdateService : Service() {
       } else if (action == Intent.ACTION_SCREEN_OFF) {
 
         MyLog.d("screen off")
-
-        // 停止する
-        mSleeping = true
-
-        // アラーム停止
-        stopAlarm()
 
         // 収集ループ停止
         stopGatherLoop()
@@ -194,9 +174,6 @@ class UsageUpdateService : Service() {
     applicationContext.registerReceiver(mReceiver, IntentFilter(Intent.ACTION_SCREEN_ON))
     applicationContext.registerReceiver(mReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
 
-    // 定期処理開始
-    scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
-
     // 収集ループ開始
     startGatherLoop()
   }
@@ -214,13 +191,10 @@ class UsageUpdateService : Service() {
       // 5秒以内に setForeground を実行する必要があるので早めに実行する
       // (すぐ実行すると MainActivity の bind に間に合わないのでちょっとだけ遅延する)
       mServiceScope.launch {
-        delay(C.ALARM_STARTUP_DELAY_MSEC.toLong())
+        delay(C.STARTUP_DELAY_MSEC.toLong())
         execTask()
       }
     }
-
-    // Alarmループ続行
-    scheduleNextTime(C.ALARM_INTERVAL_MSEC.toLong())
 
     return START_STICKY
   }
@@ -366,8 +340,6 @@ class UsageUpdateService : Service() {
 
     MyLog.i("UsageUpdateService.onDestroy")
 
-    stopAlarm()
-
     // 収集ループ停止
     stopGatherLoop()
 
@@ -385,39 +357,6 @@ class UsageUpdateService : Service() {
   }
 
   /**
-   * サービスの次回の起動を予約
-   */
-  fun scheduleNextTime(intervalMs: Long) {
-
-    if (mStopResident) {
-      MyLog.d("scheduleNextTime: サービス終了の指示が出ているので次回の予約はしない")
-      return
-    }
-    if (mSleeping) {
-      MyLog.d("scheduleNextTime: sleeping")
-      return
-    }
-
-    val now = System.currentTimeMillis()
-
-    // アラームをセット
-    val intent = Intent(this, this.javaClass)
-    val alarmSender = PendingIntent.getService(
-      this,
-      0,
-      intent,
-      PendingIntent.FLAG_IMMUTABLE
-    )
-    // ※onStartCommandが呼ばれるように設定する
-
-    val am = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-    am.set(AlarmManager.RTC, now + intervalMs, alarmSender)
-
-    MyLog.d("-- scheduled[" + intervalMs + "ms]")
-  }
-
-  /**
    * 常駐停止
    */
   fun stopResident() {
@@ -426,9 +365,6 @@ class UsageUpdateService : Service() {
 
     // 収集ループ停止
     stopGatherLoop()
-
-    // アラーム停止
-    stopAlarm()
 
     // 通知を消す
     val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -439,32 +375,11 @@ class UsageUpdateService : Service() {
   }
 
   /**
-   * アラームの停止
-   */
-  private fun stopAlarm() {
-
-    // サービス名を指定
-    val intent = Intent(this, this.javaClass)
-
-    // アラームを解除
-    val pendingIntent = PendingIntent.getService(
-      this,
-      0, // ここを-1にすると解除に成功しない
-      intent,
-      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-    )
-
-    val am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    am.cancel(pendingIntent)
-    // @see http://creadorgranoeste.blogspot.com/2011/06/alarmmanager.html
-  }
-
-  /**
    * 収集ループの開始
    */
   private fun startGatherLoop() {
 
-    if (mGatherJob != null) {
+    if (mGatherJob?.isActive == true) {
       MyLog.i("UsageUpdateService.startGatherLoop: already running")
       return
     }

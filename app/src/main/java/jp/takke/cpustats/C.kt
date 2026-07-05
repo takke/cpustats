@@ -13,11 +13,8 @@ object C {
   const val PREF_KEY_SHOW_FREQUENCY_NOTIFICATION = "ShowFrequencyNotification"
   const val PREF_KEY_SHOW_USAGE_NOTIFICATION = "ShowUsageNotification"
 
-  // 初期Alarmの遅延時間[ms]
-  const val ALARM_STARTUP_DELAY_MSEC = 1000
-
-  // Service維持のためのAlarmの更新間隔[ms]
-  const val ALARM_INTERVAL_MSEC = 60 * 1000
+  // サービス起動直後の初回収集までの遅延時間[ms]
+  const val STARTUP_DELAY_MSEC = 1000
 
   // CPU使用率通知のアイコンモード
   const val PREF_KEY_CORE_DISTRIBUTION_MODE = "CoreDistributionMode"

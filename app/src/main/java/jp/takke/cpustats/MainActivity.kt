@@ -42,6 +42,9 @@ class MainActivity : AppCompatActivity() {
   // サービス
   private var mService: UsageUpdateService? = null
 
+  // bindService 成功フラグ(bind していない状態で unbindService すると IllegalArgumentException になるため)
+  private var mBound = false
+
   private val mConfigActivityLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
       // 設定完了
@@ -229,7 +232,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // bind
-    bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+    mBound = bindService(serviceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
   }
 
   private fun setActionBarLogo(iconId: Int) {
@@ -360,7 +363,10 @@ class MainActivity : AppCompatActivity() {
     mService?.unregisterCallback(mCallback)
 
     // サービスのbind解除
-    unbindService(mServiceConnection)
+    if (mBound) {
+      unbindService(mServiceConnection)
+      mBound = false
+    }
   }
 
   override fun onPause() {
