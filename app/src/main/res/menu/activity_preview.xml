@@ -27,7 +27,7 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_exut"
+        android:id="@+id/menu_exit"
         android:orderInCategory="110"
         android:title="@string/menu_exit"
         app:showAsAction="never" />

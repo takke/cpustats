@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
 
-      MyLog.i("PreviewActivity.onServiceConnected")
+      MyLog.i("MainActivity.onServiceConnected")
 
       // サービスのインターフェースを取得する
       mServiceIf = IUsageUpdateService.Stub.asInterface(service)
@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onServiceDisconnected(name: ComponentName) {
 
-      MyLog.i("PreviewActivity.onServiceDisconnected")
+      MyLog.i("MainActivity.onServiceDisconnected")
 
       mServiceIf = null
     }
@@ -125,16 +125,16 @@ class MainActivity : AppCompatActivity() {
     registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
       if (isGranted) {
         // 通知許可リクエストで許可を選択
-        MyLog.d("PreviewActivity: POST_NOTIFICATION: 通知許可")
+        MyLog.d("MainActivity: POST_NOTIFICATION: 通知許可")
 
       } else {
         // 通知許可リクエストで許可しないを選択
-        MyLog.i("PreviewActivity: POST_NOTIFICATION: 通知許可しない")
+        MyLog.i("MainActivity: POST_NOTIFICATION: 通知許可しない")
         if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-          Toast.makeText(this, "通知を受け取るには許可が必要です", Toast.LENGTH_LONG).show()
+          Toast.makeText(this, R.string.require_notification_permission, Toast.LENGTH_LONG).show()
         } else {
           // 権限を永続的に許可しない状態
-          MyLog.i("PreviewActivity: POST_NOTIFICATION: 通知許可しない(永続的)")
+          MyLog.i("MainActivity: POST_NOTIFICATION: 通知許可しない(永続的)")
 
           NotificationPermissionUtil.showNotificationPermissionRationaleDialog(
             this,
@@ -161,12 +161,12 @@ class MainActivity : AppCompatActivity() {
     if (notificationPermission == PackageManager.PERMISSION_GRANTED) {
       // 既に通知許可済み
 
-      MyLog.d("PreviewActivity: POST_NOTIFICATION: 通知許可済み")
+      MyLog.d("MainActivity: POST_NOTIFICATION: 通知許可済み")
       // TODO 続行すること
     } else {
       if (notificationRationale) {
         // 以前に「許可をしない」を選択済み
-        MyLog.i("PreviewActivity: POST_NOTIFICATION: 以前に「許可をしない」を選択済み")
+        MyLog.i("MainActivity: POST_NOTIFICATION: 以前に「許可をしない」を選択済み")
 
         NotificationPermissionUtil.showNotificationPermissionRationaleDialog(
           this,
@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() {
         )
       } else {
         // 通知の許可をリクエストする
-        MyLog.d("PreviewActivity: POST_NOTIFICATION: 通知許可リクエスト")
+        MyLog.d("MainActivity: POST_NOTIFICATION: 通知許可リクエスト")
         requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
       }
     }
@@ -202,7 +202,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    MyLog.d("PreviewActivity.onCreate")
+    MyLog.d("MainActivity.onCreate")
 
     // とりあえず全消去
     hideAllCoreFreqInfo()
@@ -238,7 +238,7 @@ class MainActivity : AppCompatActivity() {
     val serviceIntent = Intent(this, UsageUpdateService::class.java)
 
     // start
-    MyLog.d("PreviewActivity: startService of UsageUpdateService")
+    MyLog.d("MainActivity: startService of UsageUpdateService")
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       serviceIntent.putExtra("FOREGROUND_REQUEST", true)
       startForegroundService(serviceIntent)
@@ -315,7 +315,7 @@ class MainActivity : AppCompatActivity() {
       R.id.menu_start_service ->
         // サービス開始
         if (mServiceIf != null) {
-          MyLog.i("PreviewActivity: start")
+          MyLog.i("MainActivity: start")
           try {
             // 常駐開始
             mServiceIf!!.startResident()
@@ -328,7 +328,7 @@ class MainActivity : AppCompatActivity() {
       R.id.menu_stop_service ->
         // サービス停止
         if (mServiceIf != null) {
-          MyLog.i("PreviewActivity: stop")
+          MyLog.i("MainActivity: stop")
           try {
             // 常駐停止
             mServiceIf!!.stopResident()
@@ -340,7 +340,7 @@ class MainActivity : AppCompatActivity() {
             hideAllCoreFreqInfo()
 
             // タイトル初期化
-            title = "CPU Stats"
+            title = getString(R.string.app_name)
 
             // Toolbarのアイコン初期化
             setActionBarLogo(R.drawable.single000)
@@ -358,7 +358,7 @@ class MainActivity : AppCompatActivity() {
 
       R.id.menu_about -> startActivity(Intent(this, AboutActivity::class.java))
 
-      R.id.menu_exut ->
+      R.id.menu_exit ->
         // 終了
         finish()
     }
@@ -368,7 +368,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onDestroy() {
 
-    MyLog.d("PreviewActivity.onDestroy")
+    MyLog.d("MainActivity.onDestroy")
 
     cleanupServiceConnection()
 
@@ -466,7 +466,7 @@ class MainActivity : AppCompatActivity() {
     maxFreqs: IntArray
   ) {
 
-//        MyLog.d("PreviewActivity.updateCpuUsages");
+//        MyLog.d("MainActivity.updateCpuUsages");
 
     // Toolbarのアイコン変更
     if (cpuUsages != null && cpuUsages.isNotEmpty()) {

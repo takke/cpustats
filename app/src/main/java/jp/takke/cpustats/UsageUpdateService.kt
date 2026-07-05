@@ -15,7 +15,6 @@ import android.os.RemoteCallbackList
 import android.os.RemoteException
 import android.os.SystemClock
 import jp.takke.cpustats.util.MyUtil
-import java.util.*
 
 
 class UsageUpdateService : Service() {
@@ -218,7 +217,7 @@ class UsageUpdateService : Service() {
 
     if (mRequestForeground) {
       // 5秒以内に setForeground を実行する必要があるので早めに実行する
-      // (すぐ実行すると PreviewActivity の bind に間に合わないのでちょっとだけ遅延する)
+      // (すぐ実行すると MainActivity の bind に間に合わないのでちょっとだけ遅延する)
       Handler(Looper.getMainLooper()).postDelayed({
         execTask()
       }, C.ALARM_STARTUP_DELAY_MSEC.toLong())
