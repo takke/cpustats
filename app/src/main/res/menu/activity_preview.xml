@@ -21,8 +21,14 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_about"
+        android:id="@+id/menu_history"
         android:orderInCategory="103"
+        android:title="@string/title_activity_history"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="104"
         android:title="@string/title_activity_about"
         app:showAsAction="never" />
 

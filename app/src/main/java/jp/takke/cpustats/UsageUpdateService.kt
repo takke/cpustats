@@ -71,6 +71,9 @@ class UsageUpdateService : Service() {
   // CPU使用率(全体平均)の履歴(スパークライン用)
   private val mUsageHistory = UsageHistoryBuffer()
 
+  // 履歴記録の前回記録時刻[ms]
+  private var mLastRecordTime = 0L
+
   private var mLastExecTask = System.currentTimeMillis()
 
   // 収集ループ管理(ジョブの起動・停止はメインスレッドからのみ行う)
@@ -286,6 +289,11 @@ class UsageUpdateService : Service() {
     val systemStats = getSystemStats()
 
     //-------------------------------------------------
+    // 履歴記録(間引きあり)
+    //-------------------------------------------------
+    recordUsageLogIfNeeded(cpuUsages[0], currentCpuClock, systemStats)
+
+    //-------------------------------------------------
     // 通知判定
     //-------------------------------------------------
     // 前回と同じ CPU 使用率なら通知しない
@@ -321,6 +329,36 @@ class UsageUpdateService : Service() {
     }
 
     mLastExecTask = System.currentTimeMillis()
+  }
+
+  /**
+   * 履歴を記録する(前回記録から一定時間経過している場合のみ)
+   */
+  private fun recordUsageLogIfNeeded(
+    cpuUsage: Int,
+    currentCpuClock: Int,
+    systemStats: SystemStats
+  ) {
+
+    if (!mConfig.recordHistory) {
+      return
+    }
+
+    val now = System.currentTimeMillis()
+    if (now - mLastRecordTime < C.HISTORY_RECORD_INTERVAL_MS) {
+      return
+    }
+    mLastRecordTime = now
+
+    UsageLogDatabase.getInstance(this).insertAndPurge(
+      UsageLogRow(
+        recordedAt = now,
+        cpuUsage = cpuUsage,
+        cpuClock = currentCpuClock,
+        batteryTemperature = systemStats.batteryTemperature,
+        memUsedMb = systemStats.memUsedMb,
+      )
+    )
   }
 
   /**

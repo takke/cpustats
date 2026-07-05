@@ -349,6 +349,8 @@ class MainActivity : AppCompatActivity() {
         mConfigActivityLauncher.launch(intent)
       }
 
+      R.id.menu_history -> startActivity(Intent(this, HistoryActivity::class.java))
+
       R.id.menu_about -> startActivity(Intent(this, AboutActivity::class.java))
 
       R.id.menu_exit ->

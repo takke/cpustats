@@ -18,6 +18,8 @@ internal data class MyConfig(
   val showFrequencyNotification: Boolean = false,
   // CPU使用率通知のアイコンモード
   val coreDistributionMode: Int = C.CORE_DISTRIBUTION_MODE_2ICONS,
+  // 履歴記録
+  val recordHistory: Boolean = true,
 ) {
 
   companion object {
@@ -61,6 +63,7 @@ internal data class MyConfig(
           C.PREF_KEY_SHOW_FREQUENCY_NOTIFICATION, false
         ),
         coreDistributionMode = coreDistributionMode,
+        recordHistory = pref.getBoolean(C.PREF_KEY_RECORD_HISTORY, true),
       )
     }
   }

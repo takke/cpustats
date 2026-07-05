@@ -19,6 +19,15 @@ object C {
   // CPU使用率履歴(スパークライン用)の保持件数
   const val USAGE_HISTORY_CAPACITY = 120
 
+  // 履歴記録の設定キー
+  const val PREF_KEY_RECORD_HISTORY = "RecordHistory"
+
+  // 履歴記録の間引き間隔[ms](更新間隔が短くてもこれ以上の頻度では記録しない)
+  const val HISTORY_RECORD_INTERVAL_MS = 10 * 1000L
+
+  // 履歴の保持期間[ms]
+  const val HISTORY_RETENTION_MS = 24 * 60 * 60 * 1000L
+
   // CPU使用率通知のアイコンモード
   const val PREF_KEY_CORE_DISTRIBUTION_MODE = "CoreDistributionMode"
   const val CORE_DISTRIBUTION_MODE_2ICONS = 0          // 最大2アイコン(デフォルト)

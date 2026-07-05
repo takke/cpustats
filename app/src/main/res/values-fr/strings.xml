@@ -4,6 +4,8 @@
     <string name="title_activity_main">CPU Stats</string>
     <string name="title_activity_config">Configuration</string>
     <string name="title_activity_about">À propos</string>
+    <string name="title_activity_history">Historique</string>
+    <string name="history_no_data">Aucune donnée enregistrée pour le moment</string>
 
     <string name="menu_settings">Configuration</string>
     <string name="menu_start_service">Afficher Notification</string>
@@ -13,6 +15,8 @@
     <string name="require_notification_permission">L\'autorisation de notification est requise</string>
     
     <string name="config_general_category_title">Général</string>
+    <string name="config_record_history_title">Enregistrer l\'historique</string>
+    <string name="config_record_history_summary">Enregistre l\'utilisation du CPU etc. toutes les 10 secondes (conservé 24 heures)</string>
     <string name="config_update_interval_title">Interval de Mise à jour</string>
     <string name="config_start_on_boot_title">Au démarrage</string>
     <string name="config_start_on_boot_summary">Démarrer la notification au démarrage</string>

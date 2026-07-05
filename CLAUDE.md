@@ -60,6 +60,7 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
   - Android 8.0+ からは foreground 起動要求のフラグ(`FOREGROUND_REQUEST`)を extras に載せてもらい、5 秒以内に `startForeground` を呼び出す設計。
   - CPU 以外の情報は `SystemStats`(data class)に集約して配信: バッテリー温度(`ACTION_BATTERY_CHANGED` の sticky broadcast、権限不要)とメモリ使用量(`ActivityManager.getMemoryInfo`)。メモリは変動が細かすぎるため通知の更新判定には含めない。
   - 全体使用率の履歴を `UsageHistoryBuffer`(容量 120 のリングバッファ)に毎サンプル記録し、`getUsageHistory()` で公開(スパークライン用)。
+  - 履歴記録: `UsageLogDatabase`(SQLiteOpenHelper 直・シングルトン、Room 不使用)に 10 秒間隔の間引きで記録し、挿入時に 24h rolling 削除。設定(`RecordHistory`、デフォルト ON)で無効化可能。`HistoryActivity` が 1h/6h/24h の時系列グラフ(`view/HistoryGraphView`)を表示する。
   - 常駐状態は companion の `isResidentRunning`(@Volatile)で公開。`ACTION_STOP_RESIDENT` を intent action で受けると常駐停止する(クイック設定タイル用)。
 - **`CpuInfoCollector`**(object)
   - コア数は `/sys/devices/system/cpu/cpu[0-9]` を数え(取れなければ `availableProcessors()`)、一度だけキャッシュ。

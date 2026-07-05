@@ -4,6 +4,8 @@
     <string name="title_activity_main">CPU Stats</string>
     <string name="title_activity_config">Nastavení</string>
     <string name="title_activity_about">About</string>
+    <string name="title_activity_history">Historie</string>
+    <string name="history_no_data">Zatím nejsou zaznamenána žádná data</string>
 
     <string name="menu_settings">Nastavení</string>
     <string name="menu_start_service">Zobrazit upozornění</string>
@@ -13,6 +15,8 @@
     <string name="require_notification_permission">Vyžaduje oprávnění upozornění</string>
 
     <string name="config_general_category_title">Všeobecné</string>
+    <string name="config_record_history_title">Zaznamenávat historii</string>
+    <string name="config_record_history_summary">Zaznamenává využití CPU atd. každých 10 sekund (uchováváno 24 hodin)</string>
     <string name="config_update_interval_title">Interval aktualizace</string>
     <string name="config_start_on_boot_title">Při startu</string>
     <string name="config_start_on_boot_summary">Spustit upozorňování při startu</string>

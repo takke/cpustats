@@ -79,6 +79,14 @@ class ConfigFragment : PreferenceFragmentCompat() {
         pref.setDefaultValue(true)
         pc.addPreference(pref)
       }
+
+      CheckBoxPreference(activity).also { pref ->
+        pref.key = C.PREF_KEY_RECORD_HISTORY
+        pref.setTitle(R.string.config_record_history_title)
+        pref.setSummary(R.string.config_record_history_summary)
+        pref.setDefaultValue(true)
+        pc.addPreference(pref)
+      }
     }
 
     preferenceScreen = ps

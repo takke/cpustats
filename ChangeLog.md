@@ -11,6 +11,8 @@ v3.0.0 (2026.07.xx)
 - Add CPU usage history graph (sparkline) to the main screen
 - Add Quick Settings tile (tap to toggle monitoring, shows current CPU usage)
 - Show memory usage on the main screen
+- Add history recording and history graphs (CPU usage / battery temperature /
+  memory; recorded every 10 seconds, kept for 24 hours, can be disabled in settings)
 - Internal: Remove AIDL (replaced with in-process local binder)
 - Internal: Replace gather thread with Kotlin coroutines
 - Internal: Remove AlarmManager keep-alive loop (foreground service is sufficient)
