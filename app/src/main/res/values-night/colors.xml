@@ -8,4 +8,7 @@
     <color name="core_bg_active">#333333</color>
     <color name="core_bg_idle">#222222</color>
 
+    <!-- スパークラインの線色 -->
+    <color name="sparkline_line">#00c21c</color>
+
 </resources>

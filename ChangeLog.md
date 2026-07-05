@@ -1,13 +1,15 @@
 Change Log
 ==========
 
-v2.2.5 (2026.07.xx)
+v3.0.0 (2026.07.xx)
 -------------------
 
 - Fix "Start on boot" and long-running notification on Android 15+
   (foregroundServiceType: dataSync -> specialUse)
 - Support light/dark theme (follow the system dark mode setting)
 - Show battery temperature (main screen and CPU Frequency notification)
+- Add CPU usage history graph (sparkline) to the main screen
+- Add Quick Settings tile (tap to toggle monitoring, shows current CPU usage)
 - Internal: Remove AIDL (replaced with in-process local binder)
 - Internal: Replace gather thread with Kotlin coroutines
 - Internal: Remove AlarmManager keep-alive loop (foreground service is sufficient)

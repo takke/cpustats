@@ -29,6 +29,7 @@ import androidx.lifecycle.lifecycleScope
 import jp.takke.cpustats.util.EdgeToEdgeUtil
 import jp.takke.cpustats.util.MyUtil
 import jp.takke.cpustats.util.ResourceUtil
+import jp.takke.cpustats.view.SparklineView
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -76,7 +77,8 @@ class MainActivity : AppCompatActivity() {
           // CPU使用率表示更新
           showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs)
 
-//                    setTitle(getString(R.string.app_name) + "  Freq: " + MyUtil.formatFreq(currentFreq) + "");
+          // 履歴グラフ更新
+          updateSparkline()
         }
       }
     }
@@ -96,6 +98,9 @@ class MainActivity : AppCompatActivity() {
 
       // onActivityResult 後に設定がロードされていないかもしれないのでここで強制再ロードする
       mService?.reloadSettings()
+
+      // 履歴グラフの復元(再表示時に収集済みの履歴を即座に反映する)
+      updateSparkline()
     }
 
     override fun onServiceDisconnected(name: ComponentName) {
@@ -237,12 +242,18 @@ class MainActivity : AppCompatActivity() {
 
   private fun setActionBarLogo(iconId: Int) {
 
-//        val actionBar = supportActionBar
-//        actionBar?.setLogo(iconId)
-
     val toolbar = findViewById<Toolbar?>(R.id.my_toolbar)
     toolbar?.setNavigationIcon(iconId)
-//        toolbar.setLogo(iconId)
+  }
+
+  /**
+   * CPU使用率履歴グラフの更新
+   */
+  private fun updateSparkline() {
+
+    val sparkline = findViewById<SparklineView?>(R.id.sparkline) ?: return
+    val history = mService?.getUsageHistory() ?: IntArray(0)
+    sparkline.setHistory(history, C.USAGE_HISTORY_CAPACITY)
   }
 
   private fun hideAllCoreFreqInfo() {
@@ -509,7 +520,6 @@ class MainActivity : AppCompatActivity() {
       val textView = coreView.findViewById<View>(R.id.coreText) as TextView
       val ssb = SpannableStringBuilder()
       ssb.append("Core" + (i + 1) + ": " + cpuUsage + "%")
-//            MyLog.i("disp core[" + i + "] = " + cpuUsage + "% (max=" + maxFreqs[i] + ")");
 
       // 周波数
       val freqText = MyUtil.formatFreq(freqs[i])

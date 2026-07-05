@@ -59,6 +59,8 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
   - IPC は AIDL ではなく **`LocalBinder`(Service インスタンス直接参照)+ `UsageUpdateCallback`(fun interface)**。`MainActivity` が bind して `onUsageUpdated(cpuUsages, freqs, minFreqs, maxFreqs, batteryTemperature)` を受け取る。コールバックは収集スレッドから呼ばれるため受信側でメインスレッドへ切り替える。
   - Android 8.0+ からは foreground 起動要求のフラグ(`FOREGROUND_REQUEST`)を extras に載せてもらい、5 秒以内に `startForeground` を呼び出す設計。
   - バッテリー温度(0.1℃単位)も収集する(`ACTION_BATTERY_CHANGED` の sticky broadcast、権限不要)。
+  - 全体使用率の履歴を `UsageHistoryBuffer`(容量 120 のリングバッファ)に毎サンプル記録し、`getUsageHistory()` で公開(スパークライン用)。
+  - 常駐状態は companion の `isResidentRunning`(@Volatile)で公開。`ACTION_STOP_RESIDENT` を intent action で受けると常駐停止する(クイック設定タイル用)。
 - **`CpuInfoCollector`**(object)
   - コア数は `/sys/devices/system/cpu/cpu[0-9]` を数え(取れなければ `availableProcessors()`)、一度だけキャッシュ。
   - 周波数は `/sys/devices/system/cpu/cpuN/cpufreq/{scaling_cur_freq,cpuinfo_min_freq,cpuinfo_max_freq}` を読む。
@@ -78,6 +80,8 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
 - **UI 側**
   - テーマは `Theme.CpuStats(.NoActionBar)`(`Theme.AppCompat.DayNight` ベース)。色は values / values-night で切替(ダークは従来の配色)。
   - `MainActivity`: サービスに bind → コールバックで受け取った値を画面に描画。設定画面 (`ConfigActivity` / `ConfigFragment`)、`AboutActivity` を提供。
+  - `view/SparklineView`: 全体使用率履歴の折れ線グラフ(右端が最新、右詰め)。メイン画面の周波数行直下に配置。
+  - `CpuTileService`: クイック設定タイル(Android 7.0+)。タップで常駐 ON/OFF、パネル表示中は flags=0 で bind してライブ表示(タイル表示だけで収集を始めない)。
   - `BootReceiver`: 起動時に `StartOnBoot`(デフォルト true)なら foreground service として `UsageUpdateService` を起動。
   - `NotificationPermissionUtil`: Android 13+ の `POST_NOTIFICATIONS` 許可導線。
 - **設定は `MyConfig`(immutable data class)+ `MyConfig.load(context)`**: `updateIntervalSec`(小数秒可 → ms 変換)、`showUsageNotification`、`showFrequencyNotification`、`coreDistributionMode`。設定変更後は `ConfigActivity` から戻った時に `MainActivity` がサービスの `reloadSettings()` を呼び、サービス側で新しい `MyConfig` に差し替え + 不要な通知を消去する。

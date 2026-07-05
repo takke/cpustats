@@ -16,6 +16,9 @@ object C {
   // サービス起動直後の初回収集までの遅延時間[ms]
   const val STARTUP_DELAY_MSEC = 1000
 
+  // CPU使用率履歴(スパークライン用)の保持件数
+  const val USAGE_HISTORY_CAPACITY = 120
+
   // CPU使用率通知のアイコンモード
   const val PREF_KEY_CORE_DISTRIBUTION_MODE = "CoreDistributionMode"
   const val CORE_DISTRIBUTION_MODE_2ICONS = 0          // 最大2アイコン(デフォルト)

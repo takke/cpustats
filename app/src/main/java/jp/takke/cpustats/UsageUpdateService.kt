@@ -25,6 +25,17 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class UsageUpdateService : Service() {
 
+  companion object {
+
+    // 常駐停止指示のアクション(クイック設定タイル等から使用)
+    const val ACTION_STOP_RESIDENT = "jp.takke.cpustats.action.STOP_RESIDENT"
+
+    // 常駐中フラグ(クイック設定タイルの状態表示用。同一プロセス内でのみ参照可能)
+    @Volatile
+    var isResidentRunning = false
+      private set
+  }
+
   // 設定値(reloadSettings で新しいインスタンスに差し替える)
   @Volatile
   private var mConfig = MyConfig()
@@ -56,6 +67,9 @@ class UsageUpdateService : Service() {
   // コールバック一覧
   private val mCallbacks = CopyOnWriteArrayList<UsageUpdateCallback>()
 
+  // CPU使用率(全体平均)の履歴(スパークライン用)
+  private val mUsageHistory = UsageHistoryBuffer()
+
   private var mLastExecTask = System.currentTimeMillis()
 
   // 収集ループ管理(ジョブの起動・停止はメインスレッドからのみ行う)
@@ -83,12 +97,18 @@ class UsageUpdateService : Service() {
   }
 
   /**
+   * CPU使用率(全体平均)の履歴を取得する(古い→新しい順)
+   */
+  fun getUsageHistory(): IntArray = mUsageHistory.toArray()
+
+  /**
    * 常駐開始
    */
   fun startResident() {
 
     // 常駐停止フラグを解除
     mStopResident = false
+    isResidentRunning = true
 
     // 収集ループ開始
     startGatherLoop()
@@ -164,6 +184,8 @@ class UsageUpdateService : Service() {
 
     MyLog.i("UsageUpdateService.onCreate")
 
+    isResidentRunning = true
+
     // 設定のロード
     mConfig = MyConfig.load(this)
 
@@ -181,6 +203,17 @@ class UsageUpdateService : Service() {
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     super.onStartCommand(intent, flags, startId)
+
+    // クイック設定タイル等からの常駐停止指示
+    if (intent?.action == ACTION_STOP_RESIDENT) {
+      MyLog.i("UsageUpdateService.onStartCommand[stop resident]")
+      stopResident()
+      return START_NOT_STICKY
+    }
+
+    // 常駐開始(停止後の再開を含む)
+    mStopResident = false
+    isResidentRunning = true
 
     mRequestForeground = intent != null && intent.getBooleanExtra("FOREGROUND_REQUEST", false)
     MyLog.i("UsageUpdateService.onStartCommand[$mRequestForeground]")
@@ -241,6 +274,9 @@ class UsageUpdateService : Service() {
       // fallbackモード(Android 8.0以降では /proc/stat にアクセスできないのでコアの周波数からCPU使用率を算出する)
       cpuUsages = MyUtil.calcCpuUsagesByCoreFrequencies(fi)
     }
+
+    // 履歴に追加(通知更新の有無に関わらず毎回記録する)
+    mUsageHistory.add(cpuUsages[0])
 
 
     //-------------------------------------------------
@@ -342,6 +378,8 @@ class UsageUpdateService : Service() {
 
     MyLog.i("UsageUpdateService.onDestroy")
 
+    isResidentRunning = false
+
     // 収集ループ停止
     stopGatherLoop()
 
@@ -364,6 +402,7 @@ class UsageUpdateService : Service() {
   fun stopResident() {
 
     mStopResident = true
+    isResidentRunning = false
 
     // 収集ループ停止
     stopGatherLoop()

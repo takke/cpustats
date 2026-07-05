@@ -34,6 +34,13 @@
                 android:id="@+id/freq"
                 layout="@layout/activity_preview_freq" />
 
+            <!-- CPU使用率(全体)の履歴グラフ -->
+            <jp.takke.cpustats.view.SparklineView
+                android:id="@+id/sparkline"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginBottom="@dimen/padding_tiny" />
+
             <!-- Core1 - Core8 -->
             <include
                 android:id="@+id/core1"
