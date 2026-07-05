@@ -7,10 +7,16 @@ annotation = "1.10.0"
 appcompat = "1.7.1"
 # AssertJ
 assertjCore = "3.27.7"
+# AndroidX Activity(activity-compose を含む)
+activity = "1.11.0"
+# Compose BOM(BOM が Compose UI/Foundation/Material3 のバージョンを揃える)
+composeBom = "2025.10.00"
 # ConstraintLayout
 constraintlayout = "2.2.1"
 # AndroidX Core
 core-ktx = "1.19.0"
+# AndroidX Lifecycle(runtime-compose / viewmodel-compose)
+lifecycle = "2.9.4"
 # Preference-ktx
 preference-ktx = "1.2.1"
 # JUnit
@@ -23,8 +29,17 @@ robolectricVersion = "4.16.1"
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preference-ktx" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjCore" }
 junit = { module = "junit:junit", version.ref = "junit" }
@@ -32,4 +47,4 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectricVersion" }
 
 [plugins]
-
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

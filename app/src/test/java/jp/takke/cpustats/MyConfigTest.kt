@@ -1,6 +1,5 @@
 package jp.takke.cpustats
 
-import androidx.preference.PreferenceManager
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +14,7 @@ class MyConfigTest {
   private val context get() = RuntimeEnvironment.getApplication()
 
   private fun putPrefs(block: android.content.SharedPreferences.Editor.() -> Unit) {
-    PreferenceManager.getDefaultSharedPreferences(context).edit().apply(block).commit()
+    context.defaultSharedPreferences().edit().apply(block).commit()
   }
 
   @Test

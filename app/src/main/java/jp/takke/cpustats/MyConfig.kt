@@ -1,7 +1,6 @@
 package jp.takke.cpustats
 
 import android.content.Context
-import androidx.preference.PreferenceManager
 import jp.takke.cpustats.MyConfig.Companion.load
 
 /**
@@ -31,7 +30,7 @@ internal data class MyConfig(
 
       MyLog.i("load settings")
 
-      val pref = PreferenceManager.getDefaultSharedPreferences(context)
+      val pref = context.defaultSharedPreferences()
 
       // 更新間隔
       var intervalMs = (C.PREF_DEFAULT_UPDATE_INTERVAL_SEC * 1000).toLong()

@@ -1,10 +1,6 @@
 <resources>
 
-    <dimen name="padding_tiny">4dp</dimen>
-    <dimen name="padding_small">8dp</dimen>
-    <dimen name="padding_medium">8dp</dimen>
-    <dimen name="padding_large">16dp</dimen>
-
+    <!-- 通知アイコン(single_XXX / dual_X_X / freq_XX)の drawable レイヤーで参照される dimens -->
     <dimen name="single_left">0.0dp</dimen>
 
     <dimen name="dual_left">2.7dp</dimen>
@@ -15,5 +11,4 @@
     <dimen name="freq_left3">27.5dp</dimen>
     <dimen name="freq_top">10dp</dimen>
 
-    <dimen name="about_horizontal_margin">12dp</dimen>
 </resources>

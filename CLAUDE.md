@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 CPU Stats — Android のステータスバーに CPU 使用率／クロック周波数を常駐通知として表示するアプリ (`jp.takke.cpustats`)。Google Play と F-Droid で配布されている。
 
 - 言語 / ツールチェイン: Kotlin 2.4.0 / AGP 9.2.1 / Gradle 9.6.1 / JDK 11 (JVM toolchain 11)
+- UI は **Jetpack Compose(Material3)**。Compose BOM で UI/Foundation/Material3 のバージョンを揃える。`kotlin-compose` Gradle プラグイン使用。
 - minSdk 23 / compileSdk 37 / targetSdk 35(buildTools は AGP の自動選択に任せるため未指定)
 - モジュール: `:app`, `:modules:quad5`
 
@@ -78,13 +79,18 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
 - **`ResourceUtil` / `:modules:quad5`(QuadResource)**
   - コア数によりアイコンリソースを差し替える: 1 コア = `single*`、2 コア = `dual_*_*`、3 コア = `tri_*`、4 コア以上 = `quad_*`。
   - 各コアの使用率を「level5」(<5,<20,<40,<60,<80,else)にマップし、それを 4 桁の 5 進値にして `quad_XXXX.xml` へ引く仕組み。この 1500 件超のドロウアブルを別モジュール `:modules:quad5` に切り出している(`QuadResource.getIconIdForCpuUsageQuad` などが公開 API)。
-- **UI 側**
-  - テーマは `Theme.CpuStats(.NoActionBar)`(`Theme.AppCompat.DayNight` ベース)。色は values / values-night で切替(ダークは従来の配色)。
-  - `MainActivity`: サービスに bind → コールバックで受け取った値を画面に描画。設定画面 (`ConfigActivity` / `ConfigFragment`)、`AboutActivity` を提供。
-  - `view/SparklineView`: 全体使用率履歴の折れ線グラフ(右端が最新、右詰め)。メイン画面の周波数行直下に配置。
+- **UI 側(Jetpack Compose)**
+  - 全画面 `ComponentActivity` + `setContent { CpuStatsTheme { ... } }`。XML レイアウトと Fragment は撤去済み。
+  - テーマ: `ui/theme/CpuStatsTheme`(Material3 `ColorScheme`、DayNight 追従、Dynamic Color はデフォルト OFF)。application/activity のマニフェスト theme は `Theme.CpuStats(.NoActionBar)`(`Theme.AppCompat.DayNight` ベース、起動画面の一時色として使用)。
+  - `MainActivity`: `LocalBinder` でサービスに bind →  `UsageUpdateCallback` で `MutableStateFlow<MainState>` を更新 → `collectAsState` で画面に反映。TopAppBar のオーバーフローメニューで Start/Stop/Settings/History/About/Exit。
+  - `ConfigActivity`: `SharedPreferences` 直接読み書きの Compose 版 Settings 画面(`SwitchPreference` / `ListPreference` を自前実装)。`androidx.preference-ktx` 依存は撤去済み(素の `context.defaultSharedPreferences()` を使う)。
+  - `AboutActivity`: Material3 + `LinkAnnotation.Url` によるクリック可能リンク。アイコン長押しで内部ダンプ表示。
+  - `HistoryActivity`: `SingleChoiceSegmentedButtonRow` で 1h/6h/24h 切替、DB 読み出しは `Dispatchers.IO` + `LaunchedEffect`。
+  - `ui/component/Sparkline`: 全体使用率の折れ線(Compose Canvas 版)。
+  - `ui/component/HistoryGraph`: 履歴の時系列グラフ(Compose Canvas 版、記録間隔の 3 倍で欠測分断)。
   - `CpuTileService`: クイック設定タイル(Android 7.0+)。タップで常駐 ON/OFF、パネル表示中は flags=0 で bind してライブ表示(タイル表示だけで収集を始めない)。
   - `BootReceiver`: 起動時に `StartOnBoot`(デフォルト true)なら foreground service として `UsageUpdateService` を起動。
-  - `NotificationPermissionUtil`: Android 13+ の `POST_NOTIFICATIONS` 許可導線。
+  - `NotificationPermissionUtil`: Android 13+ の `POST_NOTIFICATIONS` 許可導線(MainActivity 側は `rememberLauncherForActivityResult` で自前実装)。
 - **設定は `MyConfig`(immutable data class)+ `MyConfig.load(context)`**: `updateIntervalSec`(小数秒可 → ms 変換)、`showUsageNotification`、`showFrequencyNotification`、`coreDistributionMode`。設定変更後は `ConfigActivity` から戻った時に `MainActivity` がサービスの `reloadSettings()` を呼び、サービス側で新しい `MyConfig` に差し替え + 不要な通知を消去する。
 
 ## 注意点 / 落とし穴

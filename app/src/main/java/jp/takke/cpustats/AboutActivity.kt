@@ -1,182 +1,227 @@
 package jp.takke.cpustats
 
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.method.LinkMovementMethod
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.unit.dp
 import androidx.core.content.pm.PackageInfoCompat
-import androidx.core.text.HtmlCompat
-import jp.takke.cpustats.util.EdgeToEdgeUtil
+import jp.takke.cpustats.ui.theme.CpuStatsTheme
+import jp.takke.cpustats.ui.util.rememberDrawablePainter
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
 
-class AboutActivity : AppCompatActivity() {
-
-  /**
-   * http://android-er.blogspot.in/2009/09/read-android-cpu-info.html
-   */
-  private val cpuInfoText: String
-    get() {
-
-      var result = ""
-
-      try {
-        val args = arrayOf("/system/bin/cat", "/proc/cpuinfo")
-        val cmd = ProcessBuilder(*args)
-
-        val process = cmd.start()
-        val `in` = process.inputStream
-        val isr = InputStreamReader(`in`)
-        val br = BufferedReader(isr)
-
-        br.forEachLine {
-          result += "$it<br />"
-        }
-        br.close()
-      } catch (ex: IOException) {
-        MyLog.e(ex)
-      }
-
-      return result
-    }
+class AboutActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    setContentView(R.layout.activity_about)
-
-    // Edge to Edge 対応
-    EdgeToEdgeUtil.optimizeEdgeToEdge(findViewById(R.id.root))
-
-
-    // ライセンス情報
-    run {
-      val textView = findViewById<View>(R.id.license_info) as TextView
-
-      // リンク有効化
-      val movementMethod = LinkMovementMethod.getInstance()
-      textView.movementMethod = movementMethod
-
-      // HTML設定
-      val spanned = makeLicenceInfoText()
-      textView.text = spanned
-    }
-
-    // バージョン情報
-    run {
-      val textView = findViewById<View>(R.id.app_version) as TextView
-
-      // Version, Version code取得
-      var pinfo: PackageInfo? = null
-      try {
-        pinfo = packageManager.getPackageInfo(
-          packageName,
-          PackageManager.GET_META_DATA
-        )
-      } catch (e: PackageManager.NameNotFoundException) {
-        MyLog.e(e)
-      }
-
-      var versionCode = "?"
-      var version = "x.x.x"
-      if (pinfo != null) {
-        versionCode = PackageInfoCompat.getLongVersionCode(pinfo).toString()
-        version = pinfo.versionName ?: ""
-      }
-
-      val versionString = getString(R.string.app_version)
-        .replace("{VERSION}", version)
-        .replace("{REVISION}", versionCode)
-      textView.text = versionString
-    }
-
-    // アイコン長押しで内部情報ダンプ
-    run {
-      val imageView = findViewById<View>(R.id.icon) as ImageView
-      imageView.setOnLongClickListener {
-        showInternalInfo()
-
-        true
+    enableEdgeToEdge()
+    setContent {
+      CpuStatsTheme {
+        AboutScreen(versionString = resolveVersionString())
       }
     }
   }
 
-  private fun makeLicenceInfoText(): CharSequence {
-    val html = """
-<p>Source code : <a href="https://github.com/takke/cpustats">github/takke/cpustats</a></p>
+  private fun resolveVersionString(): String {
 
-<p>Using cpuid code from
- <a href="http://android-er.blogspot.in/2009/09/read-android-cpu-info.html">http://android-er.blogspot.in/2009/09/read-android-cpu-info.html</a>
-</p>
-
-<b>Android CPU Info.:</b><br />
-<pre>$cpuInfoText</pre>
-""".trimIndent()
-
-    return HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
-  }
-
-  /**
-   * 内部情報のダンプを取得し、表示する
-   */
-  private fun showInternalInfo() {
-
-    // dump
-    val targets = ArrayList<String>()
-
-    for (i in 0 until CpuInfoCollector.calcCpuCoreCount()) {
-
-      targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/scaling_cur_freq")
-      targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/cpuinfo_min_freq")
-      targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/cpuinfo_max_freq")
-      targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/scaling_available_frequencies")
-    }
-    targets.add("/proc/stat")
-
-    val sb = StringBuilder()
-    for (target in targets) {
-      readFileInfoAsHtml(target, sb)
-    }
-
-    // 表示
-    val textView = findViewById<View>(R.id.license_info) as TextView
-    val ssb = SpannableStringBuilder()
-    ssb.append(makeLicenceInfoText())
-    ssb.append(HtmlCompat.fromHtml(sb.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY))
-    textView.text = ssb
-
-    Toast.makeText(this, "updated", Toast.LENGTH_SHORT).show()
-  }
-
-  private fun readFileInfoAsHtml(filepath: String, sb: StringBuilder) {
-
-    sb.append("----<br>")
-    sb.append("<b>").append(filepath).append("</b><br />")
-    sb.append("<pre>")
+    var versionCode = "?"
+    var version = "x.x.x"
     try {
-      val reader = BufferedReader(
-        InputStreamReader(FileInputStream(filepath)), C.READ_BUFFER_SIZE
+      val pinfo = packageManager.getPackageInfo(packageName, PackageManager.GET_META_DATA)
+      versionCode = PackageInfoCompat.getLongVersionCode(pinfo).toString()
+      version = pinfo.versionName ?: ""
+    } catch (e: PackageManager.NameNotFoundException) {
+      MyLog.e(e)
+    }
+
+    return getString(R.string.app_version)
+      .replace("{VERSION}", version)
+      .replace("{REVISION}", versionCode)
+  }
+}
+
+private const val LINK_SOURCE = "https://github.com/takke/cpustats"
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun AboutScreen(versionString: String) {
+
+  val context = LocalContext.current
+
+  var showDump by remember { mutableStateOf(false) }
+
+  Scaffold(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(MaterialTheme.colorScheme.background)
+  ) { innerPadding ->
+
+    Column(
+      modifier = Modifier
+        .padding(innerPadding)
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(16.dp)
+    ) {
+
+      // アプリ名 + アイコン(長押しで内部情報ダンプ)
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Image(
+          painter = rememberDrawablePainter(R.drawable.ic_launcher),
+          contentDescription = null,
+          modifier = Modifier
+            .size(48.dp)
+            .combinedClickable(
+              onClick = {},
+              onLongClick = {
+                showDump = true
+                Toast.makeText(context, "updated", Toast.LENGTH_SHORT).show()
+              }
+            )
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+          text = stringResource(R.string.app_name),
+          style = MaterialTheme.typography.headlineMedium
+        )
+      }
+
+      Spacer(Modifier.padding(top = 12.dp))
+      Text(versionString, style = MaterialTheme.typography.bodySmall)
+
+      Spacer(Modifier.padding(top = 16.dp))
+
+      // ライセンス情報
+      Text(
+        buildLicenceText(),
+        style = MaterialTheme.typography.bodyMedium
       )
 
-      reader.forEachLine {
-        sb.append(it).append("<br />")
+      // CPU 情報
+      Spacer(Modifier.padding(top = 12.dp))
+      Text("Android CPU Info.:", fontWeight = FontWeight.Bold)
+      Spacer(Modifier.padding(top = 4.dp))
+      SelectionContainer {
+        Text(
+          text = remember { readCpuInfo() },
+          fontFamily = FontFamily.Monospace,
+          style = MaterialTheme.typography.bodySmall
+        )
       }
 
-      reader.close()
+      // 長押しで表示される内部ダンプ
+      if (showDump) {
+        Spacer(Modifier.padding(top = 12.dp))
+        SelectionContainer {
+          Text(
+            text = remember { collectInternalDump() },
+            fontFamily = FontFamily.Monospace,
+            style = MaterialTheme.typography.bodySmall
+          )
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun buildLicenceText(): AnnotatedString {
+
+  val linkStyle = TextLinkStyles(
+    style = SpanStyle(
+      color = MaterialTheme.colorScheme.primary,
+      textDecoration = TextDecoration.Underline
+    )
+  )
+
+  return buildAnnotatedString {
+    append("Source code : ")
+    withLink(LinkAnnotation.Url(LINK_SOURCE, linkStyle)) {
+      append("github/takke/cpustats")
+    }
+  }
+}
+
+private fun readCpuInfo(): String {
+
+  val sb = StringBuilder()
+  try {
+    val args = arrayOf("/system/bin/cat", "/proc/cpuinfo")
+    val process = ProcessBuilder(*args).start()
+    BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+      reader.forEachLine {
+        sb.append(it).append('\n')
+      }
+    }
+  } catch (ex: IOException) {
+    MyLog.e(ex)
+  }
+  return sb.toString()
+}
+
+private fun collectInternalDump(): String {
+
+  val targets = ArrayList<String>()
+  for (i in 0 until CpuInfoCollector.calcCpuCoreCount()) {
+    targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/scaling_cur_freq")
+    targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/cpuinfo_min_freq")
+    targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/cpuinfo_max_freq")
+    targets.add("/sys/devices/system/cpu/cpu$i/cpufreq/scaling_available_frequencies")
+  }
+  targets.add("/proc/stat")
+
+  val sb = StringBuilder()
+  for (path in targets) {
+    sb.append("----\n").append(path).append("\n")
+    try {
+      BufferedReader(InputStreamReader(FileInputStream(path)), C.READ_BUFFER_SIZE).use { r ->
+        r.forEachLine { sb.append(it).append('\n') }
+      }
     } catch (ex: Exception) {
       MyLog.e(ex)
-      sb.append(ex.message)
+      sb.append(ex.message).append('\n')
     }
-
-    sb.append("</pre>")
   }
-
+  return sb.toString()
 }

@@ -4,6 +4,7 @@ import java.util.Date
 
 plugins {
   id("com.android.application")
+  alias(libs.plugins.kotlin.compose)
 }
 
 kotlin {
@@ -61,6 +62,7 @@ android {
 
   buildFeatures {
     buildConfig = true
+    compose = true
   }
 
   testOptions {
@@ -120,10 +122,21 @@ dependencies {
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.annotation)
-  implementation(libs.androidx.constraintlayout)
-  implementation(libs.androidx.preference.ktx)
   implementation(libs.kotlinx.coroutines.android)
 
+  // Compose
+  val composeBom = platform(libs.androidx.compose.bom)
+  implementation(composeBom)
+  implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.compose.foundation)
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.material.icons.extended)
+  implementation(libs.androidx.compose.ui)
+  implementation(libs.androidx.compose.ui.tooling.preview)
+  implementation(libs.androidx.lifecycle.runtime.compose)
+  debugImplementation(libs.androidx.compose.ui.tooling)
+
+  testImplementation(composeBom)
   testImplementation(libs.robolectric)
   testImplementation(libs.junit)
   testImplementation(libs.assertj.core)

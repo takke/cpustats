@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.preference.PreferenceManager
 
 class BootReceiver : BroadcastReceiver() {
 
@@ -16,7 +15,7 @@ class BootReceiver : BroadcastReceiver() {
       // 端末起動時の処理
 
       // 自動起動の確認
-      val pref = PreferenceManager.getDefaultSharedPreferences(context)
+      val pref = context.defaultSharedPreferences()
       val startOnBoot = pref.getBoolean(C.PREF_KEY_START_ON_BOOT, true)
 
       MyLog.i("start on boot[" + (if (startOnBoot) "YES" else "NO") + "]")
