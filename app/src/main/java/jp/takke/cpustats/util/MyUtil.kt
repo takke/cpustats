@@ -113,6 +113,18 @@ object MyUtil {
   }
 
   /**
+   * バッテリー温度の表示用整形
+   *
+   * @param temperature 温度(0.1℃単位)
+   * @return "32.5°C" のような文字列
+   */
+  fun formatTemperature(temperature: Int): String {
+    val sign = if (temperature < 0) "-" else ""
+    val t = if (temperature < 0) -temperature else temperature
+    return "$sign${t / 10}.${t % 10}°C"
+  }
+
+  /**
    * 最もアクティブなコアのインデックスを返す
    */
   fun getActiveCoreIndex(freqs: IntArray): Int {

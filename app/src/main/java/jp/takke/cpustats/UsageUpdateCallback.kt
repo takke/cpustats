@@ -11,6 +11,7 @@ fun interface UsageUpdateCallback {
     cpuUsages: IntArray,
     freqs: IntArray,
     minFreqs: IntArray,
-    maxFreqs: IntArray
+    maxFreqs: IntArray,
+    batteryTemperature: Int  // 0.1℃単位(取得できない場合は0)
   )
 }

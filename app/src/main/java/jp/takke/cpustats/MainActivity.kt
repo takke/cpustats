@@ -58,24 +58,25 @@ class MainActivity : AppCompatActivity() {
     }
 
   // コールバックの実装(サービスの収集スレッドから呼ばれるのでメインスレッドに切り替える)
-  private val mCallback = UsageUpdateCallback { cpuUsages, freqs, minFreqs, maxFreqs ->
+  private val mCallback =
+    UsageUpdateCallback { cpuUsages, freqs, minFreqs, maxFreqs, batteryTemperature ->
 
-    lifecycleScope.launch {
+      lifecycleScope.launch {
 
-      // サービス実行中フラグを立てておく
-      mServiceMaybeRunning = true
+        // サービス実行中フラグを立てておく
+        mServiceMaybeRunning = true
 
-      if (mIsForeground) {
-        // CPUクロック周波数表示
-        showCpuFrequency(freqs, minFreqs, maxFreqs)
+        if (mIsForeground) {
+          // CPUクロック周波数表示
+          showCpuFrequency(freqs, minFreqs, maxFreqs, batteryTemperature)
 
-        // CPU使用率表示更新
-        showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs)
+          // CPU使用率表示更新
+          showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs)
 
 //                    setTitle(getString(R.string.app_name) + "  Freq: " + MyUtil.formatFreq(currentFreq) + "");
+        }
       }
     }
-  }
 
   // サービスのコネクション
   private val mServiceConnection = object : ServiceConnection {
@@ -191,7 +192,7 @@ class MainActivity : AppCompatActivity() {
     // CPU クロック更新
     val coreCount = CpuInfoCollector.calcCpuCoreCount()
     val fi = AllCoreFrequencyInfo(coreCount)
-    showCpuFrequency(fi.freqs, fi.minFreqs, fi.maxFreqs)
+    showCpuFrequency(fi.freqs, fi.minFreqs, fi.maxFreqs, 0)
 
     // CPU使用率表示更新
     val dummyCpuUsages = IntArray(coreCount)
@@ -384,7 +385,12 @@ class MainActivity : AppCompatActivity() {
    * CPU クロック周波数を画面に表示する
    */
   @SuppressLint("SetTextI18n")
-  private fun showCpuFrequency(freqs: IntArray, minFreqs: IntArray, maxFreqs: IntArray) {
+  private fun showCpuFrequency(
+    freqs: IntArray,
+    minFreqs: IntArray,
+    maxFreqs: IntArray,
+    batteryTemperature: Int
+  ) {
 
     // 全コアのうち最適なクロック周波数を探す
     val activeCoreIndex = MyUtil.getActiveCoreIndex(freqs)
@@ -413,6 +419,14 @@ class MainActivity : AppCompatActivity() {
       val maxFreqText = MyUtil.formatFreq(maxFreq)
       val start = ssb.length
       ssb.append(" ($minFreqText - $maxFreqText)")
+      ssb.setSpan(RelativeSizeSpan(0.8f), start, ssb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+
+    // バッテリー温度
+    if (batteryTemperature != 0) {
+      ssb.append("\n")
+      val start = ssb.length
+      ssb.append(" Battery: ${MyUtil.formatTemperature(batteryTemperature)}")
       ssb.setSpan(RelativeSizeSpan(0.8f), start, ssb.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 

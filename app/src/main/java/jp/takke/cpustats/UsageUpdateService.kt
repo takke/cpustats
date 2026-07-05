@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.BatteryManager
 import android.os.Binder
 import android.os.IBinder
 import jp.takke.cpustats.util.MyUtil
@@ -43,6 +44,9 @@ class UsageUpdateService : Service() {
 
   // 前回の CPU クロック周波数
   private var mLastCpuClock = -1
+
+  // 前回のバッテリー温度(0.1℃単位)
+  private var mLastBatteryTemperature = 0
 
   // 前回の収集データ
   private var mLastCpuUsageSnapshot: ArrayList<OneCpuInfo>? = null
@@ -265,13 +269,19 @@ class UsageUpdateService : Service() {
 
 
     //-------------------------------------------------
+    // バッテリー温度の取得
+    //-------------------------------------------------
+    val batteryTemperature = getBatteryTemperature()
+
+    //-------------------------------------------------
     // 通知判定
     //-------------------------------------------------
     // 前回と同じ CPU 使用率なら通知しない
     // ※通知アイコンだけなら丸めた値で比較すればいいんだけど通知テキストにCPU使用率%が出るので完全一致で比較する
-    val updated = isUpdated(currentCpuClock, cpuUsages)
+    val updated = isUpdated(currentCpuClock, cpuUsages, batteryTemperature)
     mLastCpuUsages = cpuUsages
     mLastCpuClock = currentCpuClock
+    mLastBatteryTemperature = batteryTemperature
 
     //-------------------------------------------------
     // 通知
@@ -287,20 +297,42 @@ class UsageUpdateService : Service() {
         currentCpuClock,
         minFreq,
         maxFreq,
+        batteryTemperature,
         mRequestForeground
       )
       mRequestForeground = false
 
       // コールバック経由で通知
-      distributeToCallbacks(cpuUsages, fi)
+      distributeToCallbacks(cpuUsages, fi, batteryTemperature)
     }
 
     mLastExecTask = System.currentTimeMillis()
   }
 
-  private fun isUpdated(currentCpuClock: Int, cpuUsages: IntArray?): Boolean {
+  /**
+   * バッテリー温度を取得する
+   *
+   * @return 温度(0.1℃単位、取得できない場合は0)
+   */
+  private fun getBatteryTemperature(): Int {
+
+    // ACTION_BATTERY_CHANGED は sticky broadcast なので受信登録なしで現在値を取得できる
+    val intent = applicationContext.registerReceiver(
+      null,
+      IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+    )
+    return intent?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) ?: 0
+  }
+
+  private fun isUpdated(
+    currentCpuClock: Int,
+    cpuUsages: IntArray?,
+    batteryTemperature: Int
+  ): Boolean {
 
     if (mLastCpuClock != currentCpuClock) {
+      return true
+    } else if (mLastBatteryTemperature != batteryTemperature) {
       return true
     } else if (mLastCpuUsages == null || cpuUsages == null) {
       return true
@@ -319,10 +351,14 @@ class UsageUpdateService : Service() {
     return false
   }
 
-  private fun distributeToCallbacks(cpuUsages: IntArray, fi: AllCoreFrequencyInfo) {
+  private fun distributeToCallbacks(
+    cpuUsages: IntArray,
+    fi: AllCoreFrequencyInfo,
+    batteryTemperature: Int
+  ) {
 
     for (callback in mCallbacks) {
-      callback.onUsageUpdated(cpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs)
+      callback.onUsageUpdated(cpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs, batteryTemperature)
     }
   }
 

@@ -33,6 +33,7 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
     currentCpuClock: Int,
     minFreq: Int,
     maxFreq: Int,
+    batteryTemperature: Int,
     requestForeground: Boolean
   ) {
 
@@ -107,7 +108,9 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
 
       doNotify(
         MY_FREQ_NOTIFICATION_ID,
-        makeFrequencyNotification(minFreq, maxFreq, currentCpuClock, pendingIntent).build(),
+        makeFrequencyNotification(
+          minFreq, maxFreq, currentCpuClock, batteryTemperature, pendingIntent
+        ).build(),
         service,
         nm,
         requestForeground
@@ -225,7 +228,7 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
 
   private fun makeFrequencyNotification(
     minFreq: Int, maxFreq: Int,
-    currentCpuClock: Int, pendingIntent: PendingIntent
+    currentCpuClock: Int, batteryTemperature: Int, pendingIntent: PendingIntent
   ): NotificationCompat.Builder {
 
     // 通知ウインドウのメッセージ
@@ -247,8 +250,11 @@ internal class NotificationPresenter(service: Service, private val mConfig: MyCo
 
     // 通知文字列の生成
     val notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock)
-    val notificationContent =
+    var notificationContent =
       "Max Freq " + MyUtil.formatFreq(maxFreq) + " Min Freq " + MyUtil.formatFreq(minFreq)
+    if (batteryTemperature != 0) {
+      notificationContent += "  Battery " + MyUtil.formatTemperature(batteryTemperature)
+    }
 
     builder.setContentTitle(notificationTitle)
     builder.setContentText(notificationContent)
