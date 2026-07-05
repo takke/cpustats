@@ -14,6 +14,7 @@ v3.0.0 (2026.07.xx)
 - Add history recording and history graphs (CPU usage / battery temperature /
   memory; recorded every 10 seconds, kept for 24 hours, can be disabled in settings)
 - Support per-app language preference (Android 13+)
+- Add adaptive icon with themed icon (Material You) support
 - Internal: Remove AIDL (replaced with in-process local binder)
 - Internal: Replace gather thread with Kotlin coroutines
 - Internal: Remove AlarmManager keep-alive loop (foreground service is sufficient)

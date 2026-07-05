@@ -11,4 +11,7 @@
     <!-- スパークラインの線色 -->
     <color name="sparkline_line">#009018</color>
 
+    <!-- Adaptive icon の背景色(ic_launcher.png のセル間背景色と同一) -->
+    <color name="ic_launcher_background">#00202b</color>
+
 </resources>
