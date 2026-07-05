@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.os.RemoteException
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.RelativeSizeSpan
@@ -39,54 +38,40 @@ class MainActivity : AppCompatActivity() {
   // サービス実行フラグ(メニュー切り替え用。コールバックがあれば実行中と判定する)
   private var mServiceMaybeRunning = false
 
-  // サービスのIF
-  private var mServiceIf: IUsageUpdateService? = null
+  // サービス
+  private var mService: UsageUpdateService? = null
 
   private val mConfigActivityLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
       // 設定完了
 
       // 設定変更の内容をサービスに反映させる
-      if (mServiceIf != null) {
-        try {
-          // 設定のリロード
-          MyLog.d("request reloadSettings")
-          mServiceIf!!.reloadSettings()
-        } catch (e: RemoteException) {
-          MyLog.e(e)
-        }
+      if (mService != null) {
+        // 設定のリロード
+        MyLog.d("request reloadSettings")
+        mService!!.reloadSettings()
       } else {
         MyLog.w("cannot reloadSettings (no service i.f.)")
         // 接続後に再ロードする
       }
     }
 
-  // コールバックIFの実装
-  private val mCallback = object : IUsageUpdateCallback.Stub() {
+  // コールバックの実装(サービスの収集スレッドから呼ばれるのでメインスレッドに切り替える)
+  private val mCallback = UsageUpdateCallback { cpuUsages, freqs, minFreqs, maxFreqs ->
 
-    /**
-     * サービスからの通知受信メソッド
-     */
-    @Throws(RemoteException::class)
-    override fun updateUsage(
-      cpuUsages: IntArray,
-      freqs: IntArray, minFreqs: IntArray, maxFreqs: IntArray
-    ) {
+    lifecycleScope.launch {
 
-      lifecycleScope.launch {
+      // サービス実行中フラグを立てておく
+      mServiceMaybeRunning = true
 
-        // サービス実行中フラグを立てておく
-        mServiceMaybeRunning = true
+      if (mIsForeground) {
+        // CPUクロック周波数表示
+        showCpuFrequency(freqs, minFreqs, maxFreqs)
 
-        if (mIsForeground) {
-          // CPUクロック周波数表示
-          showCpuFrequency(freqs, minFreqs, maxFreqs)
-
-          // CPU使用率表示更新
-          showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs)
+        // CPU使用率表示更新
+        showCpuUsages(cpuUsages, freqs, minFreqs, maxFreqs)
 
 //                    setTitle(getString(R.string.app_name) + "  Freq: " + MyUtil.formatFreq(currentFreq) + "");
-        }
       }
     }
   }
@@ -98,26 +83,21 @@ class MainActivity : AppCompatActivity() {
 
       MyLog.i("MainActivity.onServiceConnected")
 
-      // サービスのインターフェースを取得する
-      mServiceIf = IUsageUpdateService.Stub.asInterface(service)
+      // サービスのインスタンスを取得する
+      mService = (service as UsageUpdateService.LocalBinder).service
 
-      try {
-        // コールバック登録
-        mServiceIf?.registerCallback(mCallback)
+      // コールバック登録
+      mService?.registerCallback(mCallback)
 
-        // onActivityResult 後に設定がロードされていないかもしれないのでここで強制再ロードする
-        mServiceIf?.reloadSettings()
-      } catch (e: RemoteException) {
-        MyLog.e(e)
-      }
-
+      // onActivityResult 後に設定がロードされていないかもしれないのでここで強制再ロードする
+      mService?.reloadSettings()
     }
 
     override fun onServiceDisconnected(name: ComponentName) {
 
       MyLog.i("MainActivity.onServiceDisconnected")
 
-      mServiceIf = null
+      mService = null
     }
   }
 
@@ -314,41 +294,32 @@ class MainActivity : AppCompatActivity() {
     when (item.itemId) {
       R.id.menu_start_service ->
         // サービス開始
-        if (mServiceIf != null) {
+        if (mService != null) {
           MyLog.i("MainActivity: start")
-          try {
-            // 常駐開始
-            mServiceIf!!.startResident()
-          } catch (e: RemoteException) {
-            MyLog.e(e)
-          }
 
+          // 常駐開始
+          mService!!.startResident()
         }
 
       R.id.menu_stop_service ->
         // サービス停止
-        if (mServiceIf != null) {
+        if (mService != null) {
           MyLog.i("MainActivity: stop")
-          try {
-            // 常駐停止
-            mServiceIf!!.stopResident()
 
-            // サービス実行中フラグを下ろしておく
-            mServiceMaybeRunning = false
+          // 常駐停止
+          mService!!.stopResident()
 
-            // 表示初期化
-            hideAllCoreFreqInfo()
+          // サービス実行中フラグを下ろしておく
+          mServiceMaybeRunning = false
 
-            // タイトル初期化
-            title = getString(R.string.app_name)
+          // 表示初期化
+          hideAllCoreFreqInfo()
 
-            // Toolbarのアイコン初期化
-            setActionBarLogo(R.drawable.single000)
+          // タイトル初期化
+          title = getString(R.string.app_name)
 
-          } catch (e: RemoteException) {
-            MyLog.e(e)
-          }
-
+          // Toolbarのアイコン初期化
+          setActionBarLogo(R.drawable.single000)
         }
 
       R.id.menu_settings -> {
@@ -378,14 +349,7 @@ class MainActivity : AppCompatActivity() {
   private fun cleanupServiceConnection() {
 
     // コールバック解除
-    if (mServiceIf != null) {
-      try {
-        mServiceIf!!.unregisterCallback(mCallback)
-      } catch (e: RemoteException) {
-        MyLog.e(e)
-      }
-
-    }
+    mService?.unregisterCallback(mCallback)
 
     // サービスのbind解除
     unbindService(mServiceConnection)

@@ -8,13 +8,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.os.RemoteCallbackList
-import android.os.RemoteException
 import android.os.SystemClock
 import jp.takke.cpustats.util.MyUtil
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 class UsageUpdateService : Service() {
@@ -47,10 +47,7 @@ class UsageUpdateService : Service() {
   private var mUseFreqForCpuUsage = false
 
   // コールバック一覧
-  private val mCallbackList = RemoteCallbackList<IUsageUpdateCallback>()
-
-  // コールバック数キャッシュ
-  private var mCallbackListSize = 0
+  private val mCallbacks = CopyOnWriteArrayList<UsageUpdateCallback>()
 
   private var mLastExecTask = System.currentTimeMillis()
 
@@ -58,62 +55,52 @@ class UsageUpdateService : Service() {
   private var mThread: GatherThread? = null
   private var mThreadActive = false
 
-  // サービスの実装
-  private val mBinder = object : IUsageUpdateService.Stub() {
+  // ローカルバインダ(同一プロセス内なので Service インスタンスを直接渡す)
+  inner class LocalBinder : Binder() {
+    val service: UsageUpdateService
+      get() = this@UsageUpdateService
+  }
 
-    @Throws(RemoteException::class)
-    override fun registerCallback(callback: IUsageUpdateCallback) {
+  private val mBinder = LocalBinder()
 
-      // コールバックリスト登録
-      mCallbackList.register(callback)
+  fun registerCallback(callback: UsageUpdateCallback) {
 
-      mCallbackListSize++
+    // コールバックリスト登録
+    mCallbacks.addIfAbsent(callback)
+  }
+
+  fun unregisterCallback(callback: UsageUpdateCallback) {
+
+    // コールバックリスト解除
+    mCallbacks.remove(callback)
+  }
+
+  /**
+   * 常駐開始
+   */
+  fun startResident() {
+
+    // 常駐停止フラグを解除
+    mStopResident = false
+
+    // すぐに次の onStart を呼ぶ
+    scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
+
+    if (mThread == null) {
+      startThread()
     }
+  }
 
-    @Throws(RemoteException::class)
-    override fun unregisterCallback(callback: IUsageUpdateCallback) {
+  /**
+   * 設定のリロード
+   */
+  fun reloadSettings() {
 
-      // コールバックリスト解除
-      mCallbackList.unregister(callback)
+    MyLog.d("reloadSettings")
+    mConfig.loadSettings(this)
 
-      if (mCallbackListSize > 0) {
-        mCallbackListSize--
-      }
-    }
-
-    @Throws(RemoteException::class)
-    override fun stopResident() {
-
-      // 常駐停止
-      this@UsageUpdateService.stopResident()
-    }
-
-    @Throws(RemoteException::class)
-    override fun startResident() {
-
-      // 常駐停止フラグを解除
-      mStopResident = false
-
-      // すぐに次の onStart を呼ぶ
-      this@UsageUpdateService.scheduleNextTime(C.ALARM_STARTUP_DELAY_MSEC.toLong())
-
-      if (mThread == null) {
-        startThread()
-      }
-    }
-
-    /**
-     * 設定のリロード
-     */
-    @Throws(RemoteException::class)
-    override fun reloadSettings() {
-
-      MyLog.d("reloadSettings")
-      mConfig.loadSettings(this@UsageUpdateService)
-
-      // 設定で消された通知を消去
-      mNotificationPresenter.cancelNotifications()
-    }
+    // 設定で消された通知を消去
+    mNotificationPresenter.cancelNotifications()
   }
 
   /**
@@ -329,33 +316,8 @@ class UsageUpdateService : Service() {
 
   private fun distributeToCallbacks(cpuUsages: IntArray, fi: AllCoreFrequencyInfo) {
 
-    if (mCallbackListSize >= 1) {
-      try {
-        val n = mCallbackList.beginBroadcast()
-
-        // コールバック数を念のため更新しておく
-        mCallbackListSize = n
-
-//              if (MyLog.debugMode) {
-//                  MyLog.d("- broadcast:" + n);
-//              }
-
-        // 全コアのCPU周波数を収集する
-        for (i in 0 until n) {
-          try {
-            mCallbackList.getBroadcastItem(i).updateUsage(
-              cpuUsages,
-              fi.freqs, fi.minFreqs, fi.maxFreqs
-            )
-          } catch (e: RemoteException) {
-//                      MyLog.e(e);
-          }
-
-        }
-        mCallbackList.finishBroadcast()
-      } catch (e: IllegalStateException) {
-        MyLog.e(e)
-      }
+    for (callback in mCallbacks) {
+      callback.onUsageUpdated(cpuUsages, fi.freqs, fi.minFreqs, fi.maxFreqs)
     }
   }
 
