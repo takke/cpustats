@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- |== 45dp                            ==| -->
+    <!-- |1|  10  |1|  10  |1|  10  |1|  10  |1| -->
+    <!-- | ^        ^        ^        ^        | -->
+    <!-- | 1dp      12dp     23dp     34dp     | -->
+    <dimen name="quad_left1">1dp</dimen>
+    <dimen name="quad_left2">12dp</dimen>
+    <dimen name="quad_left3">23dp</dimen>
+    <dimen name="quad_left4">34dp</dimen>
+
+    <!-- |== 45dp                            ==| -->
+    <!-- |2|  13.66  |1|  13.66  |1|  13.66  |1| -->
+    <!-- | ^           ^           ^           | -->
+    <!-- | 2dp         16.7dp      31.3dp      | -->
+    <dimen name="tri_left1">2dp</dimen>
+    <dimen name="tri_left2">16.7dp</dimen>
+    <dimen name="tri_left3">31.3dp</dimen>
+
+</resources>
