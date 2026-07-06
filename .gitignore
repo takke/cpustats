@@ -33,6 +33,7 @@ proguard/
 *.keystore
 /.metadata
 /CpuStatsXSample
+/temp
 .DS_Store
 
 # Gradle
