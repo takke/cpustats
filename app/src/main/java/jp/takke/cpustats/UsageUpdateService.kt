@@ -10,7 +10,11 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Binder
 import android.os.IBinder
+import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.updateAll
 import jp.takke.cpustats.util.MyUtil
+import jp.takke.cpustats.widget.CpuWidget
+import jp.takke.cpustats.widget.WidgetData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -294,6 +298,16 @@ class UsageUpdateService : Service() {
     recordUsageLogIfNeeded(cpuUsages[0], currentCpuClock, systemStats)
 
     //-------------------------------------------------
+    // ウィジェット用の最新スナップショット更新
+    //-------------------------------------------------
+    // ホーム画面ウィジェットが常時起動していないので、直近の値だけプロセス内で持っておく
+    WidgetData.update(
+      cpuUsage = cpuUsages[0],
+      cpuClock = currentCpuClock,
+      batteryTemperature = systemStats.batteryTemperature,
+    )
+
+    //-------------------------------------------------
     // 通知判定
     //-------------------------------------------------
     // 前回と同じ CPU 使用率なら通知しない
@@ -326,9 +340,31 @@ class UsageUpdateService : Service() {
 
       // コールバック経由で通知
       distributeToCallbacks(cpuUsages, fi, systemStats)
+
+      // ホーム画面ウィジェットを再描画(貼られていなければ内部で no-op)
+      updateWidget()
     }
 
     mLastExecTask = System.currentTimeMillis()
+  }
+
+  /**
+   * ホーム画面ウィジェットの再描画を指示する
+   *
+   * ※GlanceAppWidget.updateAll は suspend fun。収集ループのコルーチンから呼ぶ
+   */
+  private fun updateWidget() {
+
+    mServiceScope.launch {
+      try {
+        val manager = GlanceAppWidgetManager(this@UsageUpdateService)
+        if (manager.getGlanceIds(CpuWidget::class.java).isNotEmpty()) {
+          CpuWidget().updateAll(this@UsageUpdateService)
+        }
+      } catch (e: Exception) {
+        MyLog.e(e)
+      }
+    }
   }
 
   /**
