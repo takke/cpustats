@@ -100,4 +100,6 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
 - 通知 ID は `NotificationPresenter` に固定値(10 / 11 / 20)。追加時は既存 ID と衝突しないこと。
 - `versionName` を変えたら `versionCode` の増加も忘れずに(root `build.gradle.kts`)。ChangeLog は `ChangeLog.md` に追記していく慣習。
 - 通知アイコン(`freq_*` / `digit*` / `single*` 等)はダーク背景用の淡色モノクロ画像。アプリ内 UI で使う場合は `app:tint="?android:attr/textColorPrimary"` などテーマ連動の tint を掛けること(掛けないとライトモードで見えない)。
+- 通知アイコン群(`single_XXX` / `dual_X_X` / `tri_XXX` / `quad_XXXX` / `freq_XX`)と `ic_launcher`(API 26+ の adaptive-icon)は Compose の `painterResource` が受け付けない(VectorDrawable と raster のみ対応)。UI で表示する時は `ui/util/rememberDrawablePainter(id)` を使う。
 - Foreground Service タイプは `specialUse`。`dataSync` に戻すと Android 15+ で BOOT_COMPLETED からの起動不可 + 6 時間タイムアウトの問題が再発する。Play Console 提出時は specialUse の用途申告が必要。
+- Glance(ウィジェット)は WorkManager 経由で Room の `WorkDatabase` を初期化する。R8 (minify) で Room の `_Impl` クラスが削られると起動時に落ちるため、`proguard-rules.pro` に Room / WorkDatabase の keep ルールを入れてある。Glance / Room 系依存を増やしたら keep ルールの見直しも必要。

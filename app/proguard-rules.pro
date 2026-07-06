@@ -7,18 +7,18 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
-# Add any project specific keep options here:
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 
-# aidl
--keep public class jp.takke.cpustats.IUsageUpdateCallback
--keep public class jp.takke.cpustats.IUsageUpdateService
+#-----------------------------------------------------------
+# Room(Glance が WorkManager 経由で内部利用)
+#
+# Room はランタイムに <DatabaseName>_Impl クラスをリフレクションで解決するため、
+# minify 時にこれらのクラスが削除されると
+# "Failed to create an instance of androidx.work.impl.WorkDatabase" で起動失敗する。
+#-----------------------------------------------------------
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+-keep @androidx.room.Database class * { *; }
+-keep class androidx.room.RoomDatabase$Builder { *; }
+-keepnames class androidx.work.impl.WorkDatabase_Impl
+-dontwarn androidx.room.paging.**
