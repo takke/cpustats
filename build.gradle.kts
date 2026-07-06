@@ -27,8 +27,8 @@ tasks.register<Delete>("clean") {
 
 ext {
   set("apkNamePrefix", "CpuStats")
-  set("versionName", "2.2.4")
-  set("versionCode", 28)
+  set("versionName", "3.0.0")
+  set("versionCode", 29)
 
   set("compileSdkVersion", 37)
   set("targetSdkVersion", 35)

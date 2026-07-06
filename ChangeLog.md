@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-v3.0.0 (2026.07.xx)
+v3.0.0 (2026.07.06)
 -------------------
 
 - Fix "Start on boot" and long-running notification on Android 15+
