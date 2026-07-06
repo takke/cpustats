@@ -156,6 +156,36 @@ class MyUtilTest {
   }
 
   @Test
+  fun formatCpuClusters() {
+
+    // big.LITTLE(4+4)
+    assertThat(
+      MyUtil.formatCpuClusters(
+        intArrayOf(1804800, 1804800, 1804800, 1804800, 2841600, 2841600, 2841600, 2841600)
+      )
+    ).isEqualTo("4×1.8 GHz + 4×2.8 GHz")
+
+    // 3 クラスタ(1+3+4)は周波数昇順
+    assertThat(
+      MyUtil.formatCpuClusters(
+        intArrayOf(2841600, 1804800, 1804800, 1804800, 1704000, 1704000, 1704000, 1704000)
+      )
+    ).isEqualTo("4×1.7 GHz + 3×1.8 GHz + 1×2.8 GHz")
+
+    // 単一クラスタ
+    assertThat(MyUtil.formatCpuClusters(intArrayOf(2000000, 2000000)))
+      .isEqualTo("2×2.0 GHz")
+
+    // 0(取得不可)は無視する
+    assertThat(MyUtil.formatCpuClusters(intArrayOf(0, 2000000, 0, 2000000)))
+      .isEqualTo("2×2.0 GHz")
+
+    // 全て取得不可・空
+    assertThat(MyUtil.formatCpuClusters(intArrayOf(0, 0))).isEmpty()
+    assertThat(MyUtil.formatCpuClusters(intArrayOf())).isEmpty()
+  }
+
+  @Test
   fun formatFreq() {
 
     assertThat(MyUtil.formatFreq(300000)).isEqualTo("300 MHz")

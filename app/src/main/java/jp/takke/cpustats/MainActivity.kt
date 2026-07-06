@@ -322,6 +322,13 @@ private fun FrequencyRow(state: MainState) {
         text = " (${MyUtil.formatFreq(minFreq)} - ${MyUtil.formatFreq(maxFreq)})",
         style = MaterialTheme.typography.bodySmall,
       )
+
+      // クラスタ構成(big.LITTLE)
+      val clusters = MyUtil.formatCpuClusters(maxFreqs)
+      if (clusters.isNotEmpty()) {
+        Text(" Cores: $clusters", style = MaterialTheme.typography.bodySmall)
+      }
+
       if (state.systemStats.batteryTemperature != 0) {
         Text(
           text = " Battery: ${MyUtil.formatTemperature(state.systemStats.batteryTemperature)}",

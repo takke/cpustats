@@ -30,15 +30,19 @@ internal class NotificationPresenter(service: Service) {
    */
   fun updateNotifications(
     cpuUsages: IntArray?,
-    currentCpuClock: Int,
-    minFreq: Int,
-    maxFreq: Int,
+    fi: AllCoreFrequencyInfo,
     systemStats: SystemStats,
     requestForeground: Boolean,
     config: MyConfig
   ) {
 
     val service = mServiceRef.get() ?: return
+
+    // 最もアクティブなコアのクロック情報
+    val activeCoreIndex = MyUtil.getActiveCoreIndex(fi.freqs)
+    val currentCpuClock = fi.freqs[activeCoreIndex]
+    val minFreq = fi.minFreqs[activeCoreIndex]
+    val maxFreq = fi.maxFreqs[activeCoreIndex]
 
     // N分おきに通知時刻を更新する
     val now = System.currentTimeMillis()
@@ -77,7 +81,7 @@ internal class NotificationPresenter(service: Service) {
       if (data.isNotEmpty()) {
         doNotify(
           MY_USAGE_NOTIFICATION_ID1,
-          makeUsageNotification(data[0], pendingIntent).build(),
+          makeUsageNotification(data[0], pendingIntent, cpuUsages, fi, systemStats).build(),
           service,
           nm,
           requestForeground
@@ -89,7 +93,7 @@ internal class NotificationPresenter(service: Service) {
       if (data.size >= 2) {
         doNotify(
           MY_USAGE_NOTIFICATION_ID2,
-          makeUsageNotification(data[1], pendingIntent).build(),
+          makeUsageNotification(data[1], pendingIntent, cpuUsages, fi, systemStats).build(),
           service,
           nm,
           requestForeground
@@ -110,13 +114,34 @@ internal class NotificationPresenter(service: Service) {
       doNotify(
         MY_FREQ_NOTIFICATION_ID,
         makeFrequencyNotification(
-          minFreq, maxFreq, currentCpuClock, systemStats.batteryTemperature, pendingIntent
+          minFreq, maxFreq, currentCpuClock, systemStats.batteryTemperature, pendingIntent, fi
         ).build(),
         service,
         nm,
         requestForeground
       )
     }
+  }
+
+  /**
+   * 通知アクション(常駐停止・設定)の追加
+   */
+  private fun addCommonActions(builder: NotificationCompat.Builder, service: Service) {
+
+    // 常駐停止
+    val stopIntent = Intent(service, UsageUpdateService::class.java)
+      .setAction(UsageUpdateService.ACTION_STOP_RESIDENT)
+    val stopPendingIntent = PendingIntent.getService(
+      service, REQUEST_CODE_STOP, stopIntent, PendingIntent.FLAG_IMMUTABLE
+    )
+    builder.addAction(0, service.getString(R.string.menu_stop_service), stopPendingIntent)
+
+    // 設定
+    val configIntent = Intent(service, ConfigActivity::class.java)
+    val configPendingIntent = PendingIntent.getActivity(
+      service, REQUEST_CODE_CONFIG, configIntent, PendingIntent.FLAG_IMMUTABLE
+    )
+    builder.addAction(0, service.getString(R.string.title_activity_config), configPendingIntent)
   }
 
   private fun doNotify(
@@ -161,7 +186,10 @@ internal class NotificationPresenter(service: Service) {
 
   private fun makeUsageNotification(
     data: CpuNotificationData,
-    pendingIntent: PendingIntent
+    pendingIntent: PendingIntent,
+    allCpuUsages: IntArray,
+    fi: AllCoreFrequencyInfo,
+    systemStats: SystemStats
   ): NotificationCompat.Builder {
 
     val notificationTitle0 = "CPU Usage"
@@ -169,8 +197,8 @@ internal class NotificationPresenter(service: Service) {
     val cpuUsages = data.cpuUsages
     val totalUsage = if (cpuUsages == null) 0 else cpuUsages[0]
     val iconId = ResourceUtil.getIconIdForCpuUsage(cpuUsages)
-    val context = mServiceRef.get()
-    val builder = NotificationCompat.Builder(context!!, CHANNEL_ID_CPU_USAGE)
+    val service = mServiceRef.get()!!
+    val builder = NotificationCompat.Builder(service, CHANNEL_ID_CPU_USAGE)
 
     builder.setSmallIcon(iconId)
     builder.color = ResourceUtil.getNotificationIconColorFromUsage(totalUsage)
@@ -207,7 +235,61 @@ internal class NotificationPresenter(service: Service) {
     builder.setContentTitle(notificationTitle)
     builder.setContentText(notificationContent)
     builder.setContentIntent(pendingIntent)
+
+    // 展開時は全コアの使用率 + 現在周波数を表示する
+    builder.setStyle(
+      NotificationCompat.BigTextStyle().bigText(
+        makeUsageBigText(allCpuUsages, fi, systemStats)
+      )
+    )
+
+    // アクション(常駐停止・設定)
+    addCommonActions(builder, service)
+
     return builder
+  }
+
+  /**
+   * 使用率通知の展開時テキストを生成する
+   */
+  private fun makeUsageBigText(
+    allCpuUsages: IntArray,
+    fi: AllCoreFrequencyInfo,
+    systemStats: SystemStats
+  ): String {
+
+    val sb = StringBuilder(256)
+
+    val coreCount = allCpuUsages.size - 1
+    for (i in 1..coreCount) {
+      sb.append("Core").append(i).append(": ").append(allCpuUsages[i]).append("%")
+
+      val freq = fi.freqs.getOrNull(i - 1) ?: 0
+      if (freq > 0) {
+        sb.append(" (").append(MyUtil.formatFreq(freq)).append(")")
+      }
+      sb.append('\n')
+    }
+
+    // バッテリー温度・メモリのサマリ
+    val summary = StringBuilder()
+    if (systemStats.batteryTemperature != 0) {
+      summary.append("Battery ").append(MyUtil.formatTemperature(systemStats.batteryTemperature))
+    }
+    if (systemStats.memTotalMb > 0) {
+      if (summary.isNotEmpty()) {
+        summary.append("  ")
+      }
+      summary.append("Memory ")
+        .append(MyUtil.formatMemSize(systemStats.memUsedMb))
+        .append(" / ")
+        .append(MyUtil.formatMemSize(systemStats.memTotalMb))
+    }
+    if (summary.isNotEmpty()) {
+      sb.append(summary)
+    }
+
+    return sb.toString().trimEnd()
   }
 
   /**
@@ -225,15 +307,16 @@ internal class NotificationPresenter(service: Service) {
 
   private fun makeFrequencyNotification(
     minFreq: Int, maxFreq: Int,
-    currentCpuClock: Int, batteryTemperature: Int, pendingIntent: PendingIntent
+    currentCpuClock: Int, batteryTemperature: Int, pendingIntent: PendingIntent,
+    fi: AllCoreFrequencyInfo
   ): NotificationCompat.Builder {
 
     // 通知ウインドウのメッセージ
     val notificationTitle0 = "CPU Frequency"
 
-    // Notification.Builder は API Level11 以降からなので旧方式で作成する
     val iconId = ResourceUtil.getIconIdForCpuFreq(currentCpuClock)
-    val builder = NotificationCompat.Builder(mServiceRef.get()!!, CHANNEL_ID_CPU_FREQUENCY)
+    val service = mServiceRef.get()!!
+    val builder = NotificationCompat.Builder(service, CHANNEL_ID_CPU_FREQUENCY)
 
     builder.setSmallIcon(iconId)
     builder.setTicker(notificationTitle0)
@@ -256,7 +339,44 @@ internal class NotificationPresenter(service: Service) {
     builder.setContentTitle(notificationTitle)
     builder.setContentText(notificationContent)
     builder.setContentIntent(pendingIntent)
+
+    // 展開時はクラスタ構成 + 全コアの現在周波数を表示する
+    builder.setStyle(
+      NotificationCompat.BigTextStyle().bigText(makeFrequencyBigText(fi))
+    )
+
+    // アクション(常駐停止・設定)
+    addCommonActions(builder, service)
+
     return builder
+  }
+
+  /**
+   * 周波数通知の展開時テキストを生成する
+   */
+  private fun makeFrequencyBigText(fi: AllCoreFrequencyInfo): String {
+
+    val sb = StringBuilder(256)
+
+    // クラスタ構成(big.LITTLE)
+    val clusters = MyUtil.formatCpuClusters(fi.maxFreqs)
+    if (clusters.isNotEmpty()) {
+      sb.append(clusters).append('\n')
+    }
+
+    // 各コアの現在周波数
+    for (i in fi.freqs.indices) {
+      sb.append("Core").append(i + 1).append(": ")
+      val freq = fi.freqs[i]
+      if (freq > 0) {
+        sb.append(MyUtil.formatFreq(freq))
+      } else {
+        sb.append("-")
+      }
+      sb.append('\n')
+    }
+
+    return sb.toString().trimEnd()
   }
 
   companion object {
@@ -267,6 +387,10 @@ internal class NotificationPresenter(service: Service) {
     private const val MY_FREQ_NOTIFICATION_ID = 20
     private const val CHANNEL_ID_CPU_USAGE = "CPU Usage"
     private const val CHANNEL_ID_CPU_FREQUENCY = "CPU Frequency"
+
+    // PendingIntent の request code(通知タップ用の 0 と衝突しないこと)
+    private const val REQUEST_CODE_STOP = 1
+    private const val REQUEST_CODE_CONFIG = 2
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private fun createNotificationChannel(

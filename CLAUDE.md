@@ -74,6 +74,8 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
 - **`NotificationPresenter`**
   - 通知チャンネル 2 本(CPU Usage / CPU Frequency)を必要時に作成。
   - 「使用率通知」= 最大 2 アイコン(ID=10, 11)、「周波数通知」= 1 アイコン(ID=20、本文にバッテリー温度も表示)。requestForeground=true の間は最初の通知を `startForeground` に流用する。
+  - 展開時(BigTextStyle): 使用率通知は全コアの使用率+周波数と Battery/Memory サマリ、周波数通知はクラスタ構成(`MyUtil.formatCpuClusters`)+ 全コアの現在周波数。
+  - 通知アクション「常駐停止」(`ACTION_STOP_RESIDENT`)と「設定」(ConfigActivity)。設定変更は `ConfigActivity.onPause` → `ACTION_RELOAD_SETTINGS` でサービスに即反映される。
   - キーガード時は priority=MIN にしてロック画面から隠す。
   - `MyConfig` は保持せず、`updateNotifications()` / `cancelNotifications()` の引数で毎回受け取る。
 - **`ResourceUtil` / `:modules:quad5`(QuadResource)**

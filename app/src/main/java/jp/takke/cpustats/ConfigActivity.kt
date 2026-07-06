@@ -1,5 +1,6 @@
 package jp.takke.cpustats
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -56,6 +57,19 @@ class ConfigActivity : ComponentActivity() {
         ConfigScreen(onBack = { finish() })
       }
     }
+  }
+
+  override fun onPause() {
+
+    // 通知アクション等、MainActivity を経由せず開かれた場合でも設定変更を
+    // サービスに反映させる(常駐中のみ。常駐状態には影響しない)
+    if (UsageUpdateService.isResidentRunning) {
+      val intent = Intent(this, UsageUpdateService::class.java)
+      intent.action = UsageUpdateService.ACTION_RELOAD_SETTINGS
+      startService(intent)
+    }
+
+    super.onPause()
   }
 }
 

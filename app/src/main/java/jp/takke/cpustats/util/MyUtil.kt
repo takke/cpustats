@@ -140,6 +140,25 @@ object MyUtil {
   }
 
   /**
+   * CPU クラスタ構成の表示用整形(big.LITTLE 対応)
+   *
+   * cpuinfo_max_freq が同じコアを 1 クラスタとしてグループ化する
+   *
+   * @param maxFreqs 各コアの最大周波数(KHz)。0 は取得不可として無視する
+   * @return "4×1.8 GHz + 4×2.8 GHz" のような文字列(周波数昇順)。取得不可時は空文字
+   */
+  fun formatCpuClusters(maxFreqs: IntArray): String {
+
+    val groups = maxFreqs.filter { it > 0 }.groupBy { it }.toSortedMap()
+    if (groups.isEmpty()) {
+      return ""
+    }
+    return groups.entries.joinToString(" + ") { (freq, cores) ->
+      "${cores.size}×${formatFreq(freq)}"
+    }
+  }
+
+  /**
    * 最もアクティブなコアのインデックスを返す
    */
   fun getActiveCoreIndex(freqs: IntArray): Int {

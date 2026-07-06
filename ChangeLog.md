@@ -16,6 +16,9 @@ v3.0.0 (2026.07.xx)
 - Support per-app language preference (Android 13+)
 - Add adaptive icon with themed icon (Material You) support
 - Add home screen widget (CPU usage / frequency / battery temperature)
+- Expand notifications: per-core details on expand, Stop / Settings actions
+- Show CPU cluster configuration (e.g. "4×1.8 GHz + 4×2.8 GHz") on the main screen
+  and in the expanded frequency notification
 - Internal: Migrate all screens (Main / Config / About / History) to Jetpack Compose (Material3)
 - Internal: Remove AIDL (replaced with in-process local binder)
 - Internal: Replace gather thread with Kotlin coroutines

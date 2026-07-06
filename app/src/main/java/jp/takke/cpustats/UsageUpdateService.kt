@@ -35,6 +35,9 @@ class UsageUpdateService : Service() {
     // 常駐停止指示のアクション(クイック設定タイル等から使用)
     const val ACTION_STOP_RESIDENT = "jp.takke.cpustats.action.STOP_RESIDENT"
 
+    // 設定再読込指示のアクション(通知アクションから ConfigActivity を開いた場合等に使用)
+    const val ACTION_RELOAD_SETTINGS = "jp.takke.cpustats.action.RELOAD_SETTINGS"
+
     // 常駐中フラグ(クイック設定タイルの状態表示用。同一プロセス内でのみ参照可能)
     @Volatile
     var isResidentRunning = false
@@ -222,6 +225,13 @@ class UsageUpdateService : Service() {
       return START_NOT_STICKY
     }
 
+    // 設定再読込指示(常駐状態には影響させない)
+    if (intent?.action == ACTION_RELOAD_SETTINGS) {
+      MyLog.i("UsageUpdateService.onStartCommand[reload settings]")
+      reloadSettings()
+      return START_STICKY
+    }
+
     // 常駐開始(停止後の再開を含む)
     mStopResident = false
     isResidentRunning = true
@@ -327,9 +337,7 @@ class UsageUpdateService : Service() {
       // ステータスバーの通知
       mNotificationPresenter.updateNotifications(
         cpuUsages,
-        currentCpuClock,
-        minFreq,
-        maxFreq,
+        fi,
         systemStats,
         mRequestForeground,
         mConfig
