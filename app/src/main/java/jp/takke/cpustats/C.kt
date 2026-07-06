@@ -28,6 +28,9 @@ object C {
   // 履歴の保持期間[ms]
   const val HISTORY_RETENTION_MS = 24 * 60 * 60 * 1000L
 
+  // ホーム画面ウィジェットの最小更新間隔[ms](更新間隔 0.5 秒設定などでランチャーに負荷をかけないための下限)
+  const val WIDGET_UPDATE_MIN_INTERVAL_MS = 5 * 1000L
+
   // CPU使用率通知のアイコンモード
   const val PREF_KEY_CORE_DISTRIBUTION_MODE = "CoreDistributionMode"
   const val CORE_DISTRIBUTION_MODE_2ICONS = 0          // 最大2アイコン(デフォルト)

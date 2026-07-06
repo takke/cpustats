@@ -89,7 +89,7 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
   - `ui/component/Sparkline`: 全体使用率の折れ線(Compose Canvas 版)。
   - `ui/component/HistoryGraph`: 履歴の時系列グラフ(Compose Canvas 版、記録間隔の 3 倍で欠測分断)。
   - `CpuTileService`: クイック設定タイル(Android 7.0+)。タップで常駐 ON/OFF、パネル表示中は flags=0 で bind してライブ表示(タイル表示だけで収集を始めない)。
-  - `widget/CpuWidget` + `CpuWidgetReceiver`: ホーム画面ウィジェット(Glance)。表示は使用率アイコン + 「CPU N%」+ 周波数 + バッテリー温度。データは `widget/WidgetData`(@Volatile Snapshot)でプロセス内共有し、サービスの execTask ごとに `CpuWidget().updateAll(context)` で再描画(貼られていなければ no-op)。`updatePeriodMillis="0"` でシステム定期更新は無効、更新はサービス駆動。
+  - `widget/CpuWidget` + `CpuWidgetReceiver`: ホーム画面ウィジェット(Glance)。`SizeMode.Responsive` で 2x1(コンパクト)/ 3x1 以上(温度付き)の 2 レイアウト。データは `widget/WidgetData` でプロセス内共有し、サービスから最小 5 秒間隔 + 表示値変化時のみ更新。**`WidgetData` は必ず Compose の `mutableStateOf` で保持すること**: Glance はセッション型 composition のため、State でない値を読むと `updateAll()` を呼んでも再コンポーズされず、セッション再生成時(数分おき)にしか画面が更新されない。`updatePeriodMillis="0"` でシステム定期更新は無効、更新はサービス駆動。
   - `BootReceiver`: 起動時に `StartOnBoot`(デフォルト true)なら foreground service として `UsageUpdateService` を起動。
   - `NotificationPermissionUtil`: Android 13+ の `POST_NOTIFICATIONS` 許可導線(MainActivity 側は `rememberLauncherForActivityResult` で自前実装)。
 - **設定は `MyConfig`(immutable data class)+ `MyConfig.load(context)`**: `updateIntervalSec`(小数秒可 → ms 変換)、`showUsageNotification`、`showFrequencyNotification`、`coreDistributionMode`。設定変更後は `ConfigActivity` から戻った時に `MainActivity` がサービスの `reloadSettings()` を呼び、サービス側で新しい `MyConfig` に差し替え + 不要な通知を消去する。

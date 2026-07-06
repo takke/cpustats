@@ -78,6 +78,9 @@ class UsageUpdateService : Service() {
   // 履歴記録の前回記録時刻[ms]
   private var mLastRecordTime = 0L
 
+  // ホーム画面ウィジェットの前回更新時刻[ms]
+  private var mLastWidgetUpdateTime = 0L
+
   private var mLastExecTask = System.currentTimeMillis()
 
   // 収集ループ管理(ジョブの起動・停止はメインスレッドからのみ行う)
@@ -298,14 +301,9 @@ class UsageUpdateService : Service() {
     recordUsageLogIfNeeded(cpuUsages[0], currentCpuClock, systemStats)
 
     //-------------------------------------------------
-    // ウィジェット用の最新スナップショット更新
+    // ホーム画面ウィジェットの更新(間引きあり)
     //-------------------------------------------------
-    // ホーム画面ウィジェットが常時起動していないので、直近の値だけプロセス内で持っておく
-    WidgetData.update(
-      cpuUsage = cpuUsages[0],
-      cpuClock = currentCpuClock,
-      batteryTemperature = systemStats.batteryTemperature,
-    )
+    updateWidgetIfNeeded(cpuUsages[0], currentCpuClock, systemStats.batteryTemperature)
 
     //-------------------------------------------------
     // 通知判定
@@ -340,20 +338,33 @@ class UsageUpdateService : Service() {
 
       // コールバック経由で通知
       distributeToCallbacks(cpuUsages, fi, systemStats)
-
-      // ホーム画面ウィジェットを再描画(貼られていなければ内部で no-op)
-      updateWidget()
     }
 
     mLastExecTask = System.currentTimeMillis()
   }
 
   /**
-   * ホーム画面ウィジェットの再描画を指示する
+   * ホーム画面ウィジェットを更新する(前回更新から一定時間経過し、表示値に変化がある場合のみ)
    *
-   * ※GlanceAppWidget.updateAll は suspend fun。収集ループのコルーチンから呼ぶ
+   * WidgetData は Compose snapshot state なので、Glance セッションが生きている間は
+   * update() の書き込みだけで再コンポーズされる。updateAll() はセッションが閉じている
+   * 場合の再起動用(生きている場合は軽量なイベント送信で済む)。
    */
-  private fun updateWidget() {
+  private fun updateWidgetIfNeeded(cpuUsage: Int, cpuClock: Int, batteryTemperature: Int) {
+
+    val now = System.currentTimeMillis()
+    if (now - mLastWidgetUpdateTime < C.WIDGET_UPDATE_MIN_INTERVAL_MS) {
+      return
+    }
+
+    // 表示値に変化がなければ更新しない
+    val newSnapshot = WidgetData.Snapshot(cpuUsage, cpuClock, batteryTemperature)
+    if (newSnapshot == WidgetData.snapshot()) {
+      return
+    }
+
+    mLastWidgetUpdateTime = now
+    WidgetData.update(cpuUsage, cpuClock, batteryTemperature)
 
     mServiceScope.launch {
       try {
