@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+v3.0.1 (2026.08.03)
+-------------------
+
+- Update libraries
+    - Kotlin from 2.4.0 to 2.4.10
+    - AndroidX Activity from 1.11.0 to 1.13.0
+    - Compose BOM from 2025.10.00 to 2026.06.01
+    - ConstraintLayout from 2.2.1 to 2.2.2
+    - AndroidX Lifecycle from 2.9.4 to 2.11.0
+    - Kotlinx Coroutines from 1.10.2 to 1.11.0
+
 v3.0.0 (2026.07.06)
 -------------------
 
