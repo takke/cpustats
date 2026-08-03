@@ -1,4 +1,5 @@
 [versions]
+gradle = "9.3.1"
 kotlin = "2.4.10"
 # AndroidX Annotation
 annotation = "1.10.0"
@@ -45,6 +46,7 @@ androidx-glance-material3 = { module = "androidx.glance:glance-material3", versi
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preference-ktx" }
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjCore" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectricVersion" }
