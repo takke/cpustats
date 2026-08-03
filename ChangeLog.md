@@ -6,6 +6,7 @@ v3.0.1 (2026.08.03)
 
 - Update libraries
     - Kotlin from 2.4.0 to 2.4.10
+    - AGP from 9.2.1 to 9.3.1
     - AndroidX Activity from 1.11.0 to 1.13.0
     - Compose BOM from 2025.10.00 to 2026.06.01
     - ConstraintLayout from 2.2.1 to 2.2.2
