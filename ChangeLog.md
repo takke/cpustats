@@ -4,6 +4,7 @@ Change Log
 v3.0.1 (2026.08.03)
 -------------------
 
+- targetSdkVersion 35 -> 36 (Android 16)
 - Update libraries
     - Kotlin from 2.4.0 to 2.4.10
     - AGP from 9.2.1 to 9.3.1
