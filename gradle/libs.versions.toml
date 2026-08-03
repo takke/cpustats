@@ -1,6 +1,5 @@
 [versions]
 kotlin = "2.4.0"
-agp = "9.2.1"
 # AndroidX Annotation
 annotation = "1.10.0"
 # AndroidX AppCompat
