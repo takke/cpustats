@@ -28,6 +28,10 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # デフォルトの "tools platform-tools" のうち旧 SDK Tools ("tools") は
+          # cmdline-tools 16.0 のリポジトリから削除され失敗するため、platform-tools のみ指定する
+          packages: 'platform-tools'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
