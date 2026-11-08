@@ -1,22 +1,22 @@
 [versions]
-gradle = "9.3.1"
-kotlin = "2.4.10"
+gradle = "9.5.1"
+kotlin = "2.4.21"
 # AndroidX Annotation
-annotation = "1.10.0"
+annotation = "1.11.0"
 # AndroidX AppCompat
-appcompat = "1.7.1"
+appcompat = "1.8.0"
 # AssertJ
 assertjCore = "3.27.7"
 # AndroidX Activity(activity-compose を含む)
 activity = "1.13.0"
 # Compose BOM(BOM が Compose UI/Foundation/Material3 のバージョンを揃える)
-composeBom = "2026.06.01"
+composeBom = "2026.09.00"
 # ConstraintLayout
 constraintlayout = "2.2.2"
 # AndroidX Core
-core-ktx = "1.19.0"
+core-ktx = "1.19.1"
 # AndroidX Glance(AppWidget for Compose)
-glance = "1.1.1"
+glance = "1.2.0"
 # AndroidX Lifecycle(runtime-compose / viewmodel-compose)
 lifecycle = "2.11.0"
 # Preference-ktx
@@ -26,7 +26,7 @@ junit = "4.13.2"
 # Kotlinx Coroutines
 kotlinxCoroutines = "1.11.0"
 # Robolectric
-robolectricVersion = "4.16.1"
+robolectricVersion = "4.17"
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }

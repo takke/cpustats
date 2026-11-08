@@ -8,6 +8,16 @@ Unreleased
 - Localize notification channel names, history graph titles and battery/memory labels
 - Support RTL layout
 - Frequency notification text: "Max Freq … Min Freq …" -> "500 MHz - 2.8 GHz" (same format as the main screen)
+- Update libraries
+    - Kotlin from 2.4.10 to 2.4.21
+    - Gradle from 9.6.1 to 9.8.2
+    - AGP from 9.3.1 to 9.5.1
+    - AndroidX Annotation from 1.10.0 to 1.11.0
+    - AndroidX AppCompat from 1.7.1 to 1.8.0
+    - AndroidX Core from 1.19.0 to 1.19.1
+    - Compose BOM from 2026.06.01 to 2026.09.00
+    - Glance from 1.1.1 to 1.2.0
+    - Robolectric from 4.16.1 to 4.17
 
 v3.0.1 (2026.08.03)
 -------------------
