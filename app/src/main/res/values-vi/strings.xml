@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Cài đặt</string>
+    <string name="title_activity_about">Giới thiệu</string>
+    <string name="title_activity_history">Lịch sử</string>
+    <string name="history_no_data">Chưa có dữ liệu nào được ghi</string>
+    <string name="menu_settings">Cài đặt</string>
+    <string name="menu_start_service">Hiện thông báo</string>
+    <string name="menu_stop_service">Ẩn thông báo</string>
+    <string name="menu_exit">Thoát</string>
+    <string name="require_notification_permission">Cần quyền thông báo</string>
+    <string name="config_general_category_title">Chung</string>
+    <string name="config_record_history_title">Ghi lịch sử</string>
+    <string name="config_record_history_summary">Ghi mức sử dụng CPU, v.v. mỗi 10 giây (lưu trong 24 giờ)</string>
+    <string name="config_update_interval_title">Khoảng thời gian cập nhật</string>
+    <string name="config_start_on_boot_title">Khi khởi động</string>
+    <string name="config_start_on_boot_summary">Hiện thông báo khi khởi động thiết bị</string>
+    <string name="config_frequency_category_title">Tần số CPU</string>
+    <string name="config_show_frequency_notification">Thông báo</string>
+    <string name="config_usage_category_title">Mức sử dụng CPU</string>
+    <string name="config_show_usage_notification">Thông báo</string>
+    <string name="config_core_distribution_mode">Số biểu tượng</string>
+    <string name="config_core_distribution_mode_summary">Số lượng và thứ tự biểu tượng thông báo</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 biểu tượng (tối đa)</item>
+        <item>1 biểu tượng (không sắp xếp)</item>
+        <item>1 biểu tượng (sắp xếp)</item>
+    </string-array>
+
+    <string name="label_battery">Pin</string>
+    <string name="label_memory">Bộ nhớ</string>
+    <string name="label_cores">Lõi</string>
+    <string name="history_battery_temperature">Nhiệt độ pin</string>
+    <string name="content_description_back">Quay lại</string>
+    <string name="content_description_more">Thêm</string>
+
+</resources>

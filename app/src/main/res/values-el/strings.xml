@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Ρυθμίσεις</string>
+    <string name="title_activity_about">Πληροφορίες</string>
+    <string name="title_activity_history">Ιστορικό</string>
+    <string name="history_no_data">Δεν έχουν καταγραφεί δεδομένα ακόμη</string>
+    <string name="menu_settings">Ρυθμίσεις</string>
+    <string name="menu_start_service">Εμφάνιση ειδοποίησης</string>
+    <string name="menu_stop_service">Απόκρυψη ειδοποίησης</string>
+    <string name="menu_exit">Έξοδος</string>
+    <string name="require_notification_permission">Απαιτείται άδεια ειδοποιήσεων</string>
+    <string name="config_general_category_title">Γενικά</string>
+    <string name="config_record_history_title">Καταγραφή ιστορικού</string>
+    <string name="config_record_history_summary">Καταγράφει τη χρήση CPU κ.λπ. κάθε 10 δευτερόλεπτα (διατηρείται για 24 ώρες)</string>
+    <string name="config_update_interval_title">Διάστημα ενημέρωσης</string>
+    <string name="config_start_on_boot_title">Κατά την εκκίνηση</string>
+    <string name="config_start_on_boot_summary">Εμφάνιση ειδοποίησης κατά την εκκίνηση της συσκευής</string>
+    <string name="config_frequency_category_title">Συχνότητα CPU</string>
+    <string name="config_show_frequency_notification">Ειδοποίηση</string>
+    <string name="config_usage_category_title">Χρήση CPU</string>
+    <string name="config_show_usage_notification">Ειδοποίηση</string>
+    <string name="config_core_distribution_mode">Αριθμός εικονιδίων</string>
+    <string name="config_core_distribution_mode_summary">Αριθμός και σειρά εικονιδίων ειδοποίησης</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 εικονίδια (μέγ.)</item>
+        <item>1 εικονίδιο (χωρίς ταξινόμηση)</item>
+        <item>1 εικονίδιο (ταξινομημένο)</item>
+    </string-array>
+
+    <string name="label_battery">Μπαταρία</string>
+    <string name="label_memory">Μνήμη</string>
+    <string name="label_cores">Πυρήνες</string>
+    <string name="history_battery_temperature">Θερμοκρασία μπαταρίας</string>
+    <string name="content_description_back">Πίσω</string>
+    <string name="content_description_more">Περισσότερα</string>
+
+</resources>

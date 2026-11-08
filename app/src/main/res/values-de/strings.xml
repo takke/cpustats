@@ -34,4 +34,11 @@
         <item>1 Icon (sortiert)</item>
     </string-array>
 
+    <string name="label_battery">Akku</string>
+    <string name="label_memory">Speicher</string>
+    <string name="label_cores">Kerne</string>
+    <string name="history_battery_temperature">Akkutemperatur</string>
+    <string name="content_description_back">Zurück</string>
+    <string name="content_description_more">Weitere Optionen</string>
+
 </resources>

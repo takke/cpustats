@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Impostazioni</string>
+    <string name="title_activity_about">Informazioni</string>
+    <string name="title_activity_history">Cronologia</string>
+    <string name="history_no_data">Nessun dato ancora registrato</string>
+    <string name="menu_settings">Impostazioni</string>
+    <string name="menu_start_service">Mostra notifica</string>
+    <string name="menu_stop_service">Nascondi notifica</string>
+    <string name="menu_exit">Esci</string>
+    <string name="require_notification_permission">È necessaria l\'autorizzazione alle notifiche</string>
+    <string name="config_general_category_title">Generale</string>
+    <string name="config_record_history_title">Registra cronologia</string>
+    <string name="config_record_history_summary">Registra l\'utilizzo della CPU ecc. ogni 10 secondi (conservato per 24 ore)</string>
+    <string name="config_update_interval_title">Intervallo di aggiornamento</string>
+    <string name="config_start_on_boot_title">All\'avvio</string>
+    <string name="config_start_on_boot_summary">Mostra la notifica all\'avvio del dispositivo</string>
+    <string name="config_frequency_category_title">Frequenza CPU</string>
+    <string name="config_show_frequency_notification">Notifica</string>
+    <string name="config_usage_category_title">Utilizzo CPU</string>
+    <string name="config_show_usage_notification">Notifica</string>
+    <string name="config_core_distribution_mode">Numero di icone</string>
+    <string name="config_core_distribution_mode_summary">Numero e ordine delle icone di notifica</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 icone (max)</item>
+        <item>1 icona (non ordinata)</item>
+        <item>1 icona (ordinata)</item>
+    </string-array>
+
+    <string name="label_battery">Batteria</string>
+    <string name="label_memory">Memoria</string>
+    <string name="label_cores">Core</string>
+    <string name="history_battery_temperature">Temperatura batteria</string>
+    <string name="content_description_back">Indietro</string>
+    <string name="content_description_more">Altro</string>
+
+</resources>

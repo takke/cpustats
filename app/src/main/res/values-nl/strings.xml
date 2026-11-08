@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Instellingen</string>
+    <string name="title_activity_about">Over</string>
+    <string name="title_activity_history">Geschiedenis</string>
+    <string name="history_no_data">Nog geen gegevens vastgelegd</string>
+    <string name="menu_settings">Instellingen</string>
+    <string name="menu_start_service">Melding tonen</string>
+    <string name="menu_stop_service">Melding verbergen</string>
+    <string name="menu_exit">Afsluiten</string>
+    <string name="require_notification_permission">Toestemming voor meldingen vereist</string>
+    <string name="config_general_category_title">Algemeen</string>
+    <string name="config_record_history_title">Geschiedenis vastleggen</string>
+    <string name="config_record_history_summary">Legt elke 10 seconden het CPU-gebruik enz. vast (24 uur bewaard)</string>
+    <string name="config_update_interval_title">Update-interval</string>
+    <string name="config_start_on_boot_title">Bij opstarten</string>
+    <string name="config_start_on_boot_summary">Melding tonen bij het opstarten van het apparaat</string>
+    <string name="config_frequency_category_title">CPU-frequentie</string>
+    <string name="config_show_frequency_notification">Melding</string>
+    <string name="config_usage_category_title">CPU-gebruik</string>
+    <string name="config_show_usage_notification">Melding</string>
+    <string name="config_core_distribution_mode">Aantal pictogrammen</string>
+    <string name="config_core_distribution_mode_summary">Aantal en volgorde van meldingspictogrammen</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 pictogrammen (max)</item>
+        <item>1 pictogram (ongesorteerd)</item>
+        <item>1 pictogram (gesorteerd)</item>
+    </string-array>
+
+    <string name="label_battery">Batterij</string>
+    <string name="label_memory">Geheugen</string>
+    <string name="label_cores">Kernen</string>
+    <string name="history_battery_temperature">Batterijtemperatuur</string>
+    <string name="content_description_back">Terug</string>
+    <string name="content_description_more">Meer</string>
+
+</resources>

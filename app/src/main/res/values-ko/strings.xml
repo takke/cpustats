@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">설정</string>
+    <string name="title_activity_about">정보</string>
+    <string name="title_activity_history">기록</string>
+    <string name="history_no_data">아직 기록된 데이터가 없습니다</string>
+    <string name="menu_settings">설정</string>
+    <string name="menu_start_service">알림 표시</string>
+    <string name="menu_stop_service">알림 숨기기</string>
+    <string name="menu_exit">종료</string>
+    <string name="require_notification_permission">알림 권한이 필요합니다</string>
+    <string name="config_general_category_title">일반</string>
+    <string name="config_record_history_title">기록 저장</string>
+    <string name="config_record_history_summary">10초마다 CPU 사용률 등을 기록합니다(24시간 보관)</string>
+    <string name="config_update_interval_title">업데이트 간격</string>
+    <string name="config_start_on_boot_title">부팅 시 시작</string>
+    <string name="config_start_on_boot_summary">기기 부팅 시 알림을 표시합니다</string>
+    <string name="config_frequency_category_title">CPU 클럭</string>
+    <string name="config_show_frequency_notification">알림</string>
+    <string name="config_usage_category_title">CPU 사용률</string>
+    <string name="config_show_usage_notification">알림</string>
+    <string name="config_core_distribution_mode">아이콘 수</string>
+    <string name="config_core_distribution_mode_summary">알림 아이콘의 수와 정렬 순서</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>아이콘 2개(최대)</item>
+        <item>아이콘 1개(정렬 안 함)</item>
+        <item>아이콘 1개(정렬)</item>
+    </string-array>
+
+    <string name="label_battery">배터리</string>
+    <string name="label_memory">메모리</string>
+    <string name="label_cores">코어</string>
+    <string name="history_battery_temperature">배터리 온도</string>
+    <string name="content_description_back">뒤로</string>
+    <string name="content_description_more">더보기</string>
+
+</resources>

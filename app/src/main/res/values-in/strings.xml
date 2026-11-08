@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Setelan</string>
+    <string name="title_activity_about">Tentang</string>
+    <string name="title_activity_history">Riwayat</string>
+    <string name="history_no_data">Belum ada data yang direkam</string>
+    <string name="menu_settings">Setelan</string>
+    <string name="menu_start_service">Tampilkan Notifikasi</string>
+    <string name="menu_stop_service">Sembunyikan Notifikasi</string>
+    <string name="menu_exit">Keluar</string>
+    <string name="require_notification_permission">Memerlukan izin notifikasi</string>
+    <string name="config_general_category_title">Umum</string>
+    <string name="config_record_history_title">Rekam Riwayat</string>
+    <string name="config_record_history_summary">Merekam penggunaan CPU dll. setiap 10 detik (disimpan selama 24 jam)</string>
+    <string name="config_update_interval_title">Interval Pembaruan</string>
+    <string name="config_start_on_boot_title">Saat Booting</string>
+    <string name="config_start_on_boot_summary">Tampilkan notifikasi saat perangkat dinyalakan</string>
+    <string name="config_frequency_category_title">Frekuensi CPU</string>
+    <string name="config_show_frequency_notification">Notifikasi</string>
+    <string name="config_usage_category_title">Penggunaan CPU</string>
+    <string name="config_show_usage_notification">Notifikasi</string>
+    <string name="config_core_distribution_mode">Jumlah Ikon</string>
+    <string name="config_core_distribution_mode_summary">Jumlah dan urutan ikon notifikasi</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 Ikon (maks)</item>
+        <item>1 Ikon (tidak diurutkan)</item>
+        <item>1 Ikon (diurutkan)</item>
+    </string-array>
+
+    <string name="label_battery">Baterai</string>
+    <string name="label_memory">Memori</string>
+    <string name="label_cores">Inti</string>
+    <string name="history_battery_temperature">Suhu Baterai</string>
+    <string name="content_description_back">Kembali</string>
+    <string name="content_description_more">Lainnya</string>
+
+</resources>

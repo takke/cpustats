@@ -332,12 +332,12 @@ private fun FrequencyRow(state: MainState) {
       // クラスタ構成(big.LITTLE)
       val clusters = MyUtil.formatCpuClusters(maxFreqs)
       if (clusters.isNotEmpty()) {
-        Text(" Cores: $clusters", style = MaterialTheme.typography.bodySmall)
+        Text(" ${stringResource(R.string.label_cores)}: $clusters", style = MaterialTheme.typography.bodySmall)
       }
 
       if (state.systemStats.batteryTemperature != 0) {
         Text(
-          text = " Battery: ${MyUtil.formatTemperature(state.systemStats.batteryTemperature)}",
+          text = " ${stringResource(R.string.label_battery)}: ${MyUtil.formatTemperature(state.systemStats.batteryTemperature)}",
           style = MaterialTheme.typography.bodySmall,
         )
       }
@@ -346,7 +346,7 @@ private fun FrequencyRow(state: MainState) {
           state.systemStats.memUsedMb * 100 / state.systemStats.memTotalMb
         val used = MyUtil.formatMemSize(state.systemStats.memUsedMb)
         val total = MyUtil.formatMemSize(state.systemStats.memTotalMb)
-        Text(" Memory: $used / $total ($pct%)", style = MaterialTheme.typography.bodySmall)
+        Text(" ${stringResource(R.string.label_memory)}: $used / $total ($pct%)", style = MaterialTheme.typography.bodySmall)
       }
     }
   }
@@ -411,7 +411,7 @@ private fun OverflowMenu(
   var expanded by remember { mutableStateOf(false) }
 
   IconButton(onClick = { expanded = true }) {
-    Icon(Icons.Filled.MoreVert, contentDescription = "More")
+    Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.content_description_more))
   }
   DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
     if (!state.serviceRunning) {

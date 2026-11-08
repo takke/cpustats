@@ -106,7 +106,7 @@ private fun HistoryScreen(onBack: () -> Unit) {
         title = { Text(stringResource(R.string.title_activity_history)) },
         navigationIcon = {
           IconButton(onClick = onBack) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+            Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back))
           }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -151,7 +151,7 @@ private fun HistoryScreen(onBack: () -> Unit) {
           Text(stringResource(R.string.history_no_data))
         }
       } else {
-        GraphSection("CPU Usage") {
+        GraphSection(stringResource(R.string.config_usage_category_title)) {
           HistoryGraph(
             points = rows.map { it.recordedAt to it.cpuUsage },
             fromTime = fromTime,
@@ -164,7 +164,7 @@ private fun HistoryScreen(onBack: () -> Unit) {
           )
         }
 
-        GraphSection("Battery Temperature") {
+        GraphSection(stringResource(R.string.history_battery_temperature)) {
           HistoryGraph(
             points = rows.map { it.recordedAt to it.batteryTemperature },
             fromTime = fromTime,
@@ -176,7 +176,7 @@ private fun HistoryScreen(onBack: () -> Unit) {
           )
         }
 
-        GraphSection("Memory") {
+        GraphSection(stringResource(R.string.label_memory)) {
           HistoryGraph(
             points = rows.map { it.recordedAt to it.memUsedMb },
             fromTime = fromTime,

@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Inställningar</string>
+    <string name="title_activity_about">Om</string>
+    <string name="title_activity_history">Historik</string>
+    <string name="history_no_data">Inga data har registrerats ännu</string>
+    <string name="menu_settings">Inställningar</string>
+    <string name="menu_start_service">Visa avisering</string>
+    <string name="menu_stop_service">Dölj avisering</string>
+    <string name="menu_exit">Avsluta</string>
+    <string name="require_notification_permission">Behörighet för aviseringar krävs</string>
+    <string name="config_general_category_title">Allmänt</string>
+    <string name="config_record_history_title">Spara historik</string>
+    <string name="config_record_history_summary">Registrerar CPU-användning m.m. var 10:e sekund (sparas i 24 timmar)</string>
+    <string name="config_update_interval_title">Uppdateringsintervall</string>
+    <string name="config_start_on_boot_title">Vid start</string>
+    <string name="config_start_on_boot_summary">Visa avisering när enheten startar</string>
+    <string name="config_frequency_category_title">CPU-frekvens</string>
+    <string name="config_show_frequency_notification">Avisering</string>
+    <string name="config_usage_category_title">CPU-användning</string>
+    <string name="config_show_usage_notification">Avisering</string>
+    <string name="config_core_distribution_mode">Antal ikoner</string>
+    <string name="config_core_distribution_mode_summary">Antal och ordning för aviseringsikoner</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 ikoner (max)</item>
+        <item>1 ikon (osorterad)</item>
+        <item>1 ikon (sorterad)</item>
+    </string-array>
+
+    <string name="label_battery">Batteri</string>
+    <string name="label_memory">Minne</string>
+    <string name="label_cores">Kärnor</string>
+    <string name="history_battery_temperature">Batteritemperatur</string>
+    <string name="content_description_back">Tillbaka</string>
+    <string name="content_description_more">Mer</string>
+
+</resources>

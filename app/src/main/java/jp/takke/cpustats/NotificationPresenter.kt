@@ -75,7 +75,7 @@ internal class NotificationPresenter(service: Service) {
       }
 
       // Android O (8.0) 以降では通知チャンネルが必要
-      createNotificationChannel(service, CHANNEL_ID_CPU_USAGE, "CPU Usage")
+      createNotificationChannel(service, CHANNEL_ID_CPU_USAGE, service.getString(R.string.config_usage_category_title))
 
       // Notification(icon1)
       if (data.isNotEmpty()) {
@@ -109,7 +109,7 @@ internal class NotificationPresenter(service: Service) {
     if (currentCpuClock > 0 && config.showFrequencyNotification) {
 
       // Android O (8.0) 以降では通知チャンネルが必要
-      createNotificationChannel(service, CHANNEL_ID_CPU_FREQUENCY, "CPU Frequency")
+      createNotificationChannel(service, CHANNEL_ID_CPU_FREQUENCY, service.getString(R.string.config_frequency_category_title))
 
       doNotify(
         MY_FREQ_NOTIFICATION_ID,
@@ -164,7 +164,10 @@ internal class NotificationPresenter(service: Service) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
       val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-      if (manager.getNotificationChannel(channelId) == null) {
+      // 未作成の場合、または言語変更でチャンネル名が変わった場合は作成(更新)する
+      // (同じ ID で createNotificationChannel を呼ぶと名前だけが更新される)
+      val existing = manager.getNotificationChannel(channelId)
+      if (existing == null || existing.name != channelName) {
         createNotificationChannel(manager, channelId, channelName)
       }
     }
@@ -192,12 +195,12 @@ internal class NotificationPresenter(service: Service) {
     systemStats: SystemStats
   ): NotificationCompat.Builder {
 
-    val notificationTitle0 = "CPU Usage"
+    val service = mServiceRef.get()!!
+    val notificationTitle0 = service.getString(R.string.config_usage_category_title)
 
     val cpuUsages = data.cpuUsages
     val totalUsage = if (cpuUsages == null) 0 else cpuUsages[0]
     val iconId = ResourceUtil.getIconIdForCpuUsage(cpuUsages)
-    val service = mServiceRef.get()!!
     val builder = NotificationCompat.Builder(service, CHANNEL_ID_CPU_USAGE)
 
     builder.setSmallIcon(iconId)
@@ -258,6 +261,7 @@ internal class NotificationPresenter(service: Service) {
     systemStats: SystemStats
   ): String {
 
+    val service = mServiceRef.get()!!
     val sb = StringBuilder(256)
 
     val coreCount = allCpuUsages.size - 1
@@ -274,13 +278,13 @@ internal class NotificationPresenter(service: Service) {
     // バッテリー温度・メモリのサマリ
     val summary = StringBuilder()
     if (systemStats.batteryTemperature != 0) {
-      summary.append("Battery ").append(MyUtil.formatTemperature(systemStats.batteryTemperature))
+      summary.append(service.getString(R.string.label_battery)).append(' ').append(MyUtil.formatTemperature(systemStats.batteryTemperature))
     }
     if (systemStats.memTotalMb > 0) {
       if (summary.isNotEmpty()) {
         summary.append("  ")
       }
-      summary.append("Memory ")
+      summary.append(service.getString(R.string.label_memory)).append(' ')
         .append(MyUtil.formatMemSize(systemStats.memUsedMb))
         .append(" / ")
         .append(MyUtil.formatMemSize(systemStats.memTotalMb))
@@ -312,10 +316,10 @@ internal class NotificationPresenter(service: Service) {
   ): NotificationCompat.Builder {
 
     // 通知ウインドウのメッセージ
-    val notificationTitle0 = "CPU Frequency"
+    val service = mServiceRef.get()!!
+    val notificationTitle0 = service.getString(R.string.config_frequency_category_title)
 
     val iconId = ResourceUtil.getIconIdForCpuFreq(currentCpuClock)
-    val service = mServiceRef.get()!!
     val builder = NotificationCompat.Builder(service, CHANNEL_ID_CPU_FREQUENCY)
 
     builder.setSmallIcon(iconId)

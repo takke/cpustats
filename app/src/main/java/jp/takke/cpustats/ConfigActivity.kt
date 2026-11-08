@@ -89,7 +89,7 @@ private fun ConfigScreen(onBack: () -> Unit) {
         title = { Text(stringResource(R.string.title_activity_config)) },
         navigationIcon = {
           IconButton(onClick = onBack) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+            Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.content_description_back))
           }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -294,7 +294,7 @@ private fun ListPreference(
         }
       },
       confirmButton = {
-        TextButton(onClick = { showDialog = false }) { Text("Cancel") }
+        TextButton(onClick = { showDialog = false }) { Text(stringResource(android.R.string.cancel)) }
       }
     )
   }

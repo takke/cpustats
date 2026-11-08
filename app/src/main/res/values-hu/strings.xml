@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Beállítások</string>
+    <string name="title_activity_about">Névjegy</string>
+    <string name="title_activity_history">Előzmények</string>
+    <string name="history_no_data">Még nincs rögzített adat</string>
+    <string name="menu_settings">Beállítások</string>
+    <string name="menu_start_service">Értesítés megjelenítése</string>
+    <string name="menu_stop_service">Értesítés elrejtése</string>
+    <string name="menu_exit">Kilépés</string>
+    <string name="require_notification_permission">Értesítési engedély szükséges</string>
+    <string name="config_general_category_title">Általános</string>
+    <string name="config_record_history_title">Előzmények rögzítése</string>
+    <string name="config_record_history_summary">10 másodpercenként rögzíti a CPU-használatot stb. (24 óráig megőrizve)</string>
+    <string name="config_update_interval_title">Frissítési időköz</string>
+    <string name="config_start_on_boot_title">Indításkor</string>
+    <string name="config_start_on_boot_summary">Értesítés megjelenítése az eszköz indításakor</string>
+    <string name="config_frequency_category_title">CPU-frekvencia</string>
+    <string name="config_show_frequency_notification">Értesítés</string>
+    <string name="config_usage_category_title">CPU-használat</string>
+    <string name="config_show_usage_notification">Értesítés</string>
+    <string name="config_core_distribution_mode">Ikonok száma</string>
+    <string name="config_core_distribution_mode_summary">Az értesítési ikonok száma és sorrendje</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 ikon (max.)</item>
+        <item>1 ikon (rendezetlen)</item>
+        <item>1 ikon (rendezett)</item>
+    </string-array>
+
+    <string name="label_battery">Akkumulátor</string>
+    <string name="label_memory">Memória</string>
+    <string name="label_cores">Magok</string>
+    <string name="history_battery_temperature">Akkumulátor hőmérséklete</string>
+    <string name="content_description_back">Vissza</string>
+    <string name="content_description_more">Továbbiak</string>
+
+</resources>

@@ -34,4 +34,11 @@
         <item>1 Ikona (seřazeny)</item>
     </string-array>
 
+    <string name="label_battery">Baterie</string>
+    <string name="label_memory">Paměť</string>
+    <string name="label_cores">Jádra</string>
+    <string name="history_battery_temperature">Teplota baterie</string>
+    <string name="content_description_back">Zpět</string>
+    <string name="content_description_more">Další možnosti</string>
+
 </resources>

@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Setări</string>
+    <string name="title_activity_about">Despre</string>
+    <string name="title_activity_history">Istoric</string>
+    <string name="history_no_data">Nu există încă date înregistrate</string>
+    <string name="menu_settings">Setări</string>
+    <string name="menu_start_service">Afișează notificarea</string>
+    <string name="menu_stop_service">Ascunde notificarea</string>
+    <string name="menu_exit">Ieșire</string>
+    <string name="require_notification_permission">Este necesară permisiunea pentru notificări</string>
+    <string name="config_general_category_title">General</string>
+    <string name="config_record_history_title">Înregistrează istoricul</string>
+    <string name="config_record_history_summary">Înregistrează utilizarea CPU etc. la fiecare 10 secunde (păstrat 24 de ore)</string>
+    <string name="config_update_interval_title">Interval de actualizare</string>
+    <string name="config_start_on_boot_title">La pornire</string>
+    <string name="config_start_on_boot_summary">Afișează notificarea la pornirea dispozitivului</string>
+    <string name="config_frequency_category_title">Frecvența CPU</string>
+    <string name="config_show_frequency_notification">Notificare</string>
+    <string name="config_usage_category_title">Utilizare CPU</string>
+    <string name="config_show_usage_notification">Notificare</string>
+    <string name="config_core_distribution_mode">Număr de pictograme</string>
+    <string name="config_core_distribution_mode_summary">Numărul și ordinea pictogramelor de notificare</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 pictograme (max.)</item>
+        <item>1 pictogramă (nesortat)</item>
+        <item>1 pictogramă (sortat)</item>
+    </string-array>
+
+    <string name="label_battery">Baterie</string>
+    <string name="label_memory">Memorie</string>
+    <string name="label_cores">Nuclee</string>
+    <string name="history_battery_temperature">Temperatura bateriei</string>
+    <string name="content_description_back">Înapoi</string>
+    <string name="content_description_more">Mai multe</string>
+
+</resources>

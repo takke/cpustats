@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">الإعدادات</string>
+    <string name="title_activity_about">حول</string>
+    <string name="title_activity_history">السجل</string>
+    <string name="history_no_data">لم يتم تسجيل أي بيانات بعد</string>
+    <string name="menu_settings">الإعدادات</string>
+    <string name="menu_start_service">إظهار الإشعار</string>
+    <string name="menu_stop_service">إخفاء الإشعار</string>
+    <string name="menu_exit">خروج</string>
+    <string name="require_notification_permission">يلزم إذن الإشعارات</string>
+    <string name="config_general_category_title">عام</string>
+    <string name="config_record_history_title">تسجيل السجل</string>
+    <string name="config_record_history_summary">يسجّل استخدام المعالج وغيره كل 10 ثوانٍ (يُحتفظ به لمدة 24 ساعة)</string>
+    <string name="config_update_interval_title">الفاصل الزمني للتحديث</string>
+    <string name="config_start_on_boot_title">عند التشغيل</string>
+    <string name="config_start_on_boot_summary">إظهار الإشعار عند تشغيل الجهاز</string>
+    <string name="config_frequency_category_title">تردد المعالج</string>
+    <string name="config_show_frequency_notification">الإشعار</string>
+    <string name="config_usage_category_title">استخدام المعالج</string>
+    <string name="config_show_usage_notification">الإشعار</string>
+    <string name="config_core_distribution_mode">عدد الأيقونات</string>
+    <string name="config_core_distribution_mode_summary">عدد أيقونات الإشعار وترتيبها</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>أيقونتان (الحد الأقصى)</item>
+        <item>أيقونة واحدة (بدون ترتيب)</item>
+        <item>أيقونة واحدة (مرتّبة)</item>
+    </string-array>
+
+    <string name="label_battery">البطارية</string>
+    <string name="label_memory">الذاكرة</string>
+    <string name="label_cores">الأنوية</string>
+    <string name="history_battery_temperature">حرارة البطارية</string>
+    <string name="content_description_back">رجوع</string>
+    <string name="content_description_more">المزيد</string>
+
+</resources>

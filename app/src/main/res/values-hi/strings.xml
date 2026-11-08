@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">सेटिंग्स</string>
+    <string name="title_activity_about">जानकारी</string>
+    <string name="title_activity_history">इतिहास</string>
+    <string name="history_no_data">अभी तक कोई डेटा रिकॉर्ड नहीं हुआ</string>
+    <string name="menu_settings">सेटिंग्स</string>
+    <string name="menu_start_service">सूचना दिखाएं</string>
+    <string name="menu_stop_service">सूचना छिपाएं</string>
+    <string name="menu_exit">बाहर निकलें</string>
+    <string name="require_notification_permission">सूचना की अनुमति आवश्यक है</string>
+    <string name="config_general_category_title">सामान्य</string>
+    <string name="config_record_history_title">इतिहास रिकॉर्ड करें</string>
+    <string name="config_record_history_summary">हर 10 सेकंड में CPU उपयोग आदि रिकॉर्ड करता है (24 घंटे तक रखा जाता है)</string>
+    <string name="config_update_interval_title">अपडेट अंतराल</string>
+    <string name="config_start_on_boot_title">बूट पर</string>
+    <string name="config_start_on_boot_summary">डिवाइस चालू होने पर सूचना दिखाएं</string>
+    <string name="config_frequency_category_title">CPU फ़्रीक्वेंसी</string>
+    <string name="config_show_frequency_notification">सूचना</string>
+    <string name="config_usage_category_title">CPU उपयोग</string>
+    <string name="config_show_usage_notification">सूचना</string>
+    <string name="config_core_distribution_mode">आइकन की संख्या</string>
+    <string name="config_core_distribution_mode_summary">सूचना आइकन की संख्या और क्रम</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 आइकन (अधिकतम)</item>
+        <item>1 आइकन (बिना क्रम)</item>
+        <item>1 आइकन (क्रमबद्ध)</item>
+    </string-array>
+
+    <string name="label_battery">बैटरी</string>
+    <string name="label_memory">मेमोरी</string>
+    <string name="label_cores">कोर</string>
+    <string name="history_battery_temperature">बैटरी तापमान</string>
+    <string name="content_description_back">वापस</string>
+    <string name="content_description_more">अधिक</string>
+
+</resources>

@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Ajustes</string>
+    <string name="title_activity_about">Acerca de</string>
+    <string name="title_activity_history">Historial</string>
+    <string name="history_no_data">Aún no hay datos registrados</string>
+    <string name="menu_settings">Ajustes</string>
+    <string name="menu_start_service">Mostrar notificación</string>
+    <string name="menu_stop_service">Ocultar notificación</string>
+    <string name="menu_exit">Salir</string>
+    <string name="require_notification_permission">Se requiere permiso de notificaciones</string>
+    <string name="config_general_category_title">General</string>
+    <string name="config_record_history_title">Registrar historial</string>
+    <string name="config_record_history_summary">Registra el uso de CPU, etc. cada 10 segundos (se conserva 24 horas)</string>
+    <string name="config_update_interval_title">Intervalo de actualización</string>
+    <string name="config_start_on_boot_title">Al iniciar</string>
+    <string name="config_start_on_boot_summary">Mostrar la notificación al iniciar el dispositivo</string>
+    <string name="config_frequency_category_title">Frecuencia de CPU</string>
+    <string name="config_show_frequency_notification">Notificación</string>
+    <string name="config_usage_category_title">Uso de CPU</string>
+    <string name="config_show_usage_notification">Notificación</string>
+    <string name="config_core_distribution_mode">Número de iconos</string>
+    <string name="config_core_distribution_mode_summary">Número y orden de los iconos de notificación</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 iconos (máx.)</item>
+        <item>1 icono (sin ordenar)</item>
+        <item>1 icono (ordenado)</item>
+    </string-array>
+
+    <string name="label_battery">Batería</string>
+    <string name="label_memory">Memoria</string>
+    <string name="label_cores">Núcleos</string>
+    <string name="history_battery_temperature">Temperatura de la batería</string>
+    <string name="content_description_back">Atrás</string>
+    <string name="content_description_more">Más opciones</string>
+
+</resources>

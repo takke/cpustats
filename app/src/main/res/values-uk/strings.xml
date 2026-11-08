@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Налаштування</string>
+    <string name="title_activity_about">Про програму</string>
+    <string name="title_activity_history">Історія</string>
+    <string name="history_no_data">Дані ще не записано</string>
+    <string name="menu_settings">Налаштування</string>
+    <string name="menu_start_service">Показати сповіщення</string>
+    <string name="menu_stop_service">Приховати сповіщення</string>
+    <string name="menu_exit">Вихід</string>
+    <string name="require_notification_permission">Потрібен дозвіл на сповіщення</string>
+    <string name="config_general_category_title">Загальні</string>
+    <string name="config_record_history_title">Записувати історію</string>
+    <string name="config_record_history_summary">Записує завантаження ЦП тощо кожні 10 секунд (зберігається 24 години)</string>
+    <string name="config_update_interval_title">Інтервал оновлення</string>
+    <string name="config_start_on_boot_title">Під час запуску</string>
+    <string name="config_start_on_boot_summary">Показувати сповіщення під час запуску пристрою</string>
+    <string name="config_frequency_category_title">Частота ЦП</string>
+    <string name="config_show_frequency_notification">Сповіщення</string>
+    <string name="config_usage_category_title">Завантаження ЦП</string>
+    <string name="config_show_usage_notification">Сповіщення</string>
+    <string name="config_core_distribution_mode">Кількість значків</string>
+    <string name="config_core_distribution_mode_summary">Кількість і порядок значків сповіщення</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 значки (макс.)</item>
+        <item>1 значок (без сортування)</item>
+        <item>1 значок (із сортуванням)</item>
+    </string-array>
+
+    <string name="label_battery">Батарея</string>
+    <string name="label_memory">Пам\'ять</string>
+    <string name="label_cores">Ядра</string>
+    <string name="history_battery_temperature">Температура батареї</string>
+    <string name="content_description_back">Назад</string>
+    <string name="content_description_more">Більше</string>
+
+</resources>

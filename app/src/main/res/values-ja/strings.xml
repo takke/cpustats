@@ -34,4 +34,11 @@
         <item>1アイコン(ソート)</item>
     </string-array>
 
+    <string name="label_battery">バッテリー</string>
+    <string name="label_memory">メモリ</string>
+    <string name="label_cores">コア</string>
+    <string name="history_battery_temperature">バッテリー温度</string>
+    <string name="content_description_back">戻る</string>
+    <string name="content_description_more">その他のオプション</string>
+
 </resources>

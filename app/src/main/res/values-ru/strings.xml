@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">Настройки</string>
+    <string name="title_activity_about">О программе</string>
+    <string name="title_activity_history">История</string>
+    <string name="history_no_data">Данные ещё не записаны</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_start_service">Показать уведомление</string>
+    <string name="menu_stop_service">Скрыть уведомление</string>
+    <string name="menu_exit">Выход</string>
+    <string name="require_notification_permission">Требуется разрешение на уведомления</string>
+    <string name="config_general_category_title">Общие</string>
+    <string name="config_record_history_title">Записывать историю</string>
+    <string name="config_record_history_summary">Записывает загрузку ЦП и др. каждые 10 секунд (хранится 24 часа)</string>
+    <string name="config_update_interval_title">Интервал обновления</string>
+    <string name="config_start_on_boot_title">При загрузке</string>
+    <string name="config_start_on_boot_summary">Показывать уведомление при запуске устройства</string>
+    <string name="config_frequency_category_title">Частота ЦП</string>
+    <string name="config_show_frequency_notification">Уведомление</string>
+    <string name="config_usage_category_title">Загрузка ЦП</string>
+    <string name="config_show_usage_notification">Уведомление</string>
+    <string name="config_core_distribution_mode">Количество значков</string>
+    <string name="config_core_distribution_mode_summary">Количество и порядок значков уведомления</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 значка (макс.)</item>
+        <item>1 значок (без сортировки)</item>
+        <item>1 значок (с сортировкой)</item>
+    </string-array>
+
+    <string name="label_battery">Батарея</string>
+    <string name="label_memory">Память</string>
+    <string name="label_cores">Ядра</string>
+    <string name="history_battery_temperature">Температура батареи</string>
+    <string name="content_description_back">Назад</string>
+    <string name="content_description_more">Ещё</string>
+
+</resources>

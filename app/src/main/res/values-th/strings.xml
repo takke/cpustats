@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">การตั้งค่า</string>
+    <string name="title_activity_about">เกี่ยวกับ</string>
+    <string name="title_activity_history">ประวัติ</string>
+    <string name="history_no_data">ยังไม่มีข้อมูลที่บันทึกไว้</string>
+    <string name="menu_settings">การตั้งค่า</string>
+    <string name="menu_start_service">แสดงการแจ้งเตือน</string>
+    <string name="menu_stop_service">ซ่อนการแจ้งเตือน</string>
+    <string name="menu_exit">ออก</string>
+    <string name="require_notification_permission">ต้องได้รับสิทธิ์การแจ้งเตือน</string>
+    <string name="config_general_category_title">ทั่วไป</string>
+    <string name="config_record_history_title">บันทึกประวัติ</string>
+    <string name="config_record_history_summary">บันทึกการใช้งาน CPU ฯลฯ ทุก 10 วินาที (เก็บไว้ 24 ชั่วโมง)</string>
+    <string name="config_update_interval_title">ช่วงเวลาอัปเดต</string>
+    <string name="config_start_on_boot_title">เมื่อเปิดเครื่อง</string>
+    <string name="config_start_on_boot_summary">แสดงการแจ้งเตือนเมื่อเปิดเครื่อง</string>
+    <string name="config_frequency_category_title">ความถี่ CPU</string>
+    <string name="config_show_frequency_notification">การแจ้งเตือน</string>
+    <string name="config_usage_category_title">การใช้งาน CPU</string>
+    <string name="config_show_usage_notification">การแจ้งเตือน</string>
+    <string name="config_core_distribution_mode">จำนวนไอคอน</string>
+    <string name="config_core_distribution_mode_summary">จำนวนและลำดับของไอคอนแจ้งเตือน</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 ไอคอน (สูงสุด)</item>
+        <item>1 ไอคอน (ไม่เรียง)</item>
+        <item>1 ไอคอน (เรียงลำดับ)</item>
+    </string-array>
+
+    <string name="label_battery">แบตเตอรี่</string>
+    <string name="label_memory">หน่วยความจำ</string>
+    <string name="label_cores">คอร์</string>
+    <string name="history_battery_temperature">อุณหภูมิแบตเตอรี่</string>
+    <string name="content_description_back">กลับ</string>
+    <string name="content_description_more">เพิ่มเติม</string>
+
+</resources>

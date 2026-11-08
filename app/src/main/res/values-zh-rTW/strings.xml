@@ -1,0 +1,39 @@
+<resources>
+
+    <string name="app_name">CPU Stats</string>
+    <string name="title_activity_main">CPU Stats</string>
+    <string name="title_activity_config">設定</string>
+    <string name="title_activity_about">關於</string>
+    <string name="title_activity_history">歷史記錄</string>
+    <string name="history_no_data">尚無記錄資料</string>
+    <string name="menu_settings">設定</string>
+    <string name="menu_start_service">顯示通知</string>
+    <string name="menu_stop_service">隱藏通知</string>
+    <string name="menu_exit">結束</string>
+    <string name="require_notification_permission">需要通知權限</string>
+    <string name="config_general_category_title">一般</string>
+    <string name="config_record_history_title">記錄歷史</string>
+    <string name="config_record_history_summary">每 10 秒記錄一次 CPU 使用率等(保留 24 小時)</string>
+    <string name="config_update_interval_title">更新間隔</string>
+    <string name="config_start_on_boot_title">開機啟動</string>
+    <string name="config_start_on_boot_summary">開機時自動顯示通知</string>
+    <string name="config_frequency_category_title">CPU 頻率</string>
+    <string name="config_show_frequency_notification">通知</string>
+    <string name="config_usage_category_title">CPU 使用率</string>
+    <string name="config_show_usage_notification">通知</string>
+    <string name="config_core_distribution_mode">圖示數量</string>
+    <string name="config_core_distribution_mode_summary">通知圖示的數量與排序</string>
+    <string-array name="core_distribution_mode_entries">
+        <item>2 個圖示(最多)</item>
+        <item>1 個圖示(不排序)</item>
+        <item>1 個圖示(排序)</item>
+    </string-array>
+
+    <string name="label_battery">電池</string>
+    <string name="label_memory">記憶體</string>
+    <string name="label_cores">核心</string>
+    <string name="history_battery_temperature">電池溫度</string>
+    <string name="content_description_back">返回</string>
+    <string name="content_description_more">更多選項</string>
+
+</resources>

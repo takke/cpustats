@@ -34,4 +34,11 @@
         <item>1 Icône (triés)</item>
     </string-array>
 
+    <string name="label_battery">Batterie</string>
+    <string name="label_memory">Mémoire</string>
+    <string name="label_cores">Cœurs</string>
+    <string name="history_battery_temperature">Température de la batterie</string>
+    <string name="content_description_back">Retour</string>
+    <string name="content_description_more">Plus d\'options</string>
+
 </resources>
