@@ -7,6 +7,7 @@ Unreleased
 - Add translations: Portuguese (Brazil/Portugal), Spanish, Russian, Ukrainian, Chinese (Simplified/Traditional), Korean, Italian, Indonesian, Turkish, Vietnamese, Polish, Hindi, Thai, Arabic, Dutch, Swedish, Hungarian, Romanian, Greek
 - Localize notification channel names, history graph titles and battery/memory labels
 - Support RTL layout
+- Frequency notification text: "Max Freq … Min Freq …" -> "500 MHz - 2.8 GHz" (same format as the main screen)
 
 v3.0.1 (2026.08.03)
 -------------------

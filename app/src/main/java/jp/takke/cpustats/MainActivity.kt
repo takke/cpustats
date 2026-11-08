@@ -317,27 +317,30 @@ private fun FrequencyRow(state: MainState) {
 
     Column {
       val bodyText = buildAnnotatedString {
+        // RTL 言語で数値と単位が並べ替えられないよう LTR に固定する(MyUtil.ltr と同じ)
+        append('\u2066')
         append(MyUtil.formatFreq(currentFreq))
         withStyleSmall {
           append("  [Core ${activeCoreIndex + 1}: $clockPercent%]")
         }
+        append('\u2069')
       }
       Text(bodyText, style = MaterialTheme.typography.bodyLarge)
 
       Text(
-        text = " (${MyUtil.formatFreq(minFreq)} - ${MyUtil.formatFreq(maxFreq)})",
+        text = " " + MyUtil.ltr("(${MyUtil.formatFreq(minFreq)} - ${MyUtil.formatFreq(maxFreq)})"),
         style = MaterialTheme.typography.bodySmall,
       )
 
       // クラスタ構成(big.LITTLE)
       val clusters = MyUtil.formatCpuClusters(maxFreqs)
       if (clusters.isNotEmpty()) {
-        Text(" ${stringResource(R.string.label_cores)}: $clusters", style = MaterialTheme.typography.bodySmall)
+        Text(" ${stringResource(R.string.label_cores)}: ${MyUtil.ltr(clusters)}", style = MaterialTheme.typography.bodySmall)
       }
 
       if (state.systemStats.batteryTemperature != 0) {
         Text(
-          text = " ${stringResource(R.string.label_battery)}: ${MyUtil.formatTemperature(state.systemStats.batteryTemperature)}",
+          text = " ${stringResource(R.string.label_battery)}: ${MyUtil.ltr(MyUtil.formatTemperature(state.systemStats.batteryTemperature))}",
           style = MaterialTheme.typography.bodySmall,
         )
       }
@@ -346,7 +349,7 @@ private fun FrequencyRow(state: MainState) {
           state.systemStats.memUsedMb * 100 / state.systemStats.memTotalMb
         val used = MyUtil.formatMemSize(state.systemStats.memUsedMb)
         val total = MyUtil.formatMemSize(state.systemStats.memTotalMb)
-        Text(" ${stringResource(R.string.label_memory)}: $used / $total ($pct%)", style = MaterialTheme.typography.bodySmall)
+        Text(" ${stringResource(R.string.label_memory)}: ${MyUtil.ltr("$used / $total ($pct%)")}", style = MaterialTheme.typography.bodySmall)
       }
     }
   }
@@ -384,13 +387,15 @@ private fun CoreRow(coreIndex: Int, cpuUsage: Int, freq: Int, minFreq: Int, maxF
         )
         Text(
           buildAnnotatedString {
+            append('\u2066')
             append(MyUtil.formatFreq(freq))
             withStyleSmall { append(" [$clockPercent%]") }
+            append('\u2069')
           },
           style = MaterialTheme.typography.bodyMedium,
         )
         Text(
-          text = " (${MyUtil.formatFreq(minFreq)} - ${MyUtil.formatFreq(maxFreq)})",
+          text = " " + MyUtil.ltr("(${MyUtil.formatFreq(minFreq)} - ${MyUtil.formatFreq(maxFreq)})"),
           style = MaterialTheme.typography.bodySmall,
         )
       }

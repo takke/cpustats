@@ -234,7 +234,7 @@ internal class NotificationPresenter(service: Service) {
       MyLog.d("- $notificationContent")
     }
 
-    val notificationTitle = "$notificationTitle0 $totalUsage%"
+    val notificationTitle = notificationTitle0 + " " + MyUtil.ltr("$totalUsage%")
     builder.setContentTitle(notificationTitle)
     builder.setContentText(notificationContent)
     builder.setContentIntent(pendingIntent)
@@ -278,16 +278,14 @@ internal class NotificationPresenter(service: Service) {
     // バッテリー温度・メモリのサマリ
     val summary = StringBuilder()
     if (systemStats.batteryTemperature != 0) {
-      summary.append(service.getString(R.string.label_battery)).append(' ').append(MyUtil.formatTemperature(systemStats.batteryTemperature))
+      summary.append(service.getString(R.string.label_battery)).append(' ').append(MyUtil.ltr(MyUtil.formatTemperature(systemStats.batteryTemperature)))
     }
     if (systemStats.memTotalMb > 0) {
       if (summary.isNotEmpty()) {
         summary.append("  ")
       }
       summary.append(service.getString(R.string.label_memory)).append(' ')
-        .append(MyUtil.formatMemSize(systemStats.memUsedMb))
-        .append(" / ")
-        .append(MyUtil.formatMemSize(systemStats.memTotalMb))
+        .append(MyUtil.ltr(MyUtil.formatMemSize(systemStats.memUsedMb) + " / " + MyUtil.formatMemSize(systemStats.memTotalMb)))
     }
     if (summary.isNotEmpty()) {
       sb.append(summary)
@@ -333,11 +331,12 @@ internal class NotificationPresenter(service: Service) {
     setPriorityForKeyguard(builder)
 
     // 通知文字列の生成
-    val notificationTitle = "CPU Frequency " + MyUtil.formatFreq(currentCpuClock)
+    val notificationTitle = notificationTitle0 + " " + MyUtil.ltr(MyUtil.formatFreq(currentCpuClock))
     var notificationContent =
-      "Max Freq " + MyUtil.formatFreq(maxFreq) + " Min Freq " + MyUtil.formatFreq(minFreq)
+      MyUtil.ltr(MyUtil.formatFreq(minFreq) + " - " + MyUtil.formatFreq(maxFreq))
     if (batteryTemperature != 0) {
-      notificationContent += "  Battery " + MyUtil.formatTemperature(batteryTemperature)
+      notificationContent += "  " + service.getString(R.string.label_battery) + " " +
+          MyUtil.ltr(MyUtil.formatTemperature(batteryTemperature))
     }
 
     builder.setContentTitle(notificationTitle)
@@ -365,7 +364,7 @@ internal class NotificationPresenter(service: Service) {
     // クラスタ構成(big.LITTLE)
     val clusters = MyUtil.formatCpuClusters(fi.maxFreqs)
     if (clusters.isNotEmpty()) {
-      sb.append(clusters).append('\n')
+      sb.append(MyUtil.ltr(clusters)).append('\n')
     }
 
     // 各コアの現在周波数
