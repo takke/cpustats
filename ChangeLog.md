@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Unreleased
+v3.0.2 (2026.11.08)
 ----------
 
 - Add translations: Portuguese (Brazil/Portugal), Spanish, Russian, Ukrainian, Chinese (Simplified/Traditional), Korean, Italian, Indonesian, Turkish, Vietnamese, Polish, Hindi, Thai, Arabic, Dutch, Swedish, Hungarian, Romanian, Greek
