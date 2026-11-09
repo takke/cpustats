@@ -63,6 +63,10 @@ class UsageUpdateService : Service() {
   // 前回のバッテリー温度(0.1℃単位)
   private var mLastBatteryTemperature = 0
 
+  // 次回の収集時に値の変化がなくても通知を更新するフラグ(設定変更時用)
+  @Volatile
+  private var mForceNotificationUpdate = false
+
   // 前回の収集データ
   private var mLastCpuUsageSnapshot: ArrayList<OneCpuInfo>? = null
 
@@ -138,6 +142,9 @@ class UsageUpdateService : Service() {
 
     // 設定で消された通知を消去
     mNotificationPresenter.cancelNotifications(mConfig)
+
+    // 温度単位等の表示設定を反映させるため、次回は値が変わらなくても通知を更新する
+    mForceNotificationUpdate = true
   }
 
   /**
@@ -313,7 +320,7 @@ class UsageUpdateService : Service() {
     //-------------------------------------------------
     // ホーム画面ウィジェットの更新(間引きあり)
     //-------------------------------------------------
-    updateWidgetIfNeeded(cpuUsages[0], currentCpuClock, systemStats.batteryTemperature)
+    updateWidgetIfNeeded(cpuUsages[0], currentCpuClock, systemStats.batteryTemperature, mConfig.useFahrenheit)
 
     //-------------------------------------------------
     // 通知判定
@@ -321,7 +328,9 @@ class UsageUpdateService : Service() {
     // 前回と同じ CPU 使用率なら通知しない
     // ※通知アイコンだけなら丸めた値で比較すればいいんだけど通知テキストにCPU使用率%が出るので完全一致で比較する
     // ※メモリ使用量は変動が細かすぎるので通知更新判定には含めない
-    val updated = isUpdated(currentCpuClock, cpuUsages, systemStats.batteryTemperature)
+    val forceUpdate = mForceNotificationUpdate
+    mForceNotificationUpdate = false
+    val updated = forceUpdate || isUpdated(currentCpuClock, cpuUsages, systemStats.batteryTemperature)
     mLastCpuUsages = cpuUsages
     mLastCpuClock = currentCpuClock
     mLastBatteryTemperature = systemStats.batteryTemperature
@@ -358,7 +367,7 @@ class UsageUpdateService : Service() {
    * update() の書き込みだけで再コンポーズされる。updateAll() はセッションが閉じている
    * 場合の再起動用(生きている場合は軽量なイベント送信で済む)。
    */
-  private fun updateWidgetIfNeeded(cpuUsage: Int, cpuClock: Int, batteryTemperature: Int) {
+  private fun updateWidgetIfNeeded(cpuUsage: Int, cpuClock: Int, batteryTemperature: Int, useFahrenheit: Boolean) {
 
     val now = System.currentTimeMillis()
     if (now - mLastWidgetUpdateTime < C.WIDGET_UPDATE_MIN_INTERVAL_MS) {
@@ -366,13 +375,13 @@ class UsageUpdateService : Service() {
     }
 
     // 表示値に変化がなければ更新しない
-    val newSnapshot = WidgetData.Snapshot(cpuUsage, cpuClock, batteryTemperature)
+    val newSnapshot = WidgetData.Snapshot(cpuUsage, cpuClock, batteryTemperature, useFahrenheit)
     if (newSnapshot == WidgetData.snapshot()) {
       return
     }
 
     mLastWidgetUpdateTime = now
-    WidgetData.update(cpuUsage, cpuClock, batteryTemperature)
+    WidgetData.update(newSnapshot)
 
     mServiceScope.launch {
       try {

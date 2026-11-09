@@ -129,7 +129,7 @@ private fun ExpandedContent(snapshot: WidgetData.Snapshot) {
       }
       if (snapshot.batteryTemperature != 0) {
         Text(
-          text = MyUtil.formatTemperature(snapshot.batteryTemperature),
+          text = MyUtil.formatTemperature(snapshot.batteryTemperature, snapshot.useFahrenheit),
           style = TextStyle(color = fg, fontSize = 12.sp),
         )
       }

@@ -156,6 +156,24 @@ private fun ConfigScreen(onBack: () -> Unit) {
         default = "" + C.PREF_DEFAULT_UPDATE_INTERVAL_SEC,
       )
 
+      ListPreference(
+        prefs = prefs,
+        key = C.PREF_KEY_TEMPERATURE_UNIT,
+        title = stringResource(R.string.config_temperature_unit_title),
+        summary = null,
+        entries = arrayOf(
+          stringResource(R.string.config_temperature_unit_auto),
+          stringResource(R.string.config_temperature_unit_celsius),
+          stringResource(R.string.config_temperature_unit_fahrenheit),
+        ),
+        entryValues = arrayOf(
+          C.TEMPERATURE_UNIT_AUTO,
+          C.TEMPERATURE_UNIT_CELSIUS,
+          C.TEMPERATURE_UNIT_FAHRENHEIT,
+        ),
+        default = C.TEMPERATURE_UNIT_AUTO,
+      )
+
       SwitchPreference(
         prefs = prefs,
         key = C.PREF_KEY_START_ON_BOOT,

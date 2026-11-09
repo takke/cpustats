@@ -15,6 +15,10 @@
     <string name="config_record_history_title">记录历史</string>
     <string name="config_record_history_summary">每 10 秒记录一次 CPU 使用率等(保留 24 小时)</string>
     <string name="config_update_interval_title">更新间隔</string>
+    <string name="config_temperature_unit_title">温度单位</string>
+    <string name="config_temperature_unit_auto">自动(跟随系统设置)</string>
+    <string name="config_temperature_unit_celsius">摄氏度 (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">华氏度 (°F)</string>
     <string name="config_start_on_boot_title">开机启动</string>
     <string name="config_start_on_boot_summary">开机时自动显示通知</string>
     <string name="config_frequency_category_title">CPU 频率</string>

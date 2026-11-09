@@ -18,6 +18,10 @@
     <string name="config_record_history_title">Zaznamenávat historii</string>
     <string name="config_record_history_summary">Zaznamenává využití CPU atd. každých 10 sekund (uchováváno 24 hodin)</string>
     <string name="config_update_interval_title">Interval aktualizace</string>
+    <string name="config_temperature_unit_title">Jednotka teploty</string>
+    <string name="config_temperature_unit_auto">Automaticky (nastavení systému)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Při startu</string>
     <string name="config_start_on_boot_summary">Spustit upozorňování při startu</string>
 

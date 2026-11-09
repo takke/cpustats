@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Înregistrează istoricul</string>
     <string name="config_record_history_summary">Înregistrează utilizarea CPU etc. la fiecare 10 secunde (păstrat 24 de ore)</string>
     <string name="config_update_interval_title">Interval de actualizare</string>
+    <string name="config_temperature_unit_title">Unitate de temperatură</string>
+    <string name="config_temperature_unit_auto">Automat (setare de sistem)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">La pornire</string>
     <string name="config_start_on_boot_summary">Afișează notificarea la pornirea dispozitivului</string>
     <string name="config_frequency_category_title">Frecvența CPU</string>

@@ -1,7 +1,7 @@
 package jp.takke.cpustats
 
 import android.content.Context
-import jp.takke.cpustats.MyConfig.Companion.load
+import androidx.core.text.util.LocalePreferences
 
 /**
  * 設定値(immutable)
@@ -19,6 +19,8 @@ internal data class MyConfig(
   val coreDistributionMode: Int = C.CORE_DISTRIBUTION_MODE_2ICONS,
   // 履歴記録
   val recordHistory: Boolean = true,
+  // 温度を華氏で表示するか
+  val useFahrenheit: Boolean = false,
 ) {
 
   companion object {
@@ -63,7 +65,29 @@ internal data class MyConfig(
         ),
         coreDistributionMode = coreDistributionMode,
         recordHistory = pref.getBoolean(C.PREF_KEY_RECORD_HISTORY, true),
+        useFahrenheit = loadUseFahrenheit(context),
       )
+    }
+
+    /**
+     * 温度を華氏で表示するかどうか
+     *
+     * 設定が「自動」の場合はシステムの地域設定(Android 14+ の温度単位設定、
+     * それ以前はロケール。例: en-US なら華氏)に従う
+     */
+    fun loadUseFahrenheit(context: Context): Boolean {
+
+      val pref = context.defaultSharedPreferences()
+      return when (pref.getString(C.PREF_KEY_TEMPERATURE_UNIT, C.TEMPERATURE_UNIT_AUTO)) {
+        C.TEMPERATURE_UNIT_CELSIUS -> false
+        C.TEMPERATURE_UNIT_FAHRENHEIT -> true
+        else -> try {
+          LocalePreferences.getTemperatureUnit() == LocalePreferences.TemperatureUnit.FAHRENHEIT
+        } catch (e: Exception) {
+          MyLog.e(e)
+          false
+        }
+      }
     }
   }
 }

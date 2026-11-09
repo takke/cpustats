@@ -18,6 +18,10 @@
     <string name="config_record_history_title">履歴を記録する</string>
     <string name="config_record_history_summary">10秒ごとにCPU使用率等を記録します(24時間保持)</string>
     <string name="config_update_interval_title">更新間隔</string>
+    <string name="config_temperature_unit_title">温度の単位</string>
+    <string name="config_temperature_unit_auto">自動(システム設定に従う)</string>
+    <string name="config_temperature_unit_celsius">摂氏 (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">華氏 (°F)</string>
     <string name="config_start_on_boot_title">自動起動</string>
     <string name="config_start_on_boot_summary">端末の起動時に自動的に開始します</string>
 

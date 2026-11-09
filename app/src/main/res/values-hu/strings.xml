@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Előzmények rögzítése</string>
     <string name="config_record_history_summary">10 másodpercenként rögzíti a CPU-használatot stb. (24 óráig megőrizve)</string>
     <string name="config_update_interval_title">Frissítési időköz</string>
+    <string name="config_temperature_unit_title">Hőmérséklet mértékegysége</string>
+    <string name="config_temperature_unit_auto">Automatikus (rendszerbeállítás)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Indításkor</string>
     <string name="config_start_on_boot_summary">Értesítés megjelenítése az eszköz indításakor</string>
     <string name="config_frequency_category_title">CPU-frekvencia</string>

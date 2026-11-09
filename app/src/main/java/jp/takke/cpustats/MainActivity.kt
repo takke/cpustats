@@ -114,6 +114,9 @@ class MainActivity : ComponentActivity() {
 
   private val mConfigActivityLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+      // 温度単位の設定を画面に反映させる
+      _state.value = _state.value.copy(useFahrenheit = MyConfig.loadUseFahrenheit(this))
+
       // 設定変更の内容をサービスに反映させる
       if (mService != null) {
         MyLog.d("request reloadSettings")
@@ -125,6 +128,9 @@ class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    // 温度単位の設定
+    _state.value = _state.value.copy(useFahrenheit = MyConfig.loadUseFahrenheit(this))
 
     enableEdgeToEdge()
 
@@ -340,7 +346,7 @@ private fun FrequencyRow(state: MainState) {
 
       if (state.systemStats.batteryTemperature != 0) {
         Text(
-          text = " ${stringResource(R.string.label_battery)}: ${MyUtil.ltr(MyUtil.formatTemperature(state.systemStats.batteryTemperature))}",
+          text = " ${stringResource(R.string.label_battery)}: ${MyUtil.ltr(MyUtil.formatTemperature(state.systemStats.batteryTemperature, state.useFahrenheit))}",
           style = MaterialTheme.typography.bodySmall,
         )
       }

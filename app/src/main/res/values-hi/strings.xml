@@ -15,6 +15,10 @@
     <string name="config_record_history_title">इतिहास रिकॉर्ड करें</string>
     <string name="config_record_history_summary">हर 10 सेकंड में CPU उपयोग आदि रिकॉर्ड करता है (24 घंटे तक रखा जाता है)</string>
     <string name="config_update_interval_title">अपडेट अंतराल</string>
+    <string name="config_temperature_unit_title">तापमान इकाई</string>
+    <string name="config_temperature_unit_auto">स्वचालित (सिस्टम सेटिंग)</string>
+    <string name="config_temperature_unit_celsius">सेल्सियस (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">फ़ारेनहाइट (°F)</string>
     <string name="config_start_on_boot_title">बूट पर</string>
     <string name="config_start_on_boot_summary">डिवाइस चालू होने पर सूचना दिखाएं</string>
     <string name="config_frequency_category_title">CPU फ़्रीक्वेंसी</string>

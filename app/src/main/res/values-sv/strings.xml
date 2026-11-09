@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Spara historik</string>
     <string name="config_record_history_summary">Registrerar CPU-användning m.m. var 10:e sekund (sparas i 24 timmar)</string>
     <string name="config_update_interval_title">Uppdateringsintervall</string>
+    <string name="config_temperature_unit_title">Temperaturenhet</string>
+    <string name="config_temperature_unit_auto">Automatiskt (systeminställning)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Vid start</string>
     <string name="config_start_on_boot_summary">Visa avisering när enheten startar</string>
     <string name="config_frequency_category_title">CPU-frekvens</string>

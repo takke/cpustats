@@ -15,6 +15,10 @@
     <string name="config_record_history_title">기록 저장</string>
     <string name="config_record_history_summary">10초마다 CPU 사용률 등을 기록합니다(24시간 보관)</string>
     <string name="config_update_interval_title">업데이트 간격</string>
+    <string name="config_temperature_unit_title">온도 단위</string>
+    <string name="config_temperature_unit_auto">자동 (시스템 설정)</string>
+    <string name="config_temperature_unit_celsius">섭씨 (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">화씨 (°F)</string>
     <string name="config_start_on_boot_title">부팅 시 시작</string>
     <string name="config_start_on_boot_summary">기기 부팅 시 알림을 표시합니다</string>
     <string name="config_frequency_category_title">CPU 클럭</string>

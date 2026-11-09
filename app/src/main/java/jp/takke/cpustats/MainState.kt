@@ -11,6 +11,8 @@ data class MainState(
   val systemStats: SystemStats = SystemStats(),
   val history: IntArray = IntArray(0),
   val serviceRunning: Boolean = false,
+  // 温度を華氏で表示するか
+  val useFahrenheit: Boolean = false,
 ) {
   // data class の IntArray 比較を配列内容ベースにする(recompose 判定用)
   override fun equals(other: Any?): Boolean {
@@ -22,7 +24,8 @@ data class MainState(
         maxFreqs.contentEquals(other.maxFreqs) &&
         systemStats == other.systemStats &&
         history.contentEquals(other.history) &&
-        serviceRunning == other.serviceRunning
+        serviceRunning == other.serviceRunning &&
+        useFahrenheit == other.useFahrenheit
   }
 
   override fun hashCode(): Int {
@@ -33,6 +36,7 @@ data class MainState(
     r = 31 * r + systemStats.hashCode()
     r = 31 * r + history.contentHashCode()
     r = 31 * r + serviceRunning.hashCode()
+    r = 31 * r + useFahrenheit.hashCode()
     return r
   }
 }

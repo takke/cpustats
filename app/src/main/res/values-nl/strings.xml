@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Geschiedenis vastleggen</string>
     <string name="config_record_history_summary">Legt elke 10 seconden het CPU-gebruik enz. vast (24 uur bewaard)</string>
     <string name="config_update_interval_title">Update-interval</string>
+    <string name="config_temperature_unit_title">Temperatuureenheid</string>
+    <string name="config_temperature_unit_auto">Automatisch (systeeminstelling)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Bij opstarten</string>
     <string name="config_start_on_boot_summary">Melding tonen bij het opstarten van het apparaat</string>
     <string name="config_frequency_category_title">CPU-frequentie</string>

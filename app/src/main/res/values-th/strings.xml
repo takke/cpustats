@@ -15,6 +15,10 @@
     <string name="config_record_history_title">บันทึกประวัติ</string>
     <string name="config_record_history_summary">บันทึกการใช้งาน CPU ฯลฯ ทุก 10 วินาที (เก็บไว้ 24 ชั่วโมง)</string>
     <string name="config_update_interval_title">ช่วงเวลาอัปเดต</string>
+    <string name="config_temperature_unit_title">หน่วยอุณหภูมิ</string>
+    <string name="config_temperature_unit_auto">อัตโนมัติ (การตั้งค่าระบบ)</string>
+    <string name="config_temperature_unit_celsius">เซลเซียส (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">ฟาเรนไฮต์ (°F)</string>
     <string name="config_start_on_boot_title">เมื่อเปิดเครื่อง</string>
     <string name="config_start_on_boot_summary">แสดงการแจ้งเตือนเมื่อเปิดเครื่อง</string>
     <string name="config_frequency_category_title">ความถี่ CPU</string>

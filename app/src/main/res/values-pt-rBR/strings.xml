@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Registrar histórico</string>
     <string name="config_record_history_summary">Registra o uso da CPU etc. a cada 10 segundos (mantido por 24 horas)</string>
     <string name="config_update_interval_title">Intervalo de atualização</string>
+    <string name="config_temperature_unit_title">Unidade de temperatura</string>
+    <string name="config_temperature_unit_auto">Automático (configuração do sistema)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Na inicialização</string>
     <string name="config_start_on_boot_summary">Mostrar a notificação ao iniciar o dispositivo</string>
     <string name="config_frequency_category_title">Frequência da CPU</string>

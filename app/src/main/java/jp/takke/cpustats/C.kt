@@ -37,5 +37,11 @@ object C {
   const val CORE_DISTRIBUTION_MODE_1ICON_UNSORTED = 1  // 1アイコン+非ソート
   const val CORE_DISTRIBUTION_MODE_1ICON_SORTED = 2    // 1アイコン+ソート
 
+  // 温度の表示単位
+  const val PREF_KEY_TEMPERATURE_UNIT = "TemperatureUnit"
+  const val TEMPERATURE_UNIT_AUTO = "auto"              // システムの地域設定に従う(デフォルト)
+  const val TEMPERATURE_UNIT_CELSIUS = "celsius"        // 摂氏
+  const val TEMPERATURE_UNIT_FAHRENHEIT = "fahrenheit"  // 華氏
+
   const val READ_BUFFER_SIZE = 1024
 }

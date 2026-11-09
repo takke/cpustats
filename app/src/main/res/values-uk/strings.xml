@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Записувати історію</string>
     <string name="config_record_history_summary">Записує завантаження ЦП тощо кожні 10 секунд (зберігається 24 години)</string>
     <string name="config_update_interval_title">Інтервал оновлення</string>
+    <string name="config_temperature_unit_title">Одиниця температури</string>
+    <string name="config_temperature_unit_auto">Автоматично (системне налаштування)</string>
+    <string name="config_temperature_unit_celsius">Цельсій (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Фаренгейт (°F)</string>
     <string name="config_start_on_boot_title">Під час запуску</string>
     <string name="config_start_on_boot_summary">Показувати сповіщення під час запуску пристрою</string>
     <string name="config_frequency_category_title">Частота ЦП</string>

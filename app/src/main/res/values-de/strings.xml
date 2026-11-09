@@ -18,6 +18,10 @@
     <string name="config_record_history_title">Verlauf aufzeichnen</string>
     <string name="config_record_history_summary">Zeichnet CPU-Auslastung usw. alle 10 Sekunden auf (24 Stunden gespeichert)</string>
     <string name="config_update_interval_title">Aktualisierungsintervall</string>
+    <string name="config_temperature_unit_title">Temperatureinheit</string>
+    <string name="config_temperature_unit_auto">Automatisch (Systemeinstellung)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Beim Booten</string>
     <string name="config_start_on_boot_summary">Starte die Benachrichtigung beim Booten</string>
 

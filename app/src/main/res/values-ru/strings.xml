@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Записывать историю</string>
     <string name="config_record_history_summary">Записывает загрузку ЦП и др. каждые 10 секунд (хранится 24 часа)</string>
     <string name="config_update_interval_title">Интервал обновления</string>
+    <string name="config_temperature_unit_title">Единица температуры</string>
+    <string name="config_temperature_unit_auto">Автоматически (системная настройка)</string>
+    <string name="config_temperature_unit_celsius">Цельсий (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Фаренгейт (°F)</string>
     <string name="config_start_on_boot_title">При загрузке</string>
     <string name="config_start_on_boot_summary">Показывать уведомление при запуске устройства</string>
     <string name="config_frequency_category_title">Частота ЦП</string>

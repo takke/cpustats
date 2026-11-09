@@ -3,8 +3,6 @@ package jp.takke.cpustats.widget
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import jp.takke.cpustats.widget.WidgetData.snapshot
-import jp.takke.cpustats.widget.WidgetData.update
 
 /**
  * ホーム画面ウィジェット用の最新スナップショット(プロセス内共有)
@@ -20,12 +18,14 @@ object WidgetData {
     val cpuUsage: Int = 0,
     val cpuClock: Int = 0,
     val batteryTemperature: Int = 0,
+    // 温度を華氏で表示するか
+    val useFahrenheit: Boolean = false,
   )
 
   private var state by mutableStateOf(Snapshot())
 
-  fun update(cpuUsage: Int, cpuClock: Int, batteryTemperature: Int) {
-    state = Snapshot(cpuUsage, cpuClock, batteryTemperature)
+  fun update(snapshot: Snapshot) {
+    state = snapshot
   }
 
   /**

@@ -81,6 +81,7 @@ private fun HistoryScreen(onBack: () -> Unit) {
   val scope = rememberCoroutineScope()
 
   var selectedPeriodIndex by remember { mutableStateOf(2) }  // 24h デフォルト
+  val useFahrenheit = remember { MyConfig.loadUseFahrenheit(context) }
   var rows by remember { mutableStateOf<List<UsageLogRow>>(emptyList()) }
   var fromTime by remember { mutableStateOf(0L) }
   var toTime by remember { mutableStateOf(0L) }
@@ -169,7 +170,7 @@ private fun HistoryScreen(onBack: () -> Unit) {
             points = rows.map { it.recordedAt to it.batteryTemperature },
             fromTime = fromTime,
             toTime = toTime,
-            valueFormatter = { MyUtil.formatTemperature(it) },
+            valueFormatter = { MyUtil.formatTemperature(it, useFahrenheit) },
             modifier = Modifier
               .fillMaxWidth()
               .height(120.dp),

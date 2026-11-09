@@ -141,6 +141,25 @@ class MyUtilTest {
   }
 
   @Test
+  fun formatTemperature_fahrenheit() {
+
+    // 通常ケース
+    assertThat(MyUtil.formatTemperature(325, true)).isEqualTo("90.5°F")
+    assertThat(MyUtil.formatTemperature(1000, true)).isEqualTo("212.0°F")
+    assertThat(MyUtil.formatTemperature(0, true)).isEqualTo("32.0°F")
+
+    // 四捨五入(33.3℃ = 91.94°F)
+    assertThat(MyUtil.formatTemperature(333, true)).isEqualTo("91.9°F")
+
+    // 負値
+    assertThat(MyUtil.formatTemperature(-400, true)).isEqualTo("-40.0°F")
+    assertThat(MyUtil.formatTemperature(-180, true)).isEqualTo("-0.4°F")
+
+    // 摂氏指定時は従来どおり
+    assertThat(MyUtil.formatTemperature(325, false)).isEqualTo("32.5°C")
+  }
+
+  @Test
   fun formatMemSize() {
 
     // MB 表示

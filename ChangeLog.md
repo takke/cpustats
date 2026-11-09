@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Unreleased
+----------
+
+- Support Fahrenheit (°F) temperature display (Settings > Temperature Unit: Auto / Celsius / Fahrenheit)
+
 v3.0.2 (2026.11.08)
 ----------
 

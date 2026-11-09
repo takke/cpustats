@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Ghi lịch sử</string>
     <string name="config_record_history_summary">Ghi mức sử dụng CPU, v.v. mỗi 10 giây (lưu trong 24 giờ)</string>
     <string name="config_update_interval_title">Khoảng thời gian cập nhật</string>
+    <string name="config_temperature_unit_title">Đơn vị nhiệt độ</string>
+    <string name="config_temperature_unit_auto">Tự động (cài đặt hệ thống)</string>
+    <string name="config_temperature_unit_celsius">Độ C (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Độ F (°F)</string>
     <string name="config_start_on_boot_title">Khi khởi động</string>
     <string name="config_start_on_boot_summary">Hiện thông báo khi khởi động thiết bị</string>
     <string name="config_frequency_category_title">Tần số CPU</string>

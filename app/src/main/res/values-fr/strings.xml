@@ -18,6 +18,10 @@
     <string name="config_record_history_title">Enregistrer l\'historique</string>
     <string name="config_record_history_summary">Enregistre l\'utilisation du CPU etc. toutes les 10 secondes (conservé 24 heures)</string>
     <string name="config_update_interval_title">Interval de Mise à jour</string>
+    <string name="config_temperature_unit_title">Unité de température</string>
+    <string name="config_temperature_unit_auto">Automatique (paramètre système)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Au démarrage</string>
     <string name="config_start_on_boot_summary">Démarrer la notification au démarrage</string>
 

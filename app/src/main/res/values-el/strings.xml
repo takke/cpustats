@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Καταγραφή ιστορικού</string>
     <string name="config_record_history_summary">Καταγράφει τη χρήση CPU κ.λπ. κάθε 10 δευτερόλεπτα (διατηρείται για 24 ώρες)</string>
     <string name="config_update_interval_title">Διάστημα ενημέρωσης</string>
+    <string name="config_temperature_unit_title">Μονάδα θερμοκρασίας</string>
+    <string name="config_temperature_unit_auto">Αυτόματα (ρύθμιση συστήματος)</string>
+    <string name="config_temperature_unit_celsius">Κελσίου (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Φαρενάιτ (°F)</string>
     <string name="config_start_on_boot_title">Κατά την εκκίνηση</string>
     <string name="config_start_on_boot_summary">Εμφάνιση ειδοποίησης κατά την εκκίνηση της συσκευής</string>
     <string name="config_frequency_category_title">Συχνότητα CPU</string>

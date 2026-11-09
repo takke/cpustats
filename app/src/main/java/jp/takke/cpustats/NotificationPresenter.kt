@@ -25,6 +25,9 @@ internal class NotificationPresenter(service: Service) {
   // 通知時刻の非更新時刻(この時間になるまで更新しない。スリープ復帰時にはすぐに更新するとステータスバーの順序がずれてうざいので)[ms]
   var mNotificationTimeKeep: Long = 0
 
+  // 温度を華氏で表示するか(updateNotifications で config から更新する)
+  private var mUseFahrenheit = false
+
   /**
    * ステータスバー通知の設定
    */
@@ -37,6 +40,8 @@ internal class NotificationPresenter(service: Service) {
   ) {
 
     val service = mServiceRef.get() ?: return
+
+    mUseFahrenheit = config.useFahrenheit
 
     // 最もアクティブなコアのクロック情報
     val activeCoreIndex = MyUtil.getActiveCoreIndex(fi.freqs)
@@ -278,7 +283,7 @@ internal class NotificationPresenter(service: Service) {
     // バッテリー温度・メモリのサマリ
     val summary = StringBuilder()
     if (systemStats.batteryTemperature != 0) {
-      summary.append(service.getString(R.string.label_battery)).append(' ').append(MyUtil.ltr(MyUtil.formatTemperature(systemStats.batteryTemperature)))
+      summary.append(service.getString(R.string.label_battery)).append(' ').append(MyUtil.ltr(MyUtil.formatTemperature(systemStats.batteryTemperature, mUseFahrenheit)))
     }
     if (systemStats.memTotalMb > 0) {
       if (summary.isNotEmpty()) {
@@ -336,7 +341,7 @@ internal class NotificationPresenter(service: Service) {
       MyUtil.ltr(MyUtil.formatFreq(minFreq) + " - " + MyUtil.formatFreq(maxFreq))
     if (batteryTemperature != 0) {
       notificationContent += "  " + service.getString(R.string.label_battery) + " " +
-          MyUtil.ltr(MyUtil.formatTemperature(batteryTemperature))
+          MyUtil.ltr(MyUtil.formatTemperature(batteryTemperature, mUseFahrenheit))
     }
 
     builder.setContentTitle(notificationTitle)

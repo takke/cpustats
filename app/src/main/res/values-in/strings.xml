@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Rekam Riwayat</string>
     <string name="config_record_history_summary">Merekam penggunaan CPU dll. setiap 10 detik (disimpan selama 24 jam)</string>
     <string name="config_update_interval_title">Interval Pembaruan</string>
+    <string name="config_temperature_unit_title">Satuan Suhu</string>
+    <string name="config_temperature_unit_auto">Otomatis (pengaturan sistem)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">Saat Booting</string>
     <string name="config_start_on_boot_summary">Tampilkan notifikasi saat perangkat dinyalakan</string>
     <string name="config_frequency_category_title">Frekuensi CPU</string>

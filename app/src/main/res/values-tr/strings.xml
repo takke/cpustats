@@ -15,6 +15,10 @@
     <string name="config_record_history_title">Geçmişi Kaydet</string>
     <string name="config_record_history_summary">CPU kullanımı vb. her 10 saniyede bir kaydedilir (24 saat saklanır)</string>
     <string name="config_update_interval_title">Güncelleme Aralığı</string>
+    <string name="config_temperature_unit_title">Sıcaklık Birimi</string>
+    <string name="config_temperature_unit_auto">Otomatik (sistem ayarı)</string>
+    <string name="config_temperature_unit_celsius">Santigrat (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenhayt (°F)</string>
     <string name="config_start_on_boot_title">Açılışta</string>
     <string name="config_start_on_boot_summary">Cihaz açıldığında bildirimi göster</string>
     <string name="config_frequency_category_title">CPU Frekansı</string>

@@ -18,6 +18,10 @@
     <string name="config_record_history_title">Record History</string>
     <string name="config_record_history_summary">Record CPU usage etc. every 10 seconds (kept for 24 hours)</string>
     <string name="config_update_interval_title">Update Interval</string>
+    <string name="config_temperature_unit_title">Temperature Unit</string>
+    <string name="config_temperature_unit_auto">Auto (system setting)</string>
+    <string name="config_temperature_unit_celsius">Celsius (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">Fahrenheit (°F)</string>
     <string name="config_start_on_boot_title">On Boot</string>
     <string name="config_start_on_boot_summary">Start notification on boot</string>
 

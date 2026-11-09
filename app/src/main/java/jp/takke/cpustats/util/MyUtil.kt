@@ -126,13 +126,22 @@ object MyUtil {
    * バッテリー温度の表示用整形
    *
    * @param temperature 温度(0.1℃単位)
-   * @return "32.5°C" のような文字列
+   * @param fahrenheit true なら華氏に変換して表示する
+   * @return "32.5°C" または "90.5°F" のような文字列
    */
-  fun formatTemperature(temperature: Int): String {
-    val sign = if (temperature < 0) "-" else ""
-    val t = if (temperature < 0) -temperature else temperature
-    return "$sign${t / 10}.${t % 10}°C"
+  fun formatTemperature(temperature: Int, fahrenheit: Boolean = false): String {
+    val value = if (fahrenheit) celsiusToFahrenheit10(temperature) else temperature
+    val unit = if (fahrenheit) "°F" else "°C"
+    val sign = if (value < 0) "-" else ""
+    val t = if (value < 0) -value else value
+    return "$sign${t / 10}.${t % 10}$unit"
   }
+
+  /**
+   * 摂氏(0.1℃単位)を華氏(0.1°F単位)に変換する(小数第1位で四捨五入)
+   */
+  fun celsiusToFahrenheit10(celsius10: Int): Int =
+    Math.round(celsius10 * 9 / 5.0).toInt() + 320
 
   /**
    * メモリサイズの表示用整形

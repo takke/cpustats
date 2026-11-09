@@ -15,6 +15,10 @@
     <string name="config_record_history_title">تسجيل السجل</string>
     <string name="config_record_history_summary">يسجّل استخدام المعالج وغيره كل 10 ثوانٍ (يُحتفظ به لمدة 24 ساعة)</string>
     <string name="config_update_interval_title">الفاصل الزمني للتحديث</string>
+    <string name="config_temperature_unit_title">وحدة درجة الحرارة</string>
+    <string name="config_temperature_unit_auto">تلقائي (إعداد النظام)</string>
+    <string name="config_temperature_unit_celsius">مئوية (°C)</string>
+    <string name="config_temperature_unit_fahrenheit">فهرنهايت (°F)</string>
     <string name="config_start_on_boot_title">عند التشغيل</string>
     <string name="config_start_on_boot_summary">إظهار الإشعار عند تشغيل الجهاز</string>
     <string name="config_frequency_category_title">تردد المعالج</string>

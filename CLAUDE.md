@@ -94,7 +94,7 @@ CPU 状態の収集 → 通知アイコンへの割り当て → 通知描画、
   - `widget/CpuWidget` + `CpuWidgetReceiver`: ホーム画面ウィジェット(Glance)。`SizeMode.Responsive` で 2x1(コンパクト)/ 3x1 以上(温度付き)の 2 レイアウト。データは `widget/WidgetData` でプロセス内共有し、サービスから最小 5 秒間隔 + 表示値変化時のみ更新。**`WidgetData` は必ず Compose の `mutableStateOf` で保持すること**: Glance はセッション型 composition のため、State でない値を読むと `updateAll()` を呼んでも再コンポーズされず、セッション再生成時(数分おき)にしか画面が更新されない。`updatePeriodMillis="0"` でシステム定期更新は無効、更新はサービス駆動。
   - `BootReceiver`: 起動時に `StartOnBoot`(デフォルト true)なら foreground service として `UsageUpdateService` を起動。
   - `NotificationPermissionUtil`: Android 13+ の `POST_NOTIFICATIONS` 許可導線(MainActivity 側は `rememberLauncherForActivityResult` で自前実装)。
-- **設定は `MyConfig`(immutable data class)+ `MyConfig.load(context)`**: `updateIntervalSec`(小数秒可 → ms 変換)、`showUsageNotification`、`showFrequencyNotification`、`coreDistributionMode`。設定変更後は `ConfigActivity` から戻った時に `MainActivity` がサービスの `reloadSettings()` を呼び、サービス側で新しい `MyConfig` に差し替え + 不要な通知を消去する。
+- **設定は `MyConfig`(immutable data class)+ `MyConfig.load(context)`**: `updateIntervalSec`(小数秒可 → ms 変換)、`showUsageNotification`、`showFrequencyNotification`、`coreDistributionMode`、`useFahrenheit`(温度単位。設定 `TemperatureUnit` = auto/celsius/fahrenheit、auto は `LocalePreferences.getTemperatureUnit()` でシステム地域設定に従う。温度は内部的には常に 0.1℃ 単位で保持し、`MyUtil.formatTemperature(t, fahrenheit)` の表示時のみ変換)。設定変更後は `ConfigActivity` から戻った時に `MainActivity` がサービスの `reloadSettings()` を呼び、サービス側で新しい `MyConfig` に差し替え + 不要な通知を消去する。
 
 ## 注意点 / 落とし穴
 
